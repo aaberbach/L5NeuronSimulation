@@ -1,0 +1,90 @@
+{
+  "target_simulator": "NEURON",
+  "run": {
+    "tstart": 0.0,
+    "tstop": 5200.0,
+    "dt": 0.1,
+    "dL": 20.0,
+    "spike_threshold": -15.0,
+    "nsteps_block": 5000
+  },
+  "conditions": {
+    "celsius": 34.0,
+    "v_init": -80.0
+  },
+  "inputs": {
+    "exc_stim_spikes": {
+      "input_type": "spikes",
+      "module": "sonata",
+      "input_file": "/home/mizzou/Internship/L5Neuron/L5NeuronSimulation/exc_stim_spikes.h5",
+      "node_set": "exc_stim"
+    },
+    "inh_stim_spikes": {
+      "input_type": "spikes",
+      "module": "sonata",
+      "input_file": "/home/mizzou/Internship/L5Neuron/L5NeuronSimulation/inh_stim_spikes.h5",
+      "node_set": "inh_stim"
+    }
+  },
+  "output": {
+    "log_file": "/home/mizzou/Internship/L5Neuron/L5NeuronSimulation/output/log.txt",
+    "output_dir": "/home/mizzou/Internship/L5Neuron/L5NeuronSimulation/output",
+    "spikes_file": "/home/mizzou/Internship/L5Neuron/L5NeuronSimulation/output/spikes.h5"
+  },
+  "reports": {
+    "v_report": {
+      "variable_name": "v",
+      "cells": "all",
+      "module": "membrane_report",
+      "sections": "soma"
+    }
+  },
+  "node_sets_file": "/home/mizzou/Internship/L5Neuron/L5NeuronSimulation/node_sets.json",
+  "network": "/home/mizzou/Internship/L5Neuron/L5NeuronSimulation/circuit_config.json",
+  "config_path": "/home/mizzou/Internship/L5Neuron/L5NeuronSimulation/simulation_config.json",
+  "config_dir": "/home/mizzou/Internship/L5Neuron/L5NeuronSimulation",
+  "components": {
+    "biophysical_neuron_models_dir": "/home/mizzou/Internship/L5Neuron/L5NeuronSimulation/biophys_components/biophysical_neuron_models",
+    "__pycache___dir": "/home/mizzou/Internship/L5Neuron/L5NeuronSimulation/biophys_components/__pycache__",
+    "point_neuron_models_dir": "/home/mizzou/Internship/L5Neuron/L5NeuronSimulation/biophys_components/point_neuron_models",
+    "templates_dir": "/home/mizzou/Internship/L5Neuron/L5NeuronSimulation/biophys_components/templates",
+    "synaptic_models_dir": "/home/mizzou/Internship/L5Neuron/L5NeuronSimulation/biophys_components/synaptic_models",
+    "morphologies_dir": "/home/mizzou/Internship/L5Neuron/L5NeuronSimulation/biophys_components/morphologies",
+    "mechanisms_dir": "/home/mizzou/Internship/L5Neuron/L5NeuronSimulation/biophys_components/mechanisms"
+  },
+  "networks": {
+    "nodes": [
+      {
+        "nodes_file": "/home/mizzou/Internship/L5Neuron/L5NeuronSimulation/network/inh_stim_nodes.h5",
+        "node_types_file": "/home/mizzou/Internship/L5Neuron/L5NeuronSimulation/network/inh_stim_node_types.csv"
+      },
+      {
+        "nodes_file": "/home/mizzou/Internship/L5Neuron/L5NeuronSimulation/network/exc_stim_nodes.h5",
+        "node_types_file": "/home/mizzou/Internship/L5Neuron/L5NeuronSimulation/network/exc_stim_node_types.csv"
+      },
+      {
+        "nodes_file": "/home/mizzou/Internship/L5Neuron/L5NeuronSimulation/network/biophysical_nodes.h5",
+        "node_types_file": "/home/mizzou/Internship/L5Neuron/L5NeuronSimulation/network/biophysical_node_types.csv"
+      }
+    ],
+    "edges": [
+      {
+        "edge_types_file": "/home/mizzou/Internship/L5Neuron/L5NeuronSimulation/network/exc_stim_biophysical_edge_types.csv",
+        "edges_file": "/home/mizzou/Internship/L5Neuron/L5NeuronSimulation/network/exc_stim_biophysical_edges.h5"
+      },
+      {
+        "edge_types_file": "/home/mizzou/Internship/L5Neuron/L5NeuronSimulation/network/inh_stim_biophysical_edge_types.csv",
+        "edges_file": "/home/mizzou/Internship/L5Neuron/L5NeuronSimulation/network/inh_stim_biophysical_edges.h5"
+      }
+    ],
+    "gap_juncs": []
+  },
+  "node_sets": {
+    "biophysical_nodes": {
+      "model_type": "biophysical"
+    },
+    "point_nodes": {
+      "model_type": "point_process"
+    }
+  }
+}

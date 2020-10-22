@@ -1,0 +1,4 @@
+2020-10-21 19:53:11,566 [INFO] Created log file
+2020-10-21 19:53:11,903 [INFO] Building cells.
+2020-10-21 19:53:13,751 [INFO] Building recurrent connections
+2020-10-21 19:53:13,753 [INFO] Building virtual cell stimulations for exc_stim_spikes

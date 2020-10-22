@@ -1,0 +1,13 @@
+#!/bin/sh
+if test "x${NRNHOME}" = "x" ; then
+	NRNHOME="/home/mizzou/tools/utils/nrn/neuron_install/nrn"
+fi
+if test "x${NRNBIN}" = "x" ; then
+	NRNBIN="/home/mizzou/tools/utils/nrn/neuron_install/nrn/x86_64/bin/"
+fi
+if test "" = "yes" ; then
+	NRNIV="${NRNBIN}nrniv.app/Contents/MacOS/nrniv"
+else
+	NRNIV="${NRNBIN}nrniv"
+fi
+"${NRNIV}" -dll "/home/mizzou/Internship/L5Neuron/L5NeuronSimulation/biophys_components/mechanisms/x86_64/.libs/libnrnmech.so" "$@"
