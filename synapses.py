@@ -319,7 +319,7 @@ def pyr2pyr(syn_params, xs, secs):
 
 
 def load():
-    import pdb; pdb.set_trace()
+    #import pdb; pdb.set_trace()
     add_synapse_model(Bg2Pyr, 'bg2pyr', overwrite=False)
     add_synapse_model(Bg2Pyr, overwrite=False)
     add_synapse_model(Pyr2Pyr, 'pyr2pyr', overwrite=False)
@@ -327,9 +327,9 @@ def load():
     add_synapse_model(Pyr2Int, 'pyr2int', overwrite=False)
     add_synapse_model(Pyr2Int, overwrite=False)
     add_synapse_model(Int2Pyr, 'int2pyr', overwrite=False)
-    import pdb; pdb.set_trace()
+    #import pdb; pdb.set_trace()
     add_synapse_model(Int2Pyr, overwrite=False)
-    import pdb; pdb.set_trace()
+    #import pdb; pdb.set_trace()
     return
 
 def syn_params_dicts(syn_dir='biophys_components/synaptic_models'):

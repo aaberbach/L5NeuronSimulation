@@ -1,7 +1,7 @@
 from bmtk.builder import NetworkBuilder
 import numpy as np
 import sys
-import biophys_components.synapses as synapses                                                                                                                    
+import synapses                                                                                                                  
 synapses.load()
 syn = synapses.syn_params_dicts()
 
