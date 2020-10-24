@@ -16,7 +16,8 @@ mem_pot_file = './output/v_report.h5'
 
 # load 
 f = h5py.File(mem_pot_file,'r')
-mem_potential = f['report']['inh_stim']['data']
+import pdb; pdb.set_trace()
+mem_potential = f['report']['biophysical']['data']
 plt.plot(mem_potential[:,0]+70)
 
 # f = h5py.File('exc_stim_spikes.h5','r')

@@ -1,7 +1,7 @@
 from bmtk.builder import NetworkBuilder
 import numpy as np
 import sys
-import synapses                                                                                                                  
+import synapses2 as synapses                                                                                                                  
 synapses.load()
 syn = synapses.syn_params_dicts()
 
@@ -61,7 +61,8 @@ net.add_nodes(N=1, pop_name='Pyrc',
     #model_processing='aibs_allactive',
     model_processing='my_allactive',
     dynamics_params='L5Conductances.json',
-    morphology='L5Morphology.swc')
+    #morphology='L5Morphology.swc')
+    morphology='Scnn1a_473845048_m.swc')
 
 
 ##################################################################################
@@ -111,7 +112,7 @@ def correct_cell(source, target, bounds, part):
 #        weight_max=20e-3,
 #        dynamics_params='GABA_InhToExc.json',
 #        model_template='Exp2Syn',
-#        distance_range=[0.0, 300.0],
+#        distance_range=[-1000.0, 1000.0],
 #        target_sections=['somatic'],
 #        delay=2.0)
 # Create connections between Exc --> Pyr cells
@@ -124,7 +125,7 @@ net.add_edges(source=inh_stim.nodes(), target=net.nodes(),
                 delay=0.1,
                 dynamics_params='INT2PN.json',
                 model_template=syn['INT2PN.json']['level_of_detail'],
-                distance_range=[0.0, 300.0],
+                distance_range=[-1000.0, 1000.0],
                 target_sections=['somatic'])
 
 #Inhibitory on basal dendrites.
@@ -135,7 +136,7 @@ net.add_edges(source=inh_stim.nodes(), target=net.nodes(),
                 delay=0.1,
                 dynamics_params='INT2PN.json',
                 model_template=syn['INT2PN.json']['level_of_detail'],
-                distance_range=[0.0, 300.0],
+                distance_range=[-1000.0, 1000.0],
                 target_sections=['dend'])
 
 #Inhibitory on apical dendrites.
@@ -146,7 +147,7 @@ net.add_edges(source=inh_stim.nodes(), target=net.nodes(),
                 delay=0.1,
                 dynamics_params='INT2PN.json',
                 model_template=syn['INT2PN.json']['level_of_detail'],
-                distance_range=[0.0, 1000.0],
+                distance_range=[-1000.0, 1000.0],
                 target_sections=['apic'])
 
 # Create connections between Exc --> Pyr cells
@@ -158,7 +159,7 @@ net.add_edges(source=exc_stim.nodes(), target=net.nodes(),
                 syn_weight=1,
                 target_sections=['dend'],
                 delay=0.1,
-                distance_range=[0.0, 300.0],
+                distance_range=[-1000.0, 1000.0],
                 dynamics_params='PN2PN.json',
                 model_template=syn['PN2PN.json']['level_of_detail'])
 
@@ -169,7 +170,7 @@ net.add_edges(source=exc_stim.nodes(), target=net.nodes(),
                 syn_weight=1,
                 target_sections=['apic'],
                 delay=0.1,
-                distance_range=[0.0, 1000.0],
+                distance_range=[-1000.0, 1000.0],
                 dynamics_params='PN2PN.json',
                 model_template=syn['PN2PN.json']['level_of_detail'])
 
@@ -197,7 +198,7 @@ exc_psg.to_sonata('exc_stim_spikes.h5')
 
 inh_psg = PoissonSpikeGenerator(population='inh_stim')
 inh_psg.add(node_ids=range(np.sum(num_inh)), 
-        firing_rate=inh_fr / 1000,  
+        firing_rate=0,#inh_fr ,#/ 1000,  
         times=(200.0, 5200.0))   
 inh_psg.to_sonata('inh_stim_spikes.h5')
 

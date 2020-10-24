@@ -6,7 +6,7 @@ import h5py
 from neuron import h
 from scipy.stats import skew
 #import synapses2 as synapses
-import synapses
+import synapses2 as synapses
 import load_processor as processors
 from bmtk.simulator.bionet.pyfunction_cache import add_weight_function
 import pickle

@@ -24,8 +24,8 @@ def add_axon(hobj):
 def my_allactive(hobj, cell, dynamics_params):
     if dynamics_params is not None:
         add_axon(hobj)
-        #set_params_peri(hobj, dynamics_params)
-        set_params_allactive(hobj, dynamics_params)
+        set_params_peri(hobj, dynamics_params)
+        #set_params_allactive(hobj, dynamics_params)
 
     return hobj
 
