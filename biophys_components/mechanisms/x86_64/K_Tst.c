@@ -217,7 +217,7 @@ extern void _cvode_abstol( Symbol**, double*, int);
  	hoc_register_cvode(_mechtype, _ode_count, _ode_map, _ode_spec, _ode_matsol);
  	hoc_register_tolerance(_mechtype, _hoc_state_tol, &_atollist);
  	hoc_register_var(hoc_scdoub, hoc_vdoub, hoc_intfunc);
- 	ivoc_help("help ?1 K_Tst /home/mizzou/Internship/L5TractNeuron/model_info/components/mechanisms/x86_64/K_Tst.mod\n");
+ 	ivoc_help("help ?1 K_Tst /home/mizzou/Internship/L5Neuron/L5NeuronSimulation/biophys_components/mechanisms/x86_64/K_Tst.mod\n");
  hoc_register_limits(_mechtype, _hoc_parm_limits);
  hoc_register_units(_mechtype, _hoc_parm_units);
  }
@@ -484,7 +484,7 @@ _first = 0;
 #endif
 
 #if NMODL_TEXT
-static const char* nmodl_filename = "/home/mizzou/Internship/L5TractNeuron/model_info/components/mechanisms/modfiles/K_Tst.mod";
+static const char* nmodl_filename = "/home/mizzou/Internship/L5Neuron/L5NeuronSimulation/biophys_components/mechanisms/modfiles/K_Tst.mod";
 static const char* nmodl_file_text = 
   ":Comment : The transient component of the K current\n"
   ":Reference : :		Voltage-gated K+ channels in layer 5 neocortical pyramidal neurones from young rats:subtypes and gradients,Korngreen and Sakmann, J. Physiology, 2000\n"

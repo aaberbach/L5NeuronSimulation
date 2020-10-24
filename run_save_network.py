@@ -6,7 +6,8 @@ import h5py
 from neuron import h
 from scipy.stats import skew
 #import synapses2 as synapses
-import synapses2 as synapses
+#import synapses2 as synapses
+import synapses
 import load_processor as processors
 from bmtk.simulator.bionet.pyfunction_cache import add_weight_function
 import pickle
@@ -63,6 +64,12 @@ conf.build_env()
 graph = bionet.BioNetwork.from_config(conf)
 #import pdb; pdb.set_trace()
 sim = bionet.BioSimulator.from_config(conf, network=graph)
+# import pdb; pdb.set_trace()
+
+# cell = graph.get_local_cells()[5072]
+# memb = h.Vector()
+# memb.record(cell.hobj.soma[0](0.5)._ref_v)
+
 #import pdb; pdb.set_trace()
 
 # cells = graph.get_local_cells()
@@ -89,6 +96,7 @@ sim = bionet.BioSimulator.from_config(conf, network=graph)
 
 sim.run()
 pc.barrier()
+#import pdb; pdb.set_trace()
 
 # raster_file = './output/spikes.h5'
 

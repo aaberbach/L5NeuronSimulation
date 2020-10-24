@@ -1,7 +1,7 @@
 from bmtk.builder import NetworkBuilder
 import numpy as np
 import sys
-import synapses2 as synapses                                                                                                                  
+import synapses                                                                                                                
 synapses.load()
 syn = synapses.syn_params_dicts()
 
@@ -61,8 +61,9 @@ net.add_nodes(N=1, pop_name='Pyrc',
     #model_processing='aibs_allactive',
     model_processing='my_allactive',
     dynamics_params='L5Conductances.json',
-    #morphology='L5Morphology.swc')
-    morphology='Scnn1a_473845048_m.swc')
+    #dynamics_params='491766131_fit.json',
+    morphology='L5Morphology.swc')
+    #morphology='Rbp4-Cre_KL100_Ai14-203503.04.01.01_527109145_m.swc')
 
 
 ##################################################################################
@@ -192,14 +193,14 @@ from bmtk.utils.reports.spike_trains.spikes_file_writers import write_csv
 
 exc_psg = PoissonSpikeGenerator(population='exc_stim')
 exc_psg.add(node_ids=range(np.sum(num_exc)),  
-        firing_rate=exc_fr / 1000,    
-        times=(200.0, 5200.0))    
+        firing_rate=exc_fr,    
+        times=(0.2, 5.2))    
 exc_psg.to_sonata('exc_stim_spikes.h5')
 
 inh_psg = PoissonSpikeGenerator(population='inh_stim')
 inh_psg.add(node_ids=range(np.sum(num_inh)), 
-        firing_rate=0,#inh_fr ,#/ 1000,  
-        times=(200.0, 5200.0))   
+        firing_rate=inh_fr,  
+        times=(0.2, 5.2))   
 inh_psg.to_sonata('inh_stim_spikes.h5')
 
 
@@ -207,7 +208,7 @@ from bmtk.utils.sim_setup import build_env_bionet
 
 build_env_bionet(base_dir='./',
                 network_dir='./network',
-                tstop=5200.0, dt = 0.1,
+                tstop=1200.0, dt = 0.1,
                 report_vars=['v'],
                 spikes_inputs=[('exc_stim', 'exc_stim_spikes.h5'), ('inh_stim', 'inh_stim_spikes.h5')],
                 components_dir='biophys_components',
