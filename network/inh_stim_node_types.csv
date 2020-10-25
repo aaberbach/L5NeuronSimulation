@@ -1,2 +1,2 @@
-node_type_id model_type pop_name potential
-100 virtual inh_stim exc
+node_type_id model_type potential pop_name
+100 virtual exc inh_stim

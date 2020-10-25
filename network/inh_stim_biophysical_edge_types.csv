@@ -1,4 +1,4 @@
-edge_type_id target_query source_query syn_weight target_sections model_template distance_range dynamics_params delay
-100 * * 1 ['somatic'] int2pyr "[-1000.0, 1000.0]" INT2PN.json 0.1
-101 * * 1 ['dend'] int2pyr "[-1000.0, 1000.0]" INT2PN.json 0.1
-102 * * 1 ['apic'] int2pyr "[-1000.0, 1000.0]" INT2PN.json 0.1
+edge_type_id target_query source_query syn_weight distance_range delay model_template target_sections dynamics_params
+100 * * 1 "[-1000.0, 1000.0]" 0.1 int2pyr ['somatic'] INT2PN.json
+101 * * 1 "[-1000.0, 1000.0]" 0.1 int2pyr ['dend'] INT2PN.json
+102 * * 1 "[-1000.0, 1000.0]" 0.1 int2pyr ['apic'] INT2PN.json
