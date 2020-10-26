@@ -24,29 +24,7 @@
           "cm": 0.02
         }
       ],
-      "g_pas": [
-        {
-          "section": "soma",
-          "g_pas": 3.26e-05
-        },
-        {
-          "section": "dend",
-          "g_pas": 6.31e-05
-        },
-        {
-          "section": "apic",
-          "g_pas": 8.82e-05
-        },
-        {
-          "section": "axon",
-          "g_pas": 2.56e-05
-        },
-        {
-          "section": "myelin",
-          "g_pas": 4e-05
-        }
-      ],
-      "e_pas": -90
+      "e_pas": -72
     }
   ],
   "fitting": [
@@ -81,6 +59,30 @@
     }
   ],
   "genome": [
+    {
+      "section": "soma", 
+      "name": "g_pas", 
+      "value": 3.26e-05, 
+      "mechanism": ""
+    }, 
+    {
+      "section": "axon", 
+      "name": "g_pas", 
+      "value": 2.56e-05, 
+      "mechanism": ""
+    }, 
+    {
+      "section": "dend", 
+      "name": "g_pas", 
+      "value": 6.31e-05, 
+      "mechanism": ""
+    }, 
+    {
+      "section": "apic", 
+      "name": "g_pas", 
+      "value": 8.82e-05, 
+      "mechanism": ""
+    },
     {
       "section": "soma",
       "name": "gCa_LVAstbar_Ca_LVAst",

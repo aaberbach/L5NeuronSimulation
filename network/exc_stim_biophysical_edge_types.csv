@@ -1,3 +1,3 @@
-edge_type_id target_query source_query syn_weight distance_range delay model_template target_sections dynamics_params
-103 * * 1 "[-1000.0, 1000.0]" 0.1 pyr2pyr ['dend'] PN2PN.json
-104 * * 1 "[-1000.0, 1000.0]" 0.1 pyr2pyr ['apic'] PN2PN.json
+edge_type_id target_query source_query syn_weight target_sections model_template distance_range delay dynamics_params
+103 * * 1 ['dend'] pyr2pyr "[-1000.0, 1000.0]" 0.1 PN2PN.json
+104 * * 1 ['apic'] pyr2pyr "[-1000.0, 1000.0]" 0.1 PN2PN.json

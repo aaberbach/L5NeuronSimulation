@@ -1,2 +1,2 @@
-node_type_id morphology pop_name model_type model_processing model_template potental dynamics_params
-100 L5Morphology.swc Pyrc biophysical my_allactive ctdb:Biophys1.hoc exc L5Conductances.json
+node_type_id potental morphology pop_name dynamics_params model_processing model_template model_type
+100 exc L5Morphology.swc Pyrc L5Conductances.json my_allactive ctdb:Biophys1.hoc biophysical
