@@ -1,12 +1,12 @@
-2020-10-25 19:43:31,197 [INFO] Created log file
-2020-10-25 19:43:31,514 [INFO] Building cells.
-2020-10-25 19:43:32,984 [INFO] Building recurrent connections
-2020-10-25 19:43:32,987 [INFO] Building virtual cell stimulations for exc_stim_spikes
-2020-10-25 19:44:01,652 [INFO] Building virtual cell stimulations for inh_stim_spikes
-2020-10-25 19:44:14,836 [INFO] Running simulation for 1200.000 ms with the time step 0.100 ms
-2020-10-25 19:44:14,836 [INFO] Starting timestep: 0 at t_sim: 0.000 ms
-2020-10-25 19:44:14,837 [INFO] Block save every 5000 steps
-2020-10-25 19:44:28,641 [INFO]     step:5000 t_sim:500.00 ms
-2020-10-25 19:44:44,015 [INFO]     step:10000 t_sim:1000.00 ms
-2020-10-25 19:44:50,674 [INFO]     step:12000 t_sim:1200.00 ms
-2020-10-25 19:44:50,690 [INFO] Simulation completed in 35.85 seconds 
+2020-10-26 17:14:30,160 [INFO] Created log file
+2020-10-26 17:14:30,494 [INFO] Building cells.
+2020-10-26 17:14:32,213 [INFO] Building recurrent connections
+2020-10-26 17:14:32,216 [INFO] Building virtual cell stimulations for exc_stim_spikes
+2020-10-26 17:14:41,225 [INFO] Building virtual cell stimulations for inh_stim_spikes
+2020-10-26 17:14:45,331 [INFO] Running simulation for 1200.000 ms with the time step 0.100 ms
+2020-10-26 17:14:45,331 [INFO] Starting timestep: 0 at t_sim: 0.000 ms
+2020-10-26 17:14:45,331 [INFO] Block save every 5000 steps
+2020-10-26 17:14:53,989 [INFO]     step:5000 t_sim:500.00 ms
+2020-10-26 17:15:02,451 [INFO]     step:10000 t_sim:1000.00 ms
+2020-10-26 17:15:05,928 [INFO]     step:12000 t_sim:1200.00 ms
+2020-10-26 17:15:05,946 [INFO] Simulation completed in 20.62 seconds 
