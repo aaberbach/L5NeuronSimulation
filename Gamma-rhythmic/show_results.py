@@ -10,6 +10,11 @@ parentdir = os.path.dirname(currentdir)
 sys.path.insert(0,parentdir) 
 
 import my_plotting
+my_plotting.generate_prob_raster('inh_stim_spikes.h5', 'results/spikes.h5', 120000)
+#parts = my_plotting.generate_spike_probs('inh_stim_spikes.h5', 'results/spikes.h5', 120000)
+import pdb; pdb.set_trace()
+my_plotting.plot_spike_gamma('inh_stim_spikes.h5', 120000)
+#plt.show()
 
 my_plotting.plot_spikes('inh_stim_spikes.h5')
 my_plotting.plot_v('output/v_report.h5')
@@ -18,7 +23,7 @@ plt.show()
 _ = plot_report(config_file='simulation_config.json', report_name='v_report')
 
 
-# spike_trains.plot_raster(config_file='simulation_config.json', spikes_file = 'inh_stim_spikes.h5')
+spike_trains.plot_raster(config_file='simulation_config.json', spikes_file = 'inh_stim_spikes.h5')
 #f = h5py.File()
 #_ = plot_report(config_file='simulation_config.json', node_ids=[0], report_name='cai_report')
 #_ = plot_traces(config_file='model_info/simulation_config.json', node_ids=[0], report_name='cai_report')
