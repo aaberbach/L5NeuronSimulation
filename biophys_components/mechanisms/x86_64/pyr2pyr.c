@@ -85,37 +85,38 @@ extern double hoc_Exp(double);
 #define g_nmda _p[38]
 #define on_nmda _p[39]
 #define W_nmda _p[40]
-#define i_ampa _p[41]
-#define g_ampa _p[42]
-#define on_ampa _p[43]
-#define W_ampa _p[44]
-#define ICa _p[45]
-#define iCatotal _p[46]
-#define Wmax _p[47]
-#define Wmin _p[48]
-#define maxChange _p[49]
-#define normW _p[50]
-#define scaleW _p[51]
-#define pregid _p[52]
-#define postgid _p[53]
-#define calcium _p[54]
-#define F _p[55]
-#define D1 _p[56]
-#define D2 _p[57]
-#define r_nmda _p[58]
-#define r_ampa _p[59]
-#define Capoolcon _p[60]
-#define t0 _p[61]
-#define Afactor _p[62]
-#define dW_ampa _p[63]
-#define tsyn _p[64]
-#define fa _p[65]
-#define Dr_nmda _p[66]
-#define Dr_ampa _p[67]
-#define DCapoolcon _p[68]
-#define v _p[69]
-#define _g _p[70]
-#define _tsav _p[71]
+#define comb _p[41]
+#define i_ampa _p[42]
+#define g_ampa _p[43]
+#define on_ampa _p[44]
+#define W_ampa _p[45]
+#define ICa _p[46]
+#define iCatotal _p[47]
+#define Wmax _p[48]
+#define Wmin _p[49]
+#define maxChange _p[50]
+#define normW _p[51]
+#define scaleW _p[52]
+#define pregid _p[53]
+#define postgid _p[54]
+#define calcium _p[55]
+#define F _p[56]
+#define D1 _p[57]
+#define D2 _p[58]
+#define r_nmda _p[59]
+#define r_ampa _p[60]
+#define Capoolcon _p[61]
+#define t0 _p[62]
+#define Afactor _p[63]
+#define dW_ampa _p[64]
+#define tsyn _p[65]
+#define fa _p[66]
+#define Dr_nmda _p[67]
+#define Dr_ampa _p[68]
+#define DCapoolcon _p[69]
+#define v _p[70]
+#define _g _p[71]
+#define _tsav _p[72]
 #define _nd_area  *_ppvar[0]._pval
  
 #if MAC
@@ -320,6 +321,7 @@ static void _ode_matsol(_NrnThread*, _Memb_list*, int);
  "g_nmda",
  "on_nmda",
  "W_nmda",
+ "comb",
  "i_ampa",
  "g_ampa",
  "on_ampa",
@@ -354,7 +356,7 @@ static void nrn_alloc(Prop* _prop) {
 	_p = nrn_point_prop_->param;
 	_ppvar = nrn_point_prop_->dparam;
  }else{
- 	_p = nrn_prop_data_alloc(_mechtype, 72, _prop);
+ 	_p = nrn_prop_data_alloc(_mechtype, 73, _prop);
  	/*initialize range parameters*/
  	initW = 5;
  	Cdur_nmda = 17.58;
@@ -395,7 +397,7 @@ static void nrn_alloc(Prop* _prop) {
  	wDA = 0;
   }
  	_prop->param = _p;
- 	_prop->param_size = 72;
+ 	_prop->param_size = 73;
   if (!nrn_point_prop_) {
  	_ppvar = nrn_prop_datum_alloc(_mechtype, 3, _prop);
   }
@@ -429,7 +431,7 @@ extern void _cvode_abstol( Symbol**, double*, int);
   hoc_reg_nmodl_text(_mechtype, nmodl_file_text);
   hoc_reg_nmodl_filename(_mechtype, nmodl_filename);
 #endif
-  hoc_register_prop_size(_mechtype, 72, 3);
+  hoc_register_prop_size(_mechtype, 73, 3);
   hoc_register_dparam_semantics(_mechtype, 0, "area");
   hoc_register_dparam_semantics(_mechtype, 1, "pntproc");
   hoc_register_dparam_semantics(_mechtype, 2, "cvodeieq");
@@ -438,7 +440,7 @@ extern void _cvode_abstol( Symbol**, double*, int);
  pnt_receive[_mechtype] = _net_receive;
  pnt_receive_size[_mechtype] = 1;
  	hoc_register_var(hoc_scdoub, hoc_vdoub, hoc_intfunc);
- 	ivoc_help("help ?1 pyr2pyr /home/mizzou/Internship/L5Neuron/L5NeuronSimulation/biophys_components/mechanisms/x86_64/pyr2pyr.mod\n");
+ 	ivoc_help("help ?1 pyr2pyr /home/mizzou/Internship/L5Neuron/GoodL5NeuronSimulation/biophys_components/mechanisms/x86_64/pyr2pyr.mod\n");
  hoc_register_limits(_mechtype, _hoc_parm_limits);
  hoc_register_units(_mechtype, _hoc_parm_units);
  }
@@ -475,7 +477,7 @@ static int _ode_spec1(_threadargsproto_);
      }
    Dr_nmda = AlphaTmax_nmda * on_nmda * ( 1.0 - r_nmda ) - Beta_nmda * r_nmda ;
    Dr_ampa = AlphaTmax_ampa * on_ampa * ( 1.0 - r_ampa ) - Beta_ampa * r_ampa ;
-   dW_ampa = eta ( _threadargscomma_ Capoolcon ) * ( lambda1 * omega ( _threadargscomma_ Capoolcon , threshold1 , threshold2 ) - lambda2 * W_ampa ) * dt ;
+   dW_ampa = eta ( _threadargscomma_ Capoolcon ) * ( lambda1 * omega ( _threadargscomma_ Capoolcon , threshold1 , threshold2 ) - lambda2 * W_ampa ) * 0.1 ;
    if ( fabs ( dW_ampa ) > maxChange ) {
      if ( dW_ampa < 0.0 ) {
        dW_ampa = - 1.0 * maxChange ;
@@ -502,6 +504,7 @@ static int _ode_spec1(_threadargsproto_);
    i_nmda = W_nmda * g_nmda * ( v - Erev_nmda ) * sfunc ( _threadargscomma_ v ) ;
    g_ampa = gbar_ampa * r_ampa * facfactor ;
    i_ampa = W_ampa * g_ampa * ( v - Erev_ampa ) * ( 1.0 + ( bACH * ( ACH - 1.0 ) ) ) * ( aDA + ( bDA * ( DA - 1.0 ) ) ) ;
+   comb = facfactor ;
    ICa = P0 * g_nmda * ( v - ECa ) * sfunc ( _threadargscomma_ v ) ;
    DCapoolcon = - fCa * Afactor * ICa + ( Cainf - Capoolcon ) / tauCa ;
    }
@@ -524,7 +527,7 @@ static int _ode_spec1(_threadargsproto_);
    }
  Dr_nmda = Dr_nmda  / (1. - dt*( ( AlphaTmax_nmda * on_nmda )*( ( ( - 1.0 ) ) ) - ( Beta_nmda )*( 1.0 ) )) ;
  Dr_ampa = Dr_ampa  / (1. - dt*( ( AlphaTmax_ampa * on_ampa )*( ( ( - 1.0 ) ) ) - ( Beta_ampa )*( 1.0 ) )) ;
- dW_ampa = eta ( _threadargscomma_ Capoolcon ) * ( lambda1 * omega ( _threadargscomma_ Capoolcon , threshold1 , threshold2 ) - lambda2 * W_ampa ) * dt ;
+ dW_ampa = eta ( _threadargscomma_ Capoolcon ) * ( lambda1 * omega ( _threadargscomma_ Capoolcon , threshold1 , threshold2 ) - lambda2 * W_ampa ) * 0.1 ;
  if ( fabs ( dW_ampa ) > maxChange ) {
    if ( dW_ampa < 0.0 ) {
      dW_ampa = - 1.0 * maxChange ;
@@ -551,6 +554,7 @@ static int _ode_spec1(_threadargsproto_);
  i_nmda = W_nmda * g_nmda * ( v - Erev_nmda ) * sfunc ( _threadargscomma_ v ) ;
  g_ampa = gbar_ampa * r_ampa * facfactor ;
  i_ampa = W_ampa * g_ampa * ( v - Erev_ampa ) * ( 1.0 + ( bACH * ( ACH - 1.0 ) ) ) * ( aDA + ( bDA * ( DA - 1.0 ) ) ) ;
+ comb = facfactor ;
  ICa = P0 * g_nmda * ( v - ECa ) * sfunc ( _threadargscomma_ v ) ;
  DCapoolcon = DCapoolcon  / (1. - dt*( ( ( ( - 1.0 ) ) ) / tauCa )) ;
   return 0;
@@ -573,7 +577,7 @@ static int _ode_spec1(_threadargsproto_);
      }
     r_nmda = r_nmda + (1. - exp(dt*(( AlphaTmax_nmda * on_nmda )*( ( ( - 1.0 ) ) ) - ( Beta_nmda )*( 1.0 ))))*(- ( ( ( AlphaTmax_nmda )*( on_nmda ) )*( ( 1.0 ) ) ) / ( ( ( AlphaTmax_nmda )*( on_nmda ) )*( ( ( - 1.0 ) ) ) - ( Beta_nmda )*( 1.0 ) ) - r_nmda) ;
     r_ampa = r_ampa + (1. - exp(dt*(( AlphaTmax_ampa * on_ampa )*( ( ( - 1.0 ) ) ) - ( Beta_ampa )*( 1.0 ))))*(- ( ( ( AlphaTmax_ampa )*( on_ampa ) )*( ( 1.0 ) ) ) / ( ( ( AlphaTmax_ampa )*( on_ampa ) )*( ( ( - 1.0 ) ) ) - ( Beta_ampa )*( 1.0 ) ) - r_ampa) ;
-   dW_ampa = eta ( _threadargscomma_ Capoolcon ) * ( lambda1 * omega ( _threadargscomma_ Capoolcon , threshold1 , threshold2 ) - lambda2 * W_ampa ) * dt ;
+   dW_ampa = eta ( _threadargscomma_ Capoolcon ) * ( lambda1 * omega ( _threadargscomma_ Capoolcon , threshold1 , threshold2 ) - lambda2 * W_ampa ) * 0.1 ;
    if ( fabs ( dW_ampa ) > maxChange ) {
      if ( dW_ampa < 0.0 ) {
        dW_ampa = - 1.0 * maxChange ;
@@ -600,6 +604,7 @@ static int _ode_spec1(_threadargsproto_);
    i_nmda = W_nmda * g_nmda * ( v - Erev_nmda ) * sfunc ( _threadargscomma_ v ) ;
    g_ampa = gbar_ampa * r_ampa * facfactor ;
    i_ampa = W_ampa * g_ampa * ( v - Erev_ampa ) * ( 1.0 + ( bACH * ( ACH - 1.0 ) ) ) * ( aDA + ( bDA * ( DA - 1.0 ) ) ) ;
+   comb = facfactor ;
    ICa = P0 * g_nmda * ( v - ECa ) * sfunc ( _threadargscomma_ v ) ;
     Capoolcon = Capoolcon + (1. - exp(dt*(( ( ( - 1.0 ) ) ) / tauCa)))*(- ( ( ( - fCa )*( Afactor ) )*( ICa ) + ( ( Cainf ) ) / tauCa ) / ( ( ( ( - 1.0 ) ) ) / tauCa ) - Capoolcon) ;
    }
@@ -612,6 +617,15 @@ static void _net_receive (_pnt, _args, _lflag) Point_process* _pnt; double* _arg
   if (_tsav > t){ extern char* hoc_object_name(); hoc_execerror(hoc_object_name(_pnt->ob), ":Event arrived out of order. Must call ParallelContext.set_maxstep AFTER assigning minimum NetCon.delay");}
  _tsav = t; {
    t0 = t ;
+   if ( - ( t - tsyn ) / tauF > 700.0 ) {
+     printf ( "%g\t" , - ( t - tsyn ) / tauF ) ;
+     }
+   if ( - ( t - tsyn ) / tauD1 > 700.0 ) {
+     printf ( "%g\t" , - ( t - tsyn ) / tauD1 ) ;
+     }
+   if ( - ( t - tsyn ) / tauD2 > 700.0 ) {
+     printf ( "%g\t" , - ( t - tsyn ) / tauD2 ) ;
+     }
    F = 1.0 + ( F - 1.0 ) * exp ( - ( t - tsyn ) / tauF ) ;
    D1 = 1.0 - ( 1.0 - D1 ) * exp ( - ( t - tsyn ) / tauD1 ) ;
    D2 = 1.0 - ( 1.0 - D2 ) * exp ( - ( t - tsyn ) / tauD2 ) ;
@@ -749,6 +763,7 @@ static void initmodel(double* _p, Datum* _ppvar, Datum* _thread, _NrnThread* _nt
    on_ampa = 0.0 ;
    r_ampa = 0.0 ;
    W_ampa = initW ;
+   comb = 0.0 ;
    t0 = - 1.0 ;
    maxChange = ( Wmax - Wmin ) / 10.0 ;
    dW_ampa = 0.0 ;
@@ -903,14 +918,14 @@ _first = 0;
 #endif
 
 #if NMODL_TEXT
-static const char* nmodl_filename = "/home/mizzou/Internship/L5Neuron/L5NeuronSimulation/biophys_components/mechanisms/modfiles/pyr2pyr.mod";
+static const char* nmodl_filename = "/home/mizzou/Internship/L5Neuron/GoodL5NeuronSimulation/biophys_components/mechanisms/modfiles/pyr2pyr.mod";
 static const char* nmodl_file_text = 
   "NEURON {\n"
   "	POINT_PROCESS pyr2pyr\n"
   "	NONSPECIFIC_CURRENT i_nmda, i_ampa\n"
   "	RANGE initW\n"
   "	RANGE Cdur_nmda, AlphaTmax_nmda, Beta_nmda, Erev_nmda, gbar_nmda, W_nmda, on_nmda, g_nmda\n"
-  "	RANGE Cdur_ampa, AlphaTmax_ampa, Beta_ampa, Erev_ampa, gbar_ampa, W_ampa, on_ampa, g_ampa\n"
+  "	RANGE Cdur_ampa, AlphaTmax_ampa, Beta_ampa, Erev_ampa, gbar_ampa, W_ampa, on_ampa, g_ampa, comb\n"
   "	RANGE ECa, ICa, P0, fCa, tauCa, iCatotal\n"
   "	RANGE Cainf, pooldiam, z\n"
   "	RANGE lambda1, lambda2, threshold1, threshold2\n"
@@ -996,6 +1011,7 @@ static const char* nmodl_file_text =
   "	g_nmda (uS)\n"
   "	on_nmda\n"
   "	W_nmda\n"
+  "	comb\n"
   "\n"
   "	i_ampa (nA)\n"
   "	g_ampa (uS)\n"
@@ -1040,6 +1056,7 @@ static const char* nmodl_file_text =
   "	on_ampa = 0\n"
   "	r_ampa = 0\n"
   "	W_ampa = initW\n"
+  "	comb=0\n"
   "\n"
   "	t0 = -1\n"
   "\n"
@@ -1082,7 +1099,7 @@ static const char* nmodl_file_text =
   "	r_nmda' = AlphaTmax_nmda*on_nmda*(1-r_nmda) -Beta_nmda*r_nmda\n"
   "	r_ampa' = AlphaTmax_ampa*on_ampa*(1-r_ampa) -Beta_ampa*r_ampa\n"
   "\n"
-  "	dW_ampa = eta(Capoolcon)*(lambda1*omega(Capoolcon, threshold1, threshold2)-lambda2*W_ampa)*dt\n"
+  "	dW_ampa = eta(Capoolcon)*(lambda1*omega(Capoolcon, threshold1, threshold2)-lambda2*W_ampa)*0.1:dt\n"
   "\n"
   "	: Limit for extreme large weight changes\n"
   "	if (fabs(dW_ampa) > maxChange) {\n"
@@ -1110,14 +1127,17 @@ static const char* nmodl_file_text =
   " 		W_ampa = Wmin\n"
   "	}\n"
   "	\n"
-  "	g_nmda = gbar_nmda*r_nmda * facfactor\n"
-  "	i_nmda = W_nmda*g_nmda*(v - Erev_nmda)*sfunc(v)\n"
+  "	g_nmda = gbar_nmda*r_nmda * facfactor :Looks normal during most of the stuff, but has weird spikes when i_nmda goes positive. Seems like doesn't cause.\n"
+  "	i_nmda = W_nmda*g_nmda*(v - Erev_nmda)*sfunc(v):oscillates going down.\n"
   "\n"
   "	g_ampa = gbar_ampa*r_ampa * facfactor\n"
-  "	i_ampa = W_ampa*g_ampa*(v - Erev_ampa)  * (1 + (bACH * (ACH-1)))*(aDA + (bDA * (DA-1))) \n"
-  "\n"
+  "	i_ampa = W_ampa*g_ampa*(v - Erev_ampa)  * (1 + (bACH * (ACH-1)))*(aDA + (bDA * (DA-1))):oscillates going up. \n"
+  "	comb = facfactor\n"
   "	ICa = P0*g_nmda*(v - ECa)*sfunc(v)\n"
   "	Capoolcon'= -fCa*Afactor*ICa + (Cainf-Capoolcon)/tauCa\n"
+  "	:OSCILLATIONS ALL OCCUR AT THE SAME TIME\n"
+  "\n"
+  "	:if (i_ampa != 0) {printf(\"%g\\t%g\\t%g\\t%g\\t%g\\t%g\\n\", t, i_ampa, i_nmda, ICa, Capoolcon', Wmax)}\n"
   "\n"
   "}\n"
   "\n"
@@ -1125,6 +1145,11 @@ static const char* nmodl_file_text =
   "	t0 = t :spike time for conductance opening\n"
   "	\n"
   "	:Added by Ali, Synaptic facilitation\n"
+  "	:printf(\"%g\\t\", tsyn)\n"
+  "	:printf(\"%g\\t%g\\t%g\\t%g\\t%g\\t%g\\n\", t, t-tsyn, exp(-(t - tsyn)/tauF), exp(-(t - tsyn)/tauD1), exp(-(t - tsyn)/tauD2), -(t - tsyn)/tauF)\n"
+  "	if (-(t-tsyn)/tauF > 700) {printf(\"%g\\t\", -(t-tsyn)/tauF)}\n"
+  "	if (-(t - tsyn)/tauD1 > 700) {printf(\"%g\\t\", -(t - tsyn)/tauD1)}\n"
+  "	if (-(t - tsyn)/tauD2 > 700) {printf(\"%g\\t\", -(t - tsyn)/tauD2)}\n"
   "	F  = 1 + (F-1)* exp(-(t - tsyn)/tauF)\n"
   "	D1 = 1 - (1-D1)*exp(-(t - tsyn)/tauD1)\n"
   "	D2 = 1 - (1-D2)*exp(-(t - tsyn)/tauD2)\n"
@@ -1150,6 +1175,8 @@ static const char* nmodl_file_text =
   "\n"
   "FUNCTION sfunc (v (mV)) {\n"
   "	UNITSOFF\n"
+  "	:printf(\"%g\\tLSKDJFLKDSJ\", v)\n"
+  "	:if((-0.06*v) >= 700){printf(\"%g\\tLSKDJFLKDSJ\", v)}\n"
   "	sfunc = 1/(1+0.33*exp(-0.06*v))\n"
   "	UNITSON\n"
   "}\n"

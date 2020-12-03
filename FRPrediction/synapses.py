@@ -9,6 +9,7 @@ import random
 import numpy as np
 
 scale = 10
+#max_exc = 0
 
 weight_means = {"exc": {}, "inh": {}}
 
@@ -163,7 +164,7 @@ def Int2Pyr(syn_params, sec_x, sec_id):
     if trg_cell_nid in weight_means["inh"].keys():
         mean_weight = weight_means["inh"][trg_cell_nid]
     else:
-        weight_means["inh"][trg_cell_nid] = mean_weight = np.random.uniform(3.171729 - 1.5, 3.171729 + 0.1)
+        weight_means["inh"][trg_cell_nid] = mean_weight = np.random.uniform(0.2, 0.35)
 
     lsyn = h.int2pyr(sec_x, sec=sec_id)
 
@@ -191,7 +192,8 @@ def Int2Pyr(syn_params, sec_x, sec_id):
     
     if syn_params.get('initW'):
         #lsyn.initW = float(syn_params['initW']) * random.uniform(0.5,1.0) # par.x(0) * rC.uniform(0.5,1.0)//rand.normal(0.5,1.5) //`rand.repick() 
-        float(lognormal(3.171729, 0.5173616067) * scale)
+        lsyn.initW = float(min(lognormal(mean_weight, 0.1), 5) * scale)
+        #float(lognormal(3.171729, 0.5173616067) * scale * 20)
         #lsyn.initW = float(lognormal(mean_weight, 0.5173616067) * scale)
         #lsyn.initW = min(float(lognormal(mean_weight, 1)), 11) * scale
         #lsyn.initW = 3.171729*10
@@ -255,7 +257,7 @@ def Pyr2Pyr(syn_params, sec_x, sec_id):
     if trg_cell_nid in weight_means["exc"].keys():
         mean_weight = weight_means["exc"][trg_cell_nid]
     else:
-        weight_means["exc"][trg_cell_nid] = mean_weight = np.random.uniform(0.18181829517744805 - 0.18, 0.18181829517744805 + 0.28)
+        weight_means["exc"][trg_cell_nid] = mean_weight = np.random.uniform(0.435, 0.5)
         #weight_means["exc"][trg_cell_nid] = mean_weight = np.random.uniform(0.18181829517744805 + 0.32, 0.18181829517744805 + 0.35)
 
     lsyn = h.pyr2pyr(sec_x, sec=sec_id)
@@ -281,17 +283,20 @@ def Pyr2Pyr(syn_params, sec_x, sec_id):
         lsyn.gbar_nmda = float(syn_params['gbar_nmda']) # par.x(28)
     if syn_params.get('Erev_nmda'):
         lsyn.Erev_nmda = float(syn_params['Erev_nmda']) # par.x(16)
-    
+    global max_exc
     if syn_params.get('initW'):
         #lsyn.initW = float(syn_params['initW']) * random.uniform(0.5,1.0) # par.x(0) * rC.uniform(0.5,1.0)//rand.normal(0.5,1.5) //`rand.repick() 
-        lsyn.initW = float(min(lognormal(0.18181829517744805, 0.13993260156705545), 1) * scale * 1.7)
+        lsyn.initW = float(lognormal(mean_weight, 0.14) * scale)
+        #lsyn.initW = 5
+        # if (lsyn.initW > max_exc):
+        #     max_exc = lsyn.initW
         #lsyn.initW = float(lognormal(mean_weight, 0.13993260156705545) * scale)
         #lsyn.initW = float(min(lognormal(mean_weight, 0.22), 1.20) * scale)
         #lsyn.initW = 0.18181829517744805 * 10
         #print(lsyn.initW)
         
     if syn_params.get('Wmax'):
-        lsyn.Wmax = float(syn_params['Wmax']) * lsyn.initW # par.x(1) * lsyn.initW
+        lsyn.Wmax = 8#float(syn_params['Wmax']) * lsyn.initW # par.x(1) * lsyn.initW
     if syn_params.get('Wmin'):
         lsyn.Wmin = float(syn_params['Wmin']) * lsyn.initW # par.x(2) * lsyn.initW
     #delay = float(syn_params['initW']) # par.x(3) + delayDistance

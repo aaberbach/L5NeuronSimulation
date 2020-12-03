@@ -77,9 +77,9 @@ def lognormal(m, s):
 
 scale_div =10
 
-num_dend_exc = 8998 // scale_div
-num_apic_exc = 12380 // scale_div
-num_soma_inh = 2285 // scale_div
+num_dend_exc = 7186 // scale_div
+num_apic_exc = 10417 // scale_div
+num_soma_inh = 1908 // scale_div
 
 exc_fr_mean = 0.1
 exc_fr_std = 0.5
@@ -212,10 +212,10 @@ exc_stds = []
 exc_maxs = []
 
 for i in range(N):
-        fr_mean = np.random.uniform(exc_fr_mean - 0.1, exc_fr_mean + 0.3, 1)
+        fr_mean = np.random.uniform(exc_fr_mean - 0.015, exc_fr_mean + 0.03, 1)
         #fr_mean = np.random.uniform(exc_fr_mean + 0.5, exc_fr_mean + 0.55, 1)
-        dend_frs = [min(float(lognormal(exc_fr_mean, exc_fr_std)), 10) for _ in range(num_dend_exc)]
-        apic_frs = [min(float(lognormal(exc_fr_mean, exc_fr_std)), 10) for _ in range(num_apic_exc)]
+        dend_frs = [min(float(lognormal(fr_mean, exc_fr_std)), fr_mean+8*exc_fr_std) for _ in range(num_dend_exc)]
+        apic_frs = [min(float(lognormal(fr_mean, exc_fr_std)), fr_mean+8*exc_fr_std) for _ in range(num_apic_exc)]
 
         frs = dend_frs + apic_frs
 
@@ -227,7 +227,6 @@ for i in range(N):
         exc_maxs.append(np.max(frs))
 
 exc_frs = exc_dend_frs + exc_apic_frs
-
 fr_df = pd.DataFrame()
 #fr_df['gid'] = [i + num_exc+num_inh for i in range(N)]
 fr_df['gid'] = [i for i in range(N)]
@@ -240,7 +239,7 @@ fr_df.to_csv('frs_temp.csv', index=False)
 exc_psg = PoissonSpikeGenerator(population='exc_stim')
 for i in range(num_exc):
         exc_psg.add(node_ids=[i],  
-                firing_rate=exc_frs[i]/1000,    
+                firing_rate=float(exc_frs[i]/1000),    
                 times=(0.2*1000, 5.2*1000))     
 exc_psg.to_sonata('exc_stim_spikes.h5')
 
@@ -256,7 +255,7 @@ from bmtk.utils.sim_setup import build_env_bionet
 build_env_bionet(base_dir='./',
                 network_dir='./network',
                 tstop=5200.0, dt = 0.1,
-                report_vars=['v'],
+                report_vars=['v', 'cai'],
                 # current_clamp={           # Creates a step current from 500.ms to 1500.0 ms  
                 #      'amp': 0.793,
                 #      #'std': [0.0, 0.0],

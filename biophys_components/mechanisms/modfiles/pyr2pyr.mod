@@ -3,7 +3,7 @@ NEURON {
 	NONSPECIFIC_CURRENT i_nmda, i_ampa
 	RANGE initW
 	RANGE Cdur_nmda, AlphaTmax_nmda, Beta_nmda, Erev_nmda, gbar_nmda, W_nmda, on_nmda, g_nmda
-	RANGE Cdur_ampa, AlphaTmax_ampa, Beta_ampa, Erev_ampa, gbar_ampa, W_ampa, on_ampa, g_ampa
+	RANGE Cdur_ampa, AlphaTmax_ampa, Beta_ampa, Erev_ampa, gbar_ampa, W_ampa, on_ampa, g_ampa, comb
 	RANGE ECa, ICa, P0, fCa, tauCa, iCatotal
 	RANGE Cainf, pooldiam, z
 	RANGE lambda1, lambda2, threshold1, threshold2
@@ -89,6 +89,7 @@ ASSIGNED {
 	g_nmda (uS)
 	on_nmda
 	W_nmda
+	comb
 
 	i_ampa (nA)
 	g_ampa (uS)
@@ -133,6 +134,7 @@ INITIAL {
 	on_ampa = 0
 	r_ampa = 0
 	W_ampa = initW
+	comb=0
 
 	t0 = -1
 
@@ -175,7 +177,7 @@ DERIVATIVE release {
 	r_nmda' = AlphaTmax_nmda*on_nmda*(1-r_nmda) -Beta_nmda*r_nmda
 	r_ampa' = AlphaTmax_ampa*on_ampa*(1-r_ampa) -Beta_ampa*r_ampa
 
-	dW_ampa = eta(Capoolcon)*(lambda1*omega(Capoolcon, threshold1, threshold2)-lambda2*W_ampa)*dt
+	dW_ampa = eta(Capoolcon)*(lambda1*omega(Capoolcon, threshold1, threshold2)-lambda2*W_ampa)*0.1:dt
 
 	: Limit for extreme large weight changes
 	if (fabs(dW_ampa) > maxChange) {
@@ -203,14 +205,17 @@ DERIVATIVE release {
  		W_ampa = Wmin
 	}
 	
-	g_nmda = gbar_nmda*r_nmda * facfactor
-	i_nmda = W_nmda*g_nmda*(v - Erev_nmda)*sfunc(v)
+	g_nmda = gbar_nmda*r_nmda * facfactor :Looks normal during most of the stuff, but has weird spikes when i_nmda goes positive. Seems like doesn't cause.
+	i_nmda = W_nmda*g_nmda*(v - Erev_nmda)*sfunc(v):oscillates going down.
 
 	g_ampa = gbar_ampa*r_ampa * facfactor
-	i_ampa = W_ampa*g_ampa*(v - Erev_ampa)  * (1 + (bACH * (ACH-1)))*(aDA + (bDA * (DA-1))) 
-
+	i_ampa = W_ampa*g_ampa*(v - Erev_ampa)  * (1 + (bACH * (ACH-1)))*(aDA + (bDA * (DA-1))):oscillates going up. 
+	comb = facfactor
 	ICa = P0*g_nmda*(v - ECa)*sfunc(v)
 	Capoolcon'= -fCa*Afactor*ICa + (Cainf-Capoolcon)/tauCa
+	:OSCILLATIONS ALL OCCUR AT THE SAME TIME
+
+	:if (i_ampa != 0) {printf("%g\t%g\t%g\t%g\t%g\t%g\n", t, i_ampa, i_nmda, ICa, Capoolcon', Wmax)}
 
 }
 
@@ -218,6 +223,11 @@ NET_RECEIVE(dummy_weight) {
 	t0 = t :spike time for conductance opening
 	
 	:Added by Ali, Synaptic facilitation
+	:printf("%g\t", tsyn)
+	:printf("%g\t%g\t%g\t%g\t%g\t%g\n", t, t-tsyn, exp(-(t - tsyn)/tauF), exp(-(t - tsyn)/tauD1), exp(-(t - tsyn)/tauD2), -(t - tsyn)/tauF)
+	if (-(t-tsyn)/tauF > 700) {printf("%g\t", -(t-tsyn)/tauF)}
+	if (-(t - tsyn)/tauD1 > 700) {printf("%g\t", -(t - tsyn)/tauD1)}
+	if (-(t - tsyn)/tauD2 > 700) {printf("%g\t", -(t - tsyn)/tauD2)}
 	F  = 1 + (F-1)* exp(-(t - tsyn)/tauF)
 	D1 = 1 - (1-D1)*exp(-(t - tsyn)/tauD1)
 	D2 = 1 - (1-D2)*exp(-(t - tsyn)/tauD2)
@@ -243,6 +253,8 @@ NET_RECEIVE(dummy_weight) {
 
 FUNCTION sfunc (v (mV)) {
 	UNITSOFF
+	:printf("%g\tLSKDJFLKDSJ", v)
+	:if((-0.06*v) >= 700){printf("%g\tLSKDJFLKDSJ", v)}
 	sfunc = 1/(1+0.33*exp(-0.06*v))
 	UNITSON
 }

@@ -69,7 +69,7 @@ sim = bionet.BioSimulator.from_config(conf, network=graph)
 
 cells = graph.get_local_cells()
 #import pdb; pdb.set_trace()
-#gid_min = min(cells.keys())
+gid_min = min(cells.keys())
 
 exc_strengths = {}
 inh_strengths = {}
@@ -103,9 +103,10 @@ for gid, cell in cells.items():
     exc_strengths[gid] = exc_strens
     inh_strengths[gid] = inh_strens
 #import pdb; pdb.set_trace()
+#print(synapses.max_exc)
 sim.run()
-pc.barrier()
-#import pdb; pdb.set_trace()
+# pc.barrier()
+# #import pdb; pdb.set_trace()
 
 raster_file = './output/spikes.h5'
 

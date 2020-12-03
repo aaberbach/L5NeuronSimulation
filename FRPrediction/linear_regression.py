@@ -21,58 +21,89 @@ df = pd.read_csv(fname, index_col='gid')
 df.shape
 print(df.describe())
 
-x_cols = ["avg_exc", "avg_inh", "max_exc", "max_inh", "num_exc", "num_inh", "std_exc", "std_inh", "skew_exc", "skew_inh"]
+x_cols = ["fr_mean", "fr_std","fr_max", "avg_exc", "avg_inh", "std_exc", "std_inh","max_exc", "max_inh", "skew_exc", "skew_inh"]
 
-for col in x_cols:
-    plt.figure()
-    sb.distplot(df[col])
-    plt.show()
-    
 X = df[x_cols].values
 y = df['FR'].values
 
-vals = np.array(y).astype("int")
+import pdb; pdb.set_trace()
 
-fractions = []
-for i in range(0, int(np.max(y)) + 5):
-    fractions.append(len(np.where(np.array(vals) == i)[0]) / len(y))
+for col in x_cols:
+    plt.figure()
+    plt.scatter(df[col], y)
+    plt.xlabel(col)
+    plt.show()
 
-plt.figure()
-plt.plot(fractions)
-plt.show()
+# for col in x_cols:
+#     plt.figure()
+#     sb.distplot(df[col])
+#     plt.show()
 
-plt.figure()
-plt.hist(np.log(np.array(y) + 1))
-plt.show()
+from sklearn import preprocessing
+from scipy.stats import zscore
 
-plt.figure()
-sb.distplot(df['FR'])
-plt.show()
+#import pdb; pdb.set_trace()
+X = df[x_cols].values
+y = df['FR'].values
 
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=1)
+for i in range(X.shape[1]):
+    #X[i] = preprocessing.normalize(X[i].reshape(-1, 1))[:, 0]
+    X[:, i] = zscore(X[:, i])
+
+# vals = np.array(y).astype("int")
+
+# fractions = []
+# for i in range(0, int(np.max(y)) + 5):
+#     fractions.append(len(np.where(np.array(vals) == i)[0]) / len(y))
+
+# plt.figure()
+# plt.plot(fractions)
+# plt.show()
+
+# plt.figure()
+# plt.hist(np.log(np.array(y) + 1))
+# plt.show()
+
+# plt.figure()
+# sb.distplot(df['FR'])
+# plt.show()
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.5, random_state=1)
 
 regressor = LinearRegression()
 regressor.fit(X_train, y_train)
 
 coefs = regressor.coef_
-weighted_coefs = coefs.copy()
-for i in range(len(coefs)):
-    weighted_coefs[i] *= np.std(np.abs(df[x_cols[i]]))
+# weighted_coefs = coefs.copy()
+# for i in range(len(coefs)):
+#     weighted_coefs[i] *= np.std(np.abs(df[x_cols[i]]))
 
 #coeff_df = pd.DataFrame({"Coefs":regressor.coef_, "W_coefs": weighted_coefs}, x_cols)
 coeff_df = pd.DataFrame(regressor.coef_, x_cols, columns=['Coefficients'])
 print(coeff_df)
+#import pdb; pdb.set_trace()
+print(np.exp(regressor.coef_))
+plt.figure(figsize=(10, 10))
+plt.barh(x_cols, np.exp((regressor.coef_)))
+plt.title("Coefficients")
+plt.show()
+
+plt.figure()
+plt.bar(x_cols, regressor.coef_)
+plt.show()
 
 y_pred = regressor.predict(X_test)
 
-plt.figure()
-sb.distplot(df['FR'], label="trues")
+plt.figure(figsize=(10, 10))
+#sb.distplot(df['FR'], label="trues")
+sb.distplot(y_test, label="trues")
 sb.distplot(y_pred, label="preds")
 plt.ylabel("Fraction of cells")
 plt.xlabel("Firing rate")
 plt.legend()
 plt.show()
 
+#import pdb; pdb.set_trace()
 # comp = pd.DataFrame({'Actual': y_test, 'Predicted': y_pred})
 # print(comp.head(25))
 
