@@ -11,7 +11,7 @@ import pickle
 #import load_processor
 
 #load_processor.load()
-
+np.random.seed(42)
 synapses.load()
 #import pdb; pdb.set_trace()
 
@@ -104,7 +104,42 @@ cells = graph.get_local_cells()
 #     #inh_strengths[gid - gid_min] = inh_strens
 #     exc_strengths[gid] = exc_strens
 #     inh_strengths[gid] = inh_strens
-# #import pdb; pdb.set_trace()
+
+import pandas as pd
+
+conns = cells[0]._connections
+# inh_conns = conns[np.where(conns.source_node._population == "inh_stim")]
+# inh_conns = conns[np.where(conns.source_node._population == "exc_stim")]
+
+ids = []
+weights = []
+distance = []
+is_basal = []
+soma = cells[0].hobj.soma[0](0.5)
+
+for con in conns:
+    if con.source_node._population == "exc_stim":
+        ids.append(con.source_node.node_id)
+        weights.append(con._syn.initW)
+        postseg = con._connector.postseg()
+        distance.append(float(h.distance(soma, postseg)))
+        loc = str(postseg).split('.')[1][:4]
+        if loc == "dend":
+            is_basal.append(True)
+        elif loc == "apic":
+            is_basal.append(False)
+        else:
+            raise Exception(loc + "should be dend or apic.")
+
+exc_syns = pd.DataFrame()
+exc_syns["node_id"] = ids
+exc_syns["weight"] = weights
+exc_syns["is_basal"] = is_basal
+exc_syns["distance"] = distance
+
+exc_syns.to_csv("exc_syn_info.csv", index=False)
+import pdb; pdb.set_trace()
+
 sim.run()
 # pc.barrier()
 # #import pdb; pdb.set_trace()

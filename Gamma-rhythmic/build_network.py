@@ -243,29 +243,30 @@ exc_frs = exc_dend_frs + exc_apic_frs
 # fr_df['fr_max'] = exc_maxs
 
 #fr_df.to_csv('frs_temp.csv', index=False)
+seconds = 120
 
 exc_psg = PoissonSpikeGenerator(population='exc_stim')
 for i in range(num_exc):
         exc_psg.add(node_ids=[i],  
                 firing_rate=exc_frs[i]/1000,    
-                times=(0.0*1000, 120*1000))     
+                times=(0.0*1000, seconds*1000))     
 exc_psg.to_sonata('exc_stim_spikes.h5')
 
-# inh_psg = PoissonSpikeGenerator(population='inh_stim')
-# inh_psg.add(node_ids=range(num_inh), 
-#         firing_rate=inh_fr/1000,  
-#         times=(0.2*1000, 5.2*1000))   
-# inh_psg.to_sonata('inh_stim_spikes.h5')
+inh_psg = PoissonSpikeGenerator(population='inh_stim')
+inh_psg.add(node_ids=range(num_inh), 
+        firing_rate=inh_fr/1000,  
+        times=(0.0*1000, seconds*1000))   
+inh_psg.to_sonata('inh_stim_spikes.h5')
 
-from crop_raster import crop_raster
-crop_raster("rhythmic_inh_spikes.h5", 'inh_stim_spikes.h5', 120000, num_inh)
+# from crop_raster import crop_raster
+# crop_raster("rhythmic_inh_spikes.h5", 'inh_stim_spikes.h5', 120000, num_inh)
 
 
 from bmtk.utils.sim_setup import build_env_bionet
 
 build_env_bionet(base_dir='./',
                 network_dir='./network',
-                tstop=120000.0, dt = 0.1,
+                dt = 0.1, tstop=seconds * 1000.0,
                 report_vars=['v', 'cai'],
                 # current_clamp={           # Creates a step current from 500.ms to 1500.0 ms  
                 #      'amp': 0.793,
@@ -274,6 +275,13 @@ build_env_bionet(base_dir='./',
                 #      'duration': 2000,
                 #      'gids':"0"
                 #  },
+                # clamp_reports=['se'],#Records se clamp currents.
+                # se_voltage_clamp={
+                #         "amps":[[0, 0, 0]],
+                #         "durations": [[120000, 0, 0]],
+                #         'gids': [0],
+                #         'rs': [0.01],
+                # },
                 spikes_threshold=-10,
                 spikes_inputs=[('exc_stim', 'exc_stim_spikes.h5'), ('inh_stim', 'inh_stim_spikes.h5')],
                 components_dir='../biophys_components',

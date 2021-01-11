@@ -10,6 +10,10 @@ parentdir = os.path.dirname(currentdir)
 sys.path.insert(0,parentdir) 
 
 import my_plotting
+my_plotting.plot_v("gamma_results/v_report.h5", show=True)
+#_ = plot_report(config_file='simulation_config.json', report_name='gamma_results/v_report.h5')
+my_plotting.plot_se("gamma_results/clamped/se_clamp_report.h5", show=True)
+my_plotting.plot_v("gamma_results/clamped/v_report.h5", show=True)
 my_plotting.generate_prob_raster('inh_stim_spikes.h5', 'results/spikes.h5', 120000)
 #parts = my_plotting.generate_spike_probs('inh_stim_spikes.h5', 'results/spikes.h5', 120000)
 import pdb; pdb.set_trace()
