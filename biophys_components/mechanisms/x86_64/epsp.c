@@ -232,7 +232,7 @@ extern void _cvode_abstol( Symbol**, double*, int);
   hoc_register_dparam_semantics(_mechtype, 0, "area");
   hoc_register_dparam_semantics(_mechtype, 1, "pntproc");
  	hoc_register_var(hoc_scdoub, hoc_vdoub, hoc_intfunc);
- 	ivoc_help("help ?1 epsp /home/mizzou/Internship/L5Neuron/L5NeuronSimulation/biophys_components/mechanisms/x86_64/epsp.mod\n");
+ 	ivoc_help("help ?1 epsp /home/mizzou/Internship/L5Neuron/GoodL5NeuronSimulation/biophys_components/mechanisms/x86_64/epsp.mod\n");
  hoc_register_limits(_mechtype, _hoc_parm_limits);
  hoc_register_units(_mechtype, _hoc_parm_units);
  }
@@ -426,7 +426,7 @@ _first = 0;
 #endif
 
 #if NMODL_TEXT
-static const char* nmodl_filename = "/home/mizzou/Internship/L5Neuron/L5NeuronSimulation/biophys_components/mechanisms/modfiles/epsp.mod";
+static const char* nmodl_filename = "/home/mizzou/Internship/L5Neuron/GoodL5NeuronSimulation/biophys_components/mechanisms/modfiles/epsp.mod";
 static const char* nmodl_file_text = 
   ": this model is built-in to neuron with suffix epsp\n"
   ": Schaefer et al. 2003\n"

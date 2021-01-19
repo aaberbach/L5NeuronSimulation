@@ -19,7 +19,7 @@ def analyze_area(prop):
     soma_lens = lens[soma_ids]
     dend_lens = lens[dend_ids]
     apic_lens = lens[apic_ids]
-
+    import pdb; pdb.set_trace()
     print("Dend Excitatory:", np.trunc(sum(dend_lens) * 1.4))
     print("Apic Excitatory:", np.trunc(sum(apic_lens) * 1.4))
     print("Soma Inhibitory:", np.trunc(148 + sum(dend_lens) * 0.14 + sum(apic_lens) * 0.14))

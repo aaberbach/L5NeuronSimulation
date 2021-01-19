@@ -210,7 +210,7 @@ extern void _cvode_abstol( Symbol**, double*, int);
  pnt_receive[_mechtype] = _net_receive;
  pnt_receive_size[_mechtype] = 1;
  	hoc_register_var(hoc_scdoub, hoc_vdoub, hoc_intfunc);
- 	ivoc_help("help ?1 VecStim /home/mizzou/Internship/L5Neuron/L5NeuronSimulation/biophys_components/mechanisms/x86_64/vecevent.mod\n");
+ 	ivoc_help("help ?1 VecStim /home/mizzou/Internship/L5Neuron/GoodL5NeuronSimulation/biophys_components/mechanisms/x86_64/vecevent.mod\n");
  hoc_register_limits(_mechtype, _hoc_parm_limits);
  hoc_register_units(_mechtype, _hoc_parm_units);
  }
@@ -363,7 +363,7 @@ _first = 0;
 }
 
 #if NMODL_TEXT
-static const char* nmodl_filename = "/home/mizzou/Internship/L5Neuron/L5NeuronSimulation/biophys_components/mechanisms/modfiles/vecevent.mod";
+static const char* nmodl_filename = "/home/mizzou/Internship/L5Neuron/GoodL5NeuronSimulation/biophys_components/mechanisms/modfiles/vecevent.mod";
 static const char* nmodl_file_text = 
   ":  Vector stream of events\n"
   "\n"

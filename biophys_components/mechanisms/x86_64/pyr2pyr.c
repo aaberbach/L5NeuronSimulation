@@ -617,15 +617,6 @@ static void _net_receive (_pnt, _args, _lflag) Point_process* _pnt; double* _arg
   if (_tsav > t){ extern char* hoc_object_name(); hoc_execerror(hoc_object_name(_pnt->ob), ":Event arrived out of order. Must call ParallelContext.set_maxstep AFTER assigning minimum NetCon.delay");}
  _tsav = t; {
    t0 = t ;
-   if ( - ( t - tsyn ) / tauF > 700.0 ) {
-     printf ( "%g\t" , - ( t - tsyn ) / tauF ) ;
-     }
-   if ( - ( t - tsyn ) / tauD1 > 700.0 ) {
-     printf ( "%g\t" , - ( t - tsyn ) / tauD1 ) ;
-     }
-   if ( - ( t - tsyn ) / tauD2 > 700.0 ) {
-     printf ( "%g\t" , - ( t - tsyn ) / tauD2 ) ;
-     }
    F = 1.0 + ( F - 1.0 ) * exp ( - ( t - tsyn ) / tauF ) ;
    D1 = 1.0 - ( 1.0 - D1 ) * exp ( - ( t - tsyn ) / tauD1 ) ;
    D2 = 1.0 - ( 1.0 - D2 ) * exp ( - ( t - tsyn ) / tauD2 ) ;
@@ -1147,9 +1138,9 @@ static const char* nmodl_file_text =
   "	:Added by Ali, Synaptic facilitation\n"
   "	:printf(\"%g\\t\", tsyn)\n"
   "	:printf(\"%g\\t%g\\t%g\\t%g\\t%g\\t%g\\n\", t, t-tsyn, exp(-(t - tsyn)/tauF), exp(-(t - tsyn)/tauD1), exp(-(t - tsyn)/tauD2), -(t - tsyn)/tauF)\n"
-  "	if (-(t-tsyn)/tauF > 700) {printf(\"%g\\t\", -(t-tsyn)/tauF)}\n"
-  "	if (-(t - tsyn)/tauD1 > 700) {printf(\"%g\\t\", -(t - tsyn)/tauD1)}\n"
-  "	if (-(t - tsyn)/tauD2 > 700) {printf(\"%g\\t\", -(t - tsyn)/tauD2)}\n"
+  "	:if (-(t-tsyn)/tauF > 700) {printf(\"%g\\t\", -(t-tsyn)/tauF)}\n"
+  "	:if (-(t - tsyn)/tauD1 > 700) {printf(\"%g\\t\", -(t - tsyn)/tauD1)}\n"
+  "	:if (-(t - tsyn)/tauD2 > 700) {printf(\"%g\\t\", -(t - tsyn)/tauD2)}\n"
   "	F  = 1 + (F-1)* exp(-(t - tsyn)/tauF)\n"
   "	D1 = 1 - (1-D1)*exp(-(t - tsyn)/tauD1)\n"
   "	D2 = 1 - (1-D2)*exp(-(t - tsyn)/tauD2)\n"
