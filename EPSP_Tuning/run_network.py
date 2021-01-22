@@ -3,7 +3,8 @@ from bmtk.simulator import bionet
 import numpy as np
 import h5py
 import synapses
-import pickle
+import pandas as pd
+from neuron import h
 
 np.random.seed(2129)
 #np.random.seed(42)
@@ -25,6 +26,29 @@ conf.build_env()
 
 graph = bionet.BioNetwork.from_config(conf)
 sim = bionet.BioSimulator.from_config(conf, network=graph)
+
+cells = graph.get_local_cells()
+sec_types = []
+weights = []
+dists = []
+for cell in cells.values():
+    #import pdb; pdb.set_trace()
+    h.distance(sec=cell.hobj.soma[0])
+    con = cell.connections()[0]._connector
+    syn = con.syn()
+    weights.append(float(syn.initW))
+
+    seg = con.postseg()
+    fullsecname = seg.sec.name()
+    #import pdb; pdb.set_trace()
+    dists.append(float(h.distance(seg)))
+    sec_types.append(fullsecname.split(".")[1][:4])
+
+df = pd.DataFrame()
+df["Distance"] = dists
+df["Conductance"] = weights
+df["Type"] = sec_types
+df.to_csv("synapse_info.csv", index=False)
 sim.run()
 
 # mem_pot_file = './output/v_report.h5'
