@@ -31,7 +31,9 @@ cells = graph.get_local_cells()
 sec_types = []
 weights = []
 dists = []
+node_ids = []
 for cell in cells.values():
+    node_ids.append(cell.node_id)
     #import pdb; pdb.set_trace()
     h.distance(sec=cell.hobj.soma[0])
     con = cell.connections()[0]._connector
@@ -48,6 +50,7 @@ df = pd.DataFrame()
 df["Distance"] = dists
 df["Conductance"] = weights
 df["Type"] = sec_types
+df["Node ID"] = node_ids
 df.to_csv("synapse_info.csv", index=False)
 sim.run()
 
