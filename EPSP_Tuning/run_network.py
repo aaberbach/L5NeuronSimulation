@@ -27,11 +27,14 @@ conf.build_env()
 graph = bionet.BioNetwork.from_config(conf)
 sim = bionet.BioSimulator.from_config(conf, network=graph)
 
+#segs = list(graph.get_local_cells().values())[0]._morph.seg_prop
+#import pdb; pdb.set_trace()
 cells = graph.get_local_cells()
 sec_types = []
 weights = []
 dists = []
 node_ids = []
+names = []
 for cell in cells.values():
     node_ids.append(cell.node_id)
     #import pdb; pdb.set_trace()
@@ -42,18 +45,29 @@ for cell in cells.values():
 
     seg = con.postseg()
     fullsecname = seg.sec.name()
+    names.append(fullsecname)
     #import pdb; pdb.set_trace()
     dists.append(float(h.distance(seg)))
     sec_types.append(fullsecname.split(".")[1][:4])
 
 df = pd.DataFrame()
+df["Node ID"] = node_ids
 df["Distance"] = dists
 df["Conductance"] = weights
 df["Type"] = sec_types
-df["Node ID"] = node_ids
-df.to_csv("synapse_info.csv", index=False)
+df["Name"] = names
+#df["Node ID"] = node_ids
+
+# df.to_csv("EPSPs.csv", index=False)
+# import pdb; pdb.set_trace()
+
 sim.run()
 
+from analyze_EPSPs import calc_EPSPs
+epsps = calc_EPSPs("output/v_report.h5")
+df["EPSP"] = epsps
+
+df.to_csv("EPSPs.csv", index=False)
 # mem_pot_file = './output/v_report.h5'
 
 # # load 

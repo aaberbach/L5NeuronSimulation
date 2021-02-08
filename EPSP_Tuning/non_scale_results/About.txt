@@ -1,0 +1,1 @@
+Results before scaling. These are in the form of voltage traces that can be translated into EPSPs.

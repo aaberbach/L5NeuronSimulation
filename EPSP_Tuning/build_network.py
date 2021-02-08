@@ -39,7 +39,8 @@ net.add_edges(source=exc_stim.nodes(), target=net.nodes(),
                 target_sections=['apic', 'dend'],
                 delay=0.1,
                 #distance_range=[149.0, 151.0], #0.348->0.31, 0.459->0.401
-                distance_range=[-2000, 2000],
+                distance_range=[50, 2000],#(2013, Pouille et al.)
+                #distance_range=[1250,2000],
                 #distance_range=[-500, 500],
                 dynamics_params='PN2PN.json',
                 model_template=syn['PN2PN.json']['level_of_detail'])
