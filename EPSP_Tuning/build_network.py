@@ -2,6 +2,7 @@ from bmtk.builder import NetworkBuilder
 import numpy as np
 import sys
 import synapses
+import pandas as pd
 
 if __name__ == '__main__':
     if __file__ != sys.argv[-1]:
@@ -9,6 +10,14 @@ if __name__ == '__main__':
     else:
         raise Exception("no work" + str(sys.argv[-1]))
 
+# df = pd.read_csv("Segments.csv")
+# types = np.array(df["Type"])
+# xs = np.array(df["X"])
+# ids = np.array(df["Sec ID"])
+# distances = np.array(df["Distance"])
+
+# dendrites = np.where(((types == "dend") | (types == "apic")) & (distances >= 50))[0]
+# N = len(dendrites)
 N = int(inp)
 
 np.random.seed(2129)
@@ -31,6 +40,23 @@ exc_stim.add_nodes(N=1,
                 potential='exc',
                 model_type='virtual')
                 
+# def connection(source, target, id):
+#         if target.node_id == id:
+#             return 1
+#         else:
+#             return 0
+
+# for i in range(N):
+#     #import pdb; pdb.set_trace()
+#     net.add_edges(source=exc_stim.nodes(), target=net.nodes(),
+#                     connection_rule=connection,
+#                     connection_params={"id":i},
+#                     syn_weight = 1,
+#                     sec_id = ids[dendrites][i],
+#                     delay=0.1,
+#                     sec_x = xs[dendrites][i],
+#                     dynamics_params='PN2PN.json',
+#                     model_template=syn['PN2PN.json']['level_of_detail'])
 
 # Create connections between Exc --> Pyr cells
 net.add_edges(source=exc_stim.nodes(), target=net.nodes(),

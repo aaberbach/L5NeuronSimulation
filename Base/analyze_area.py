@@ -1,5 +1,35 @@
-
+import pandas as pd
 import numpy as np
+from neuron import h
+
+def make_seg_df(cell):
+    df = pd.DataFrame()
+    i = 0
+    sec_ids = []
+    full_names = []
+    xs = []
+    parts = []
+    distances = []
+    h.distance(sec=cell.hobj.soma[0])
+    for sec in cell.hobj.all:
+        for seg in sec:
+            distances.append(h.distance(seg))
+            sec_ids.append(i)
+            xs.append(seg.x)
+            fullsecname = sec.name()
+            sec_type = fullsecname.split(".")[1][:4]
+            parts.append(sec_type)
+            full_names.append(str(seg))
+        i += 1
+
+    df["Sec ID"] = sec_ids
+    df["X"] = xs
+    df["Type"] = parts
+    df["Distance"] = distances
+    df["Name"] = full_names
+
+    df.to_csv("Segments.csv", index=False)
+    import pdb; pdb.set_trace()
 
 def analyze_area(prop):
     #import pdb; pdb.set_trace()

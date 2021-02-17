@@ -26,10 +26,13 @@ conf.build_env()
 
 graph = bionet.BioNetwork.from_config(conf)
 sim = bionet.BioSimulator.from_config(conf, network=graph)
+#import pdb; pdb.set_trace()
 
 #segs = list(graph.get_local_cells().values())[0]._morph.seg_prop
 #import pdb; pdb.set_trace()
 cells = graph.get_local_cells()
+
+
 sec_types = []
 weights = []
 dists = []
@@ -57,7 +60,7 @@ df["Conductance"] = weights
 df["Type"] = sec_types
 df["Name"] = names
 #df["Node ID"] = node_ids
-
+#import pdb; pdb.set_trace()
 # df.to_csv("EPSPs.csv", index=False)
 # import pdb; pdb.set_trace()
 

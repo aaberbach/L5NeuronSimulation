@@ -30,11 +30,11 @@ except:
     print("No spikes.")
 
 plt.figure()
-plt.plot(mem_potential[:,0], label="soma")
+plt.plot(mem_potential[:,0], color = "black", label="soma")
 # plt.plot(mem_potential[:, 10], label="dend")
 # plt.plot(mem_potential[:, -20], label="apic")
 # plt.plot(mem_potential[:, -1], label="axon")
-plt.legend()
+#plt.legend()
 
 plt.show()
 

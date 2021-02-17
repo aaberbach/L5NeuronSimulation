@@ -59,7 +59,8 @@ conf.build_env()
 graph = bionet.BioNetwork.from_config(conf)
 #import pdb; pdb.set_trace()
 sim = bionet.BioSimulator.from_config(conf, network=graph)
-from analyze_area import analyze_area
+from analyze_area import analyze_area, make_seg_df
+make_seg_df(list(graph.get_local_cells().values())[0])
 #import pdb; pdb.set_trace()
 #analyze_area(list(graph.get_local_cells().values())[0]._morph.seg_prop)
 #import pdb; pdb.set_trace()

@@ -13,6 +13,7 @@ pyrWeight_s = 1
 def lognormal(m, s):
         mean = np.log(m) - 0.5 * np.log((s/m)**2+1)
         std = np.sqrt(np.log((s/m)**2 + 1))
+        #import pdb; pdb.set_trace()
         return max(np.random.lognormal(mean, std, 1), 0.00000001)
 
 def set_pyr_w(m, s):
@@ -276,7 +277,7 @@ def Pyr2Pyr(syn_params, sec_x, sec_id):
 
 
         h.distance(sec=sec_id.cell().soma[0])
-        dist = h.distance(sec_id(sec_x)) - 50.5
+        dist = h.distance(sec_id(sec_x))
         fullsecname = sec_id.name()
         sec_type = fullsecname.split(".")[1][:4]
         sec_id = int(fullsecname.split("[")[-1].split("]")[0])
@@ -290,20 +291,24 @@ def Pyr2Pyr(syn_params, sec_x, sec_id):
             base = float(pyrWeight_m)
         else:
             base = float(min(lognormal(pyrWeight_m, pyrWeight_s), 8))
+            #base = np.random.lognormal(pyrWeight_m, np.sqrt(pyrWeight_s), 1)
 
 
         if sec_type == "dend":
-            lsyn.initW = base * (0.00159513 * dist + 1.01897285)
+            lsyn.initW = base * (0.9371285272684119 * ( 1.0017027151340998 ** dist))
         elif sec_type == "apic":
             if dist < 500:
-                lsyn.initW = base * (0.97717162 * (1.00195518 ** dist))
+                lsyn.initW = base * (0.8842233502464731 * ( 1.001970475980598 ** dist))
             else:
-                if sec_id >= 60:
-                    lsyn.initW = base * (0.59768734 * (1.00326839 ** dist))
-                else:
-                    lsyn.initW = base * (0.62153507 * (1.00248601 ** dist))
+                lsyn.initW = base * (0.15197845065030272 * ( 1.0040953610902503 ** dist))
+                # if sec_id >= 60:
+                #     lsyn.initW = base * (0.59768734 * (1.00326839 ** dist))
+                # else:
+                #     lsyn.initW = base * (0.62153507 * (1.00248601 ** dist))
 
         lsyn.initW = min(float(lsyn.initW), 10)#11 no over, 
+
+        #lsyn.initW = np.random.uniform(0.02, 2)
 
         #lsyn.initW = pyrWeight_m
 

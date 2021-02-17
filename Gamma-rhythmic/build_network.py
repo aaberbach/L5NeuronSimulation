@@ -19,15 +19,6 @@ np.random.seed(2129)
 #         raise Exception("no work" + str(sys.argv[-1]))
 
 N = 1#int(inp)
-#total time = 120000 ms
-
-# exc_fr = float(frs[0])
-# inh_fr = float(frs[1])
-# print(exc_fr, inh_fr)
-
-#N = 10
-
-# Initialize our network
 
 net = NetworkBuilder("biophysical")
 
@@ -36,57 +27,21 @@ def lognormal(m, s):
         std = np.sqrt(np.log((s/m)**2 + 1))
         return max(np.random.lognormal(mean, std, 1), 0)
 
-# Dend Excitatory: 8998.0
-# Apic Excitatory: 12380.0
-# Soma Inhibitory: 2285.0
 
-# num_inh = [231, 405, 61]#[int(lognormal(56, 7.5)) for i in range(N)]
-# print(num_inh)
-# inh_bounds = []
-# sum = 0
-# for num in num_inh:
-#         sum += num
-#         inh_bounds.append(sum)
+scale_div = 1#10
 
-# num_inh_soma = [int(lognormal(61, 9)) for i in range(N)]
-# print(num_inh_soma)
-# inh_bounds_soma = []
-# sum = 0
-# for num in num_inh_soma:
-#         sum += num
-#         inh_bounds_soma.append(sum)
-
-##############################Ecitatory###############################333
-
-# num_exc = [1590, 2785]#[int(lognormal(1000, 80)) for i in range(N)]
-# print(num_exc)
-# exc_bounds = []
-# sum = 0
-# for num in num_exc:
-#         sum += num
-#         exc_bounds.append(sum)
-
-# num_exc_apic = [int(lognormal(2785, 350)) for i in range(N)]
-# print(num_exc_apic)
-# exc_bounds_apic = []
-# sum = 0
-# for num in num_exc_apic:
-#         sum += num
-#         exc_bounds_apic.append(sum)
-
-# num_exc_dend = [int(lognormal(1590, 200)) for i in range(N)]
-# print(num_exc_dend)
-# exc_bounds_dend = []
-# sum = 0
-# for num in num_exc_dend:
-#         sum += num
-#         exc_bounds_dend.append(sum)
-
-scale_div =10
+# Dend Excitatory: 7186.0
+# Dend Inhibitory: 718.0
+# Apic Excitatory: 10417.0
+# Apic Inhibitory: 1041.0
+# Soma Inhibitory: 148
 
 num_dend_exc = 7186 // scale_div
 num_apic_exc = 10417 // scale_div
-num_soma_inh = 1908 // scale_div
+
+num_dend_inh = 718 // scale_div
+num_apic_inh = 1041 // scale_div
+num_soma_inh = 148 // scale_div
 
 exc_fr_mean = 0.1
 exc_fr_std = 0.5
@@ -100,18 +55,6 @@ net.add_nodes(N=N, pop_name='Pyrc',
     model_type='biophysical',
     model_template='hoc:L5PCtemplate',
     morphology = None)
-
-# net.add_nodes(N=N, pop_name='Pyrc',
-#     potental='exc',
-#     model_type='biophysical',
-#     model_template='ctdb:Biophys1.hoc',
-#     model_processing='aibs_allactive',
-#     #model_processing='my_allactive',
-#     dynamics_params='L5Conductances.json',
-#     #dynamics_params='491766131_fit.json',
-#     morphology='Rbp4-Cre_KL100_Ai14-203503.04.01.01_527109145_m.swc')
-#     #morphology='Rbp4-Cre_KL100_Ai14-203503.04.01.01_527109145_m.swc')
-
 
 ##################################################################################
 ###################################External Networks##############################
@@ -163,7 +106,7 @@ net.add_edges(source=inh_stim.nodes(), target=net.nodes(),
                 delay=0.1,
                 dynamics_params='INT2PN.json',
                 model_template=syn['INT2PN.json']['level_of_detail'],
-                distance_range=[-2000.0, 2000.0],
+                distance_range=[-2000, 2000.0],
                 target_sections=['somatic'])
 
 #start += np.sum(inh_bounds_apic)
@@ -178,7 +121,7 @@ net.add_edges(source=exc_stim.nodes(), target=net.nodes(),
                 syn_weight=1,
                 target_sections=['dend'],
                 delay=0.1,
-                distance_range=[-2000.0, 2000.0],
+                distance_range=[50.0, 2000.0],
                 dynamics_params='PN2PN.json',
                 model_template=syn['PN2PN.json']['level_of_detail'])
 
@@ -192,7 +135,7 @@ net.add_edges(source=exc_stim.nodes(), target=net.nodes(),
                 syn_weight=1,
                 target_sections=['apic'],
                 delay=0.1,
-                distance_range=[-2000.0, 2000.0],
+                distance_range=[50.0, 2000.0],
                 dynamics_params='PN2PN.json',
                 model_template=syn['PN2PN.json']['level_of_detail'])
 
