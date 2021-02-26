@@ -18,7 +18,7 @@ sim = bionet.BioSimulator.from_config(conf, network=graph)
 cell = list(graph.get_local_cells().values())[0]
 hobj = cell.hobj
 
-experiment_type = "CaBurst"# 'BAP', 'CaBurst', 'EPSP', or 'BAC'
+experiment_type = "EPSP"# 'BAP', 'CaBurst', 'EPSP', or 'BAC'
 
 BACdt = 5
 
@@ -201,9 +201,9 @@ sim.run()
 pc.barrier()
 
 amp, isyn
-plt.figure()
-plt.plot(np.array(amp), color="green")
-plt.plot(np.array(isyn), color="red")
+# plt.figure()
+# plt.plot(np.array(amp), color="green")
+# plt.plot(np.array(isyn), color="red")
 
 #vdend2, vdend, vsoma
 plt.figure(figsize=(16,4))

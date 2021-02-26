@@ -13,12 +13,16 @@ order = np.argsort(currents)
 currents = currents[order]
 frs = frs[order]
 
-ids = np.where(frs >= 0)[0]
+# ids = np.where(frs >= 0)[0]
 
-#percentCurr = (currents / 1.2) * 100
-percentCurr = (currents / 1) * 100
+percentCurr = (currents / 1.2) * 100
+#percentCurr = (currents / 1) * 100
 
-plt.plot(percentCurr[ids], frs[ids])
+ids = np.where(percentCurr >= 25)[0]
+
+plt.plot(percentCurr[ids], frs[ids], color="black", linewidth=2)
+plt.xlabel("Percent from reference current")
+plt.ylabel("Spike frequency (Hz)")
 plt.ylim([0, 35])
 plt.xlim([0, 230])
 plt.show()

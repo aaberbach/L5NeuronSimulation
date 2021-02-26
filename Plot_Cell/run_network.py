@@ -60,28 +60,28 @@ for sec in hobj.all:
                 seg.v = 20
             if dist >= 500:
                 if sec_id >= 60: #Red
-                    dic["high"]["dist"].append(dist)
-                    dic["high"]["Ih"].append(seg.gIhbar_Ih)
-                    dic["high"]["LVAst"].append(seg.gCa_LVAstbar_Ca_LVAst)
-                    dic["high"]["HVA"].append(seg.gCa_HVAbar_Ca_HVA)
+                    # dic["high"]["dist"].append(dist)
+                    # dic["high"]["Ih"].append(seg.gIhbar_Ih)
+                    # dic["high"]["LVAst"].append(seg.gCa_LVAstbar_Ca_LVAst)
+                    # dic["high"]["HVA"].append(seg.gCa_HVAbar_Ca_HVA)
                     seg.v = 40
                 else: #teel
-                    dic["low"]["dist"].append(dist)
-                    dic["low"]["Ih"].append(seg.gIhbar_Ih)
-                    dic["low"]["LVAst"].append(seg.gCa_LVAstbar_Ca_LVAst)
-                    dic["low"]["HVA"].append(seg.gCa_HVAbar_Ca_HVA)
+                    # dic["low"]["dist"].append(dist)
+                    # dic["low"]["Ih"].append(seg.gIhbar_Ih)
+                    # dic["low"]["LVAst"].append(seg.gCa_LVAstbar_Ca_LVAst)
+                    # dic["low"]["HVA"].append(seg.gCa_HVAbar_Ca_HVA)
                     seg.v = -10
 
-for key in dic["low"].keys():
-    plt.figure()
-    plt.scatter(dic["low"]["dist"], dic["low"][key])
-    plt.title("low" + str(key))
+# for key in dic["low"].keys():
+#     plt.figure()
+#     plt.scatter(dic["low"]["dist"], dic["low"][key])
+#     plt.title("low" + str(key))
 
-    plt.figure()
-    plt.scatter(dic["high"]["dist"], dic["high"][key])
-    plt.title("high" + str(key))
+#     plt.figure()
+#     plt.scatter(dic["high"]["dist"], dic["high"][key])
+#     plt.title("high" + str(key))
 
-plt.show()
+# plt.show()
 
 import pdb; pdb.set_trace()
 cmap = cm.hsv

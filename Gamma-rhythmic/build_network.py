@@ -18,7 +18,7 @@ np.random.seed(2129)
 #     else:
 #         raise Exception("no work" + str(sys.argv[-1]))
 
-N = 1#int(inp)
+#N = 1#int(inp)
 
 net = NetworkBuilder("biophysical")
 
@@ -50,7 +50,7 @@ inh_fr = 7 #* scale_div
 ##################################################################################
 ###################################Pyr Type C#####################################
 
-net.add_nodes(N=N, pop_name='Pyrc',
+net.add_nodes(N=1, pop_name='Pyrc',
     potental='exc',
     model_type='biophysical',
     model_template='hoc:L5PCtemplate',
@@ -61,7 +61,7 @@ net.add_nodes(N=N, pop_name='Pyrc',
 
 #print("Internal nodes built")
 
-num_exc = (num_apic_exc + num_dend_exc) * N
+num_exc = (num_apic_exc + num_dend_exc) #* N
 
 # External excitatory inputs
 exc_stim = NetworkBuilder('exc_stim')
@@ -70,7 +70,7 @@ exc_stim.add_nodes(N=num_exc,
                 potential='exc',
                 model_type='virtual')
 
-num_inh = num_soma_inh * N
+num_inh = num_soma_inh #* N
 
 # External inhibitory inputs
 inh_stim = NetworkBuilder('inh_stim')
@@ -126,7 +126,7 @@ net.add_edges(source=exc_stim.nodes(), target=net.nodes(),
                 model_template=syn['PN2PN.json']['level_of_detail'])
 
 #start += np.sum(exc_bounds_dend)
-start += np.sum(num_dend_exc * N)
+start += np.sum(num_dend_exc )#* N)
 
 #Excitatory on apical dendrites.
 net.add_edges(source=exc_stim.nodes(), target=net.nodes(),
@@ -161,20 +161,20 @@ exc_means = []
 exc_stds = []
 exc_maxs = []
 
-for i in range(N):
-        #fr_mean = np.random.uniform(exc_fr_mean - 0.00, exc_fr_mean + 0.00, 1)
-        #fr_mean = np.random.uniform(exc_fr_mean + 0.5, exc_fr_mean + 0.55, 1)
-        dend_frs = [min(float(lognormal(exc_fr_mean, exc_fr_std)), exc_fr_mean + 8*exc_fr_std) for _ in range(num_dend_exc)]
-        apic_frs = [min(float(lognormal(exc_fr_mean, exc_fr_std)), exc_fr_mean + 8*exc_fr_std) for _ in range(num_apic_exc)]
+#for i in range(N):
+#fr_mean = np.random.uniform(exc_fr_mean - 0.00, exc_fr_mean + 0.00, 1)
+#fr_mean = np.random.uniform(exc_fr_mean + 0.5, exc_fr_mean + 0.55, 1)
+dend_frs = [min(float(lognormal(exc_fr_mean, exc_fr_std)), exc_fr_mean + 8*exc_fr_std) for _ in range(num_dend_exc)]
+apic_frs = [min(float(lognormal(exc_fr_mean, exc_fr_std)), exc_fr_mean + 8*exc_fr_std) for _ in range(num_apic_exc)]
 
-        frs = dend_frs + apic_frs
+frs = dend_frs + apic_frs
 
-        exc_dend_frs += dend_frs
-        exc_apic_frs += apic_frs
+exc_dend_frs += dend_frs
+exc_apic_frs += apic_frs
 
-        exc_means.append(np.mean(frs))
-        exc_stds.append(np.std(frs))
-        exc_maxs.append(np.max(frs))
+exc_means.append(np.mean(frs))
+exc_stds.append(np.std(frs))
+exc_maxs.append(np.max(frs))
 
 exc_frs = exc_dend_frs + exc_apic_frs
 

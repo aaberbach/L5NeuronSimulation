@@ -3,8 +3,15 @@ import numpy as np
 from neuron import h
 
 def make_seg_df(cell):
+    #import pdb; pdb.set_trace()
+    seg_locs = cell.morphology.seg_coords['p05']
+    px = seg_locs[0]
+    py = seg_locs[1]
+    pz = seg_locs[2]
     df = pd.DataFrame()
     i = 0
+    j = 0
+    bmtk_ids = []
     sec_ids = []
     full_names = []
     xs = []
@@ -14,19 +21,24 @@ def make_seg_df(cell):
     for sec in cell.hobj.all:
         for seg in sec:
             distances.append(h.distance(seg))
-            sec_ids.append(i)
+            bmtk_ids.append(i)
             xs.append(seg.x)
             fullsecname = sec.name()
+            sec_ids.append(int(fullsecname.split("[")[2].split("]")[0]))
             sec_type = fullsecname.split(".")[1][:4]
             parts.append(sec_type)
             full_names.append(str(seg))
+            j += 1
         i += 1
 
-    df["Sec ID"] = sec_ids
+    df["BMTK ID"] = bmtk_ids
     df["X"] = xs
     df["Type"] = parts
+    df["Sec ID"] = sec_ids
     df["Distance"] = distances
-    df["Name"] = full_names
+    df["Coord X"] = px
+    df["Coord Y"] = py
+    df["Coord Z"] = pz
 
     df.to_csv("Segments.csv", index=False)
     import pdb; pdb.set_trace()
