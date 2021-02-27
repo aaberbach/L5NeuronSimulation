@@ -23,11 +23,12 @@ def make_seg_sphere(segments, center, radius=50):
 
 
 class FunctionalGroup:
-    def __init__(self, seg_list, center, num_cells, num_clusters, name, grouping_func, clustering_func):
+    def __init__(self, seg_list, center, num_cells, num_clusters, name, start_id, grouping_func, clustering_func):
         self.center = center
         self.n_cells = num_cells
         self.n_clusters = num_clusters
         self.name =  name
+        self.start_id = start_id
         #self.grouping_func = grouping_func
         self.clustering_func = clustering_func
         self.group_segs = grouping_func(seg_list, center)
@@ -82,12 +83,22 @@ class Cell:
     def __init__(self, n_syns):
         self.n_syns = n_syns
         self.syn_segs = [] #List of Segments where the cell's synapses should be placed.
+        self.num_set = 0#Number of synapses already created in bmtk.
 
     def add_syn(self, seg):
         if len(self.syn_segs) >= self.n_syns:
             raise Exception("Error: too many synapses added to cell.")
 
         self.syn_segs.append(Segment(seg["BMTK ID"], seg["X"]))
+
+    #Returns the next syn location.
+    def get_seg(self):
+        if self.num_set >= self.n_syns:
+            raise Exception("Too many synapses created for cell.")
+
+        result = self.syn_segs[self.num_set]
+        self.num_set += 1
+        return result
 
 
 #Simple class that contains the BMTK morphology id and x of a segment.
