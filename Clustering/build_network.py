@@ -61,7 +61,7 @@ def lognormal(m, s):
         return max(np.random.lognormal(mean, std, 1), 0)
 
 
-scale_div = 10#10
+scale_div = 1#10
 
 # Dend Excitatory: 7186.0
 # Dend Inhibitory: 718.0
@@ -83,8 +83,8 @@ exc_fr_std = 0.5
 inh_fr = 7 #* scale_div
 
 clust_per_group = 8
-num_dend_groups = 5
-num_apic_groups = 2
+num_dend_groups = 100
+num_apic_groups = 120
 
 dend_groups = []
 apic_groups = []
@@ -114,70 +114,111 @@ apics = df[(df["Type"] == "apic")]
 
 #Sets the number of synapses for each input cell.
 def connector_func(source, target, cells):
-        #import pdb; pdb.set_trace()
         return [cell.n_syns for cell in cells]
 
 #Sets the location of synapses based on the given cell list.
 def set_location(source, target, cells, start_id):
-        #import pdb; pdb.set_trace()
         index = source.node_id - start_id
         seg = cells[index].get_seg()
         return seg.bmtk_id, seg.x
 
-start_id = 0
-cells_per_group = num_dend_exc // num_dend_groups
-for i in range(num_dend_groups):
-        name = "dend"+str(i)
-        exc_stim.add_nodes(N=num_dend_exc//num_dend_groups,
+def build_nodes(stim, cells_per, clust_per, group_list, segs, base_name, n_groups, start=0):
+        start_id = start
+
+        for i in range(n_groups):
+                name = base_name + str(i)
+
+                stim.add_nodes(N=cells_per,
                         pop_name=name,
                         potential="exc",
                         model_type='virtual')
 
-        new_group = FunctionalGroup(dends, dends.sample().iloc[0], cells_per_group, clust_per_group, name, start_id, partial(make_seg_sphere, radius = 100), partial(make_seg_sphere, radius = 10))
-        dend_groups.append(new_group)
-        start_id += cells_per_group
+                new_group = FunctionalGroup(segs, segs.sample().iloc[0], cells_per, clust_per, name, start_id, partial(make_seg_sphere, radius = 100), partial(make_seg_sphere, radius = 10))
+                group_list.append(new_group)
+                start_id += cells_per
 
-for i in range(num_dend_groups):
-        name = "dend"+str(i)
-        group = dend_groups[i]
-        conn = net.add_edges(source=exc_stim.nodes(pop_name=name), target=net.nodes(),
-                iterator="all_to_one",
-                connection_rule=connector_func,
-                connection_params={'cells': group.cells},#NEED BE SURE IN SAME ORDER ALWYAS
-                syn_weight=1,
-                #target_sections=['dend'],
-                delay=0.1,
-                #distance_range=[50.0, 2000.0],
-                dynamics_params='PN2PN.json',
-                model_template=syn['PN2PN.json']['level_of_detail'],)
-                #sec_id=3,
-                #sec_x=0.5)
+        return start_id
 
-        conn.add_properties(['sec_id',"sec_x"], 
-                    rule=set_location,
-                    rule_params={'cells': group.cells, 'start_id': group.start_id},#NEED BE SURE IN SAME ORDER ALWYAS
-                    dtypes=[np.int, np.float])
+def build_edges(stim, group_list, base_name, target_net):
+        for i in range(len(group_list)):
+                name = base_name + str(i)
+                group = group_list[i]
 
-        
+                conn = net.add_edges(source=stim.nodes(pop_name=name), target=target_net.nodes(),
+                        iterator="all_to_one",
+                        connection_rule=connector_func,
+                        connection_params={'cells': group.cells},#NEED BE SURE IN SAME ORDER ALWYAS
+                        syn_weight=1,
+                        delay=0.1,
+                        dynamics_params='PN2PN.json',
+                        model_template=syn['PN2PN.json']['level_of_detail'],)
 
-#import pdb; pdb.set_trace()
+                conn.add_properties(['sec_id',"sec_x"], 
+                        rule=set_location,
+                        rule_params={'cells': group.cells, 'start_id': group.start_id},#NEED BE SURE IN SAME ORDER ALWYAS
+                        dtypes=[np.int, np.float])
 
+end = build_nodes(exc_stim, num_dend_exc//num_dend_groups, clust_per_group, dend_groups, dends, "dend", num_dend_groups)
+build_nodes(exc_stim, num_apic_exc//num_apic_groups, clust_per_group, apic_groups, apics, "apic", num_apic_groups, start=end)
 
-# exc_stim.add_nodes(N=num_exc,
-#                 pop_name='exc_stim',
-#                 potential='exc',
-#                 model_type='virtual')
+build_edges(exc_stim, dend_groups, "dend", net)
+build_edges(exc_stim, apic_groups, "apic", net)
 
 #########################Inhibitory Inputs#####################################
 
 num_inh = num_soma_inh #* N
 
-# External inhibitory inputs
-inh_stim = NetworkBuilder('inh_stim')
-inh_stim.add_nodes(N=num_inh,
-                pop_name='inh_stim',
+# External proximal inhibitory inputs
+prox_inh_stim = NetworkBuilder('prox_inh_stim')
+prox_inh_stim.add_nodes(N=num_soma_inh,
+                pop_name='prox_inh_stim',
                 potential='exc',
                 model_type='virtual')
+
+#Edges
+net.add_edges(source=prox_inh_stim.nodes(), target=net.nodes(),
+                connection_rule=1,
+                #connection_params={'num_per': num_soma_inh , 'start':0},
+                syn_weight=1,
+                delay=0.1,
+                dynamics_params='INT2PN.json',
+                model_template=syn['INT2PN.json']['level_of_detail'],
+                distance_range=[-2000, 2000.0],
+                target_sections=['somatic'])
+
+dist_inh_stim = NetworkBuilder('dist_inh_stim')
+
+dist_inh_stim.add_nodes(N=num_dend_inh,
+                pop_name='dend',
+                potential='exc',
+                model_type='virtual')
+
+dist_inh_stim.add_nodes(N=num_apic_inh,
+                pop_name='apic',
+                potential='exc',
+                model_type='virtual')
+
+#Proximal edges.
+net.add_edges(source=dist_inh_stim.nodes(pop_name="dend"), target=net.nodes(),
+                connection_rule=1,
+                #connection_params={'num_per': num_soma_inh , 'start':0},
+                syn_weight=1,
+                delay=0.1,
+                dynamics_params='INT2PN.json',
+                model_template=syn['INT2PN.json']['level_of_detail'],
+                distance_range=[50, 2000.0],#CHECKKKKK
+                target_sections=['dend'])
+
+#Distal edges.
+net.add_edges(source=dist_inh_stim.nodes(pop_name="apic"), target=net.nodes(),
+                connection_rule=1,
+                #connection_params={'num_per': num_soma_inh , 'start':0},
+                syn_weight=1,
+                delay=0.1,
+                dynamics_params='INT2PN.json',
+                model_template=syn['INT2PN.json']['level_of_detail'],
+                distance_range=[50, 2000.0],
+                target_sections=['apic'])
 
 ##################################################################################
 ###################################Edges##########################################
@@ -252,8 +293,11 @@ net.save_edges(output_dir='network')
 exc_stim.build()
 exc_stim.save_nodes(output_dir='network')
 
-inh_stim.build()
-inh_stim.save_nodes(output_dir='network')
+prox_inh_stim.build()
+prox_inh_stim.save_nodes(output_dir='network')
+
+dist_inh_stim.build()
+dist_inh_stim.save_nodes(output_dir='network')
 
 
 from bmtk.utils.reports.spike_trains import PoissonSpikeGenerator
@@ -321,7 +365,7 @@ build_env_bionet(base_dir='./',
                 network_dir='./network',
                 dt = 0.1, tstop=seconds * 1000.0,
                 report_vars=['v', 'cai'],
-                dL = 1,
+                dL = 5,
                 # current_clamp={           # Creates a step current from 500.ms to 1500.0 ms  
                 #      'amp': 0.793,
                 #      #'std': [0.0, 0.0],
