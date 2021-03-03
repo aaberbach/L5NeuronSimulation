@@ -54,4 +54,20 @@ for con in cell._connections:
     #import pdb; pdb.set_trace()
     ax.mark(con._connector.postseg())
 
+import pickle
+f = open('groups.pkl', 'rb')
+groups = pickle.load(f)
+f.close()
+
+from clustering import *
+
+df = pd.read_csv("Segments.csv")
+dends = df[df["Type"] == "dend"]
+apics = df[(df["Type"] == "apic")]
+
+for key in groups.keys():
+    segs = df[df["Type"] == key]
+    for group in groups[key]:
+        plot_group(segs, group, ax, psoma=psoma)
+
 plt.show()

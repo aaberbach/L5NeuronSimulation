@@ -68,12 +68,14 @@ class Cluster:
     def __init__(self, center, clustering_func, group_segs):
         self.center = center
         #import pdb; pdb.set_trace()
+        self.n_syns = 0
         self.cluster_segs = clustering_func(group_segs, center)
 
     #Returns a random segment from cluster segs.
     #Could add count table that spreads synapses.
     def random_seg(self):
         #import pdb; pdb.set_trace()
+        self.n_syns += 1
         return self.cluster_segs.iloc[np.random.choice(len(self.cluster_segs))]
     
 

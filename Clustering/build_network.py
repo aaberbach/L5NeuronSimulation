@@ -6,6 +6,9 @@ import pandas as pd
 synapses.load()
 syn = synapses.syn_params_dicts()
 
+#short term plasticity
+#release probability
+
 np.random.seed(2129)
 
 #############################PLANS##############################################
@@ -61,7 +64,7 @@ def lognormal(m, s):
         return max(np.random.lognormal(mean, std, 1), 0)
 
 
-scale_div = 1#10
+scale_div = 70#10
 
 # Dend Excitatory: 7186.0
 # Dend Inhibitory: 718.0
@@ -83,8 +86,8 @@ exc_fr_std = 0.5
 inh_fr = 7 #* scale_div
 
 clust_per_group = 8
-num_dend_groups = 100
-num_apic_groups = 120
+num_dend_groups = 70 // scale_div
+num_apic_groups = 100 // scale_div
 
 dend_groups = []
 apic_groups = []
@@ -108,7 +111,8 @@ from clustering import *
 # External excitatory inputs
 exc_stim = NetworkBuilder('exc_stim')
 
-df = pd.read_csv("Segments_small.csv")
+#df = pd.read_csv("Segments_small.csv")
+df = pd.read_csv("Segments.csv")
 dends = df[df["Type"] == "dend"]
 apics = df[(df["Type"] == "apic")]
 
@@ -164,8 +168,22 @@ build_nodes(exc_stim, num_apic_exc//num_apic_groups, clust_per_group, apic_group
 build_edges(exc_stim, dend_groups, "dend", net)
 build_edges(exc_stim, apic_groups, "apic", net)
 
-#########################Inhibitory Inputs#####################################
+import pickle
+f = open("groups.pkl", 'wb')
+pickle.dump({"dend":dend_groups, "apic":apic_groups}, f)
+f.close()
 
+# counts = []
+# for group_list in [dend_groups, apic_groups]:
+#         for group in group_list:
+#                 for clust in group.clusters:
+#                         counts.append(clust.n_syns)
+
+# import matplotlib.pyplot as plt
+# plt.hist(counts, bins = 15, density=True)
+# plt.show()
+
+#########################Inhibitory Inputs#####################################
 num_inh = num_soma_inh #* N
 
 # External proximal inhibitory inputs
@@ -336,6 +354,11 @@ from bmtk.utils.reports.spike_trains.spikes_file_writers import write_csv
 
 #fr_df.to_csv('frs_temp.csv', index=False)
 seconds = 1
+
+def generate_spikes(psg, group, fr, times):
+        psg.add(node_ids=range(group.start_id, group.start_id + len(group.cells)),
+                        firing_rate=fr,
+                        times=times)
 
 exc_psg = PoissonSpikeGenerator(population='exc_stim')
 exc_psg.add(node_ids = range(num_apic_exc + num_dend_exc),

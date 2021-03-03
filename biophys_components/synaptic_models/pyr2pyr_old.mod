@@ -14,12 +14,6 @@ NEURON {
 	RANGE F, f, tauF, D1, d1, tauD1, D2, d2, tauD2
 	RANGE facfactor
 	RANGE aACH, bACH, aDA, bDA, wACH, wDA, calcium
-
-	:Release probability
-	RANGE random, P, P_0
-
-	THREADSAFE
-	POINTER randObjPtr
 }
 
 UNITS {
@@ -85,7 +79,6 @@ PARAMETER {
 	bDA = 0
 	wDA = 0
 
-	P_0 = 1 (1) < 0, 1 >               : base release probability
 }
 
 ASSIGNED {
@@ -127,11 +120,7 @@ ASSIGNED {
 		F
 		D1
 		D2
-
-	:Release probability
-		P				        : instantaneous release probability
-    randObjPtr              : pointer to a hoc random number generator Random.uniform(0,1)
-    random                  : individual instance of random number
+		
 }
 
 STATE { r_nmda r_ampa Capoolcon }
@@ -164,8 +153,6 @@ INITIAL {
 	D1 = 1
 	D2 = 1
 
-	P = P_0
-	random = 1
 }
 
 BREAKPOINT {
@@ -226,37 +213,23 @@ DERIVATIVE release {
 	Capoolcon'= -fCa*Afactor*ICa + (Cainf-Capoolcon)/tauCa
 }
 NET_RECEIVE(dummy_weight) {
-	random = randGen()
-	if (random < P_0)
-	{
-		t0 = t :spike time for conductance opening
-		
-		:Added by Ali, Synaptic facilitation
-		F  = 1 + (F-1)* exp(-(t - tsyn)/tauF)
-		D1 = 1 - (1-D1)*exp(-(t - tsyn)/tauD1)
-		D2 = 1 - (1-D2)*exp(-(t - tsyn)/tauD2)
-	:printf("%g\t%g\t%g\t%g\t%g\t%g\n", t, t-tsyn, F, D1, D2, facfactor)
-		:if (P_0*F*D1 > 1) {
-		:	P = 1
-		:} else {
-		:	P = P_0*F*D1*D2
-		:}
-		:random = randGen()
-		:if (random <= P) {
-			:net_event(t)
-		:}
-
-		tsyn = t
-		
-		facfactor = F * D1 * D2
-		F = F * f
-		
-		if (F > 30) { 
-		F=30
-		}
-		D1 = D1 * d1
-		D2 = D2 * d2
+	t0 = t :spike time for conductance opening
+	
+	:Added by Ali, Synaptic facilitation
+	F  = 1 + (F-1)* exp(-(t - tsyn)/tauF)
+	D1 = 1 - (1-D1)*exp(-(t - tsyn)/tauD1)
+	D2 = 1 - (1-D2)*exp(-(t - tsyn)/tauD2)
+ :printf("%g\t%g\t%g\t%g\t%g\t%g\n", t, t-tsyn, F, D1, D2, facfactor)
+	tsyn = t
+	
+	facfactor = F * D1 * D2
+	F = F * f
+	
+	if (F > 30) { 
+	F=30
 	}
+	D1 = D1 * d1
+	D2 = D2 * d2
 :printf("\t%g\t%g\t%g\n", F, D1, D2)
 	
 }
@@ -283,35 +256,4 @@ FUNCTION omega(Cani (mM), threshold1 (uM), threshold2 (uM)) {
 	if (Cacon <= threshold1) { omega = 0}
 	else if (Cacon >= threshold2) {	omega = 1/(1+50*exp(-50*(Cacon-threshold2)))}
 	else {omega = -sqrt(r*r-(Cacon-mid)*(Cacon-mid))}
-}
-
-VERBATIM
-double nrn_random_pick(void* r);
-void* nrn_random_arg(int argpos);
-ENDVERBATIM
-
-FUNCTION randGen() {
-VERBATIM
-   if (_p_randObjPtr) {
-      /*
-      :Supports separate independent but reproducible streams for
-      : each instance. However, the corresponding hoc Random
-      : distribution MUST be set to Random.uniform(0,1)
-      */
-      _lrandGen = nrn_random_pick(_p_randObjPtr);
-   }else{
-      hoc_execerror("Random object ref not set correctly for randObjPtr"," only via hoc Random");
-   }
-ENDVERBATIM
-}
-
-PROCEDURE setRandObjRef() {
-VERBATIM
-   void** pv4 = (void**)(&_p_randObjPtr);
-   if (ifarg(1)) {
-      *pv4 = nrn_random_arg(1);
-   }else{
-      *pv4 = (void*)0;
-   }
-ENDVERBATIM
 }
