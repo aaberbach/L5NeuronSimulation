@@ -570,8 +570,8 @@ static void _net_receive (_pnt, _args, _lflag) Point_process* _pnt; double* _arg
      if ( F > 3.0 ) {
        F = 3.0 ;
        }
-     if ( facfactor < 0.2 ) {
-       facfactor = 0.2 ;
+     if ( facfactor < 0.15 ) {
+       facfactor = 0.15 ;
        }
      D1 = D1 * d1 ;
      D2 = D2 * d2 ;
@@ -1913,8 +1913,8 @@ static const char* nmodl_file_text =
   "	\n"
   "	if (F > 3) { \n"
   "	F=3	}	\n"
-  "	if (facfactor < 0.2) { \n"
-  "	facfactor=0.2\n"
+  "	if (facfactor < 0.15) { \n"
+  "	facfactor=0.15\n"
   "	}\n"
   "	D1 = D1 * d1\n"
   "	D2 = D2 * d2\n"

@@ -83,12 +83,14 @@ exc_stim.save_nodes(output_dir='network')
 inh_stim.build()
 inh_stim.save_nodes(output_dir='network')
 
-spacing = 30#10
-num_AP = 9#13
-node_ids = np.full(num_AP, 0)
-timestamps = np.linspace(0 + 500, (num_AP-1)*spacing + 500, num_AP)
+# spacing = 30#10
+# num_AP = 9#13
+# node_ids = np.full(num_AP, 0)
+# timestamps = np.linspace(0 + 500, (num_AP-1)*spacing + 500, num_AP)
 #timestamps *= 10
 #import pdb; pdb.set_trace()
+node_ids = np.full(1, 0)
+timestamps = np.array([500])
 import h5py
 key = 'exc_stim'
 f = h5py.File('stim_spikes.h5', 'w')

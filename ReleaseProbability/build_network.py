@@ -80,11 +80,11 @@ net.save_edges(output_dir='network')
 exc_stim.build()
 exc_stim.save_nodes(output_dir='network')
 
-node_ids = np.full(9, 0)
 spacing = 30
-timestamps = np.linspace(0 + 500, 8*spacing + 500, 9)
-#timestamps *= 10
-#import pdb; pdb.set_trace()
+num_AP = 30
+node_ids = np.full(num_AP, 0)
+timestamps = np.linspace(0 + 500, (num_AP-1)*spacing + 500, num_AP)
+
 import h5py
 key = 'exc_stim'
 f = h5py.File('stim_spikes.h5', 'w')
@@ -98,7 +98,7 @@ from bmtk.utils.sim_setup import build_env_bionet
 
 build_env_bionet(base_dir='./',
                 network_dir='./network',
-                dt = 0.1, tstop=1000.0,
+                dt = 0.1, tstop=2000.0,
                 report_vars=['v', 'cai'],
                 dL=20,
                 # current_clamp={           # Creates a step current from 500.ms to 1500.0 ms  

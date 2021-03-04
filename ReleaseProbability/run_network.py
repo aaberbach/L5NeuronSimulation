@@ -35,19 +35,18 @@ import matplotlib.pyplot as plt
 
 import scipy.signal as s
 
-volt = np.array(syn)[5000:]
-print("Num Spikes:", len(s.find_peaks(volt)))
+volt = np.array(som)[5000:]
+peaks = s.find_peaks(volt)[0]
+print("Num Spikes:", len(peaks) - 1)
 
 plt.figure()
 plt.plot(np.array(syn))
+plt.scatter(peaks + 5000, np.full(len(peaks), -60))
 plt.title("Potential at synapse")
 
 plt.figure()
 plt.plot(np.array(som))
 plt.title("Potential at soma")
-
-plt.figure()
-plt.plot(np.array(fac))
 
 plt.show()
 

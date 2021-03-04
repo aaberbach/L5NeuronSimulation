@@ -13,9 +13,6 @@ scale = 10
 
 weight_means = {"exc": {}, "inh": {}}
 generators = []
-np.random.seed(42)
-#np_gen = np.random.RandomState()
-#np_gen.seed(42)
 
 def lognormal(m, s):
     mean = np.log(m) - 0.5 * np.log((s/m)**2+1)
@@ -276,9 +273,7 @@ def Pyr2Pyr(syn_params, sec_x, sec_id):
 
     generators.append(r)
 
-    #lsyn.P_0 = np_gen.uniform(0.16,0.9)#np.random.uniform(0.16, 0.9)
-    lsyn.P_0 = np.random.uniform(0.16, 0.9)
-    print(lsyn.P_0)
+    #lsyn.P_0 = 0.1
     #import pdb; pdb.set_trace()
 
     if syn_params.get('AlphaTmax_ampa'):
@@ -362,9 +357,7 @@ def pyr2pyr(syn_params, xs, secs):
     :param secs: target sections
     :return: list of NEURON synpase objects
     """
-    import pdb; pdb.set_trace()
-    np.random.seed(3)#SEEDING IS NOT WORKING
-    print("SEEDING IS NOT WORKING IN SYNAPSES.PY")
+    np.random.seed(3)
     syns = []
     for x, sec in zip(xs, secs):
         syn = Pyr2Pyr(syn_params, x, sec)
