@@ -54,12 +54,15 @@ net.add_edges(source=inh_stim.nodes(), target=net.nodes(),
 #Excitatory on basal dendrites.
 net.add_edges(source=exc_stim.nodes(), target=net.nodes(),
                 connection_rule=1,
+                #syn_weight=500,
                 syn_weight=1,
                 target_sections=['dend'],
                 delay=0.1,
                 distance_range=[50.0, 2000.0],
                 dynamics_params='PN2PN.json',
                 model_template=syn['PN2PN.json']['level_of_detail'])
+                # dynamics_params='AMPA_ExcToExc.json',
+                # model_template='exp2syn')
 
 # #Excitatory on apical dendrites.
 # net.add_edges(source=exc_stim.nodes(), target=net.nodes(),

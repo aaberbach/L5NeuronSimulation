@@ -8,7 +8,7 @@ from neuron import h
 import random
 import numpy as np
 
-scale = 10
+#scale = 10
 #np.random.seed(3)
 
 weight_means = {"exc": {}, "inh": {}}
@@ -306,7 +306,7 @@ def Pyr2Pyr(syn_params, sec_x, sec_id):
     if syn_params.get('initW'):
         #lsyn.initW = float(syn_params['initW']) * random.uniform(0.5,1.0) # par.x(0) * rC.uniform(0.5,1.0)//rand.normal(0.5,1.5) //`rand.repick() 
         #lsyn.initW = float(min(lognormal(2.5*0.18181829517744805, 0.13993260156705545), 0.8) * scale)
-        lsyn.initW = 0.5#float(min(lognormal(0.495, 0.09), 0.8) * scale)
+        lsyn.initW = 20#0.5#float(min(lognormal(0.495, 0.09), 0.8) * scale)
         #lsyn.initW = 5
         # if (lsyn.initW > max_exc):
         #     max_exc = lsyn.initW
@@ -315,21 +315,21 @@ def Pyr2Pyr(syn_params, sec_x, sec_id):
         #lsyn.initW = 0.18181829517744805 * 10
         #print(lsyn.initW)
         
-    if syn_params.get('Wmax'):
-        lsyn.Wmax = 8#float(syn_params['Wmax']) * lsyn.initW # par.x(1) * lsyn.initW
-    if syn_params.get('Wmin'):
-        lsyn.Wmin = float(syn_params['Wmin']) * lsyn.initW # par.x(2) * lsyn.initW
+    # if syn_params.get('Wmax'):
+    #     lsyn.Wmax = 8#float(syn_params['Wmax']) * lsyn.initW # par.x(1) * lsyn.initW
+    # if syn_params.get('Wmin'):
+    #     lsyn.Wmin = float(syn_params['Wmin']) * lsyn.initW # par.x(2) * lsyn.initW
     #delay = float(syn_params['initW']) # par.x(3) + delayDistance
     #lcon = new NetCon(&v(0.5), lsyn, 0, delay, 1)
 
-    if syn_params.get('lambda1'):
-        lsyn.lambda1 = float(syn_params['lambda1']) # par.x(6)
-    if syn_params.get('lambda2'):
-        lsyn.lambda2 = float(syn_params['lambda2']) # par.x(7)
-    if syn_params.get('threshold1'):
-        lsyn.threshold1 = float(syn_params['threshold1']) # par.x(8)
-    if syn_params.get('threshold2'):
-        lsyn.threshold2 = float(syn_params['threshold2']) # par.x(9)
+    # if syn_params.get('lambda1'):
+    #     lsyn.lambda1 = float(syn_params['lambda1']) # par.x(6)
+    # if syn_params.get('lambda2'):
+    #     lsyn.lambda2 = float(syn_params['lambda2']) # par.x(7)
+    # if syn_params.get('threshold1'):
+    #     lsyn.threshold1 = float(syn_params['threshold1']) # par.x(8)
+    # if syn_params.get('threshold2'):
+    #     lsyn.threshold2 = float(syn_params['threshold2']) # par.x(9)
     if syn_params.get('tauD1'):
         lsyn.tauD1 = float(syn_params['tauD1']) # par.x(10)
     if syn_params.get('d1'):
@@ -343,14 +343,14 @@ def Pyr2Pyr(syn_params, sec_x, sec_id):
     if syn_params.get('f'):
         lsyn.f = float(syn_params['f']) # par.x(15)
 
-    if syn_params.get('bACH'):
-        lsyn.bACH = float(syn_params['bACH']) # par.x(17)
-    if syn_params.get('aDA'):
-        lsyn.aDA = float(syn_params['aDA']) # par.x(18)
-    if syn_params.get('bDA'):
-        lsyn.bDA = float(syn_params['bDA']) # par.x(19)
-    if syn_params.get('wACH'):
-        lsyn.wACH = float(syn_params['wACH']) # par.x(20)
+    # if syn_params.get('bACH'):
+    #     lsyn.bACH = float(syn_params['bACH']) # par.x(17)
+    # if syn_params.get('aDA'):
+    #     lsyn.aDA = float(syn_params['aDA']) # par.x(18)
+    # if syn_params.get('bDA'):
+    #     lsyn.bDA = float(syn_params['bDA']) # par.x(19)
+    # if syn_params.get('wACH'):
+    #     lsyn.wACH = float(syn_params['wACH']) # par.x(20)
     
     return lsyn
 
@@ -362,9 +362,7 @@ def pyr2pyr(syn_params, xs, secs):
     :param secs: target sections
     :return: list of NEURON synpase objects
     """
-    import pdb; pdb.set_trace()
-    np.random.seed(3)#SEEDING IS NOT WORKING
-    print("SEEDING IS NOT WORKING IN SYNAPSES.PY")
+
     syns = []
     for x, sec in zip(xs, secs):
         syn = Pyr2Pyr(syn_params, x, sec)

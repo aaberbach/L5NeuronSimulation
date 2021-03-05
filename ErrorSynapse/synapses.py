@@ -265,13 +265,19 @@ def Pyr2Pyr(syn_params, sec_x, sec_id):
 
     lsyn = h.pyr2pyr(sec_x, sec=sec_id)
 
-    #Assigns random generator of release probability.
-    r = h.Random()
-    r.MCellRan4()
-    r.uniform(0,1)
-    lsyn.setRandObjRef(r)
+    # lsyn.initW =35
+    # return lsyn
 
-    generators.append(r)
+    #Assigns random generator of release probability.
+    # r = h.Random()
+    # r.MCellRan4()
+    # r.uniform(0,1)
+    # lsyn.setRandObjRef(r)
+
+    # generators.append(r)
+
+    # lsyn.initW =60
+    # return lsyn
 
     #lsyn.P_0 = 0.1
     #import pdb; pdb.set_trace()
@@ -301,7 +307,7 @@ def Pyr2Pyr(syn_params, sec_x, sec_id):
     if syn_params.get('initW'):
         #lsyn.initW = float(syn_params['initW']) * random.uniform(0.5,1.0) # par.x(0) * rC.uniform(0.5,1.0)//rand.normal(0.5,1.5) //`rand.repick() 
         #lsyn.initW = float(min(lognormal(2.5*0.18181829517744805, 0.13993260156705545), 0.8) * scale)
-        lsyn.initW = 35#float(min(lognormal(0.495, 0.09), 0.8) * scale)
+        lsyn.initW =35#35#float(min(lognormal(0.495, 0.09), 0.8) * scale)
         #lsyn.initW = 5
         # if (lsyn.initW > max_exc):
         #     max_exc = lsyn.initW
@@ -311,7 +317,7 @@ def Pyr2Pyr(syn_params, sec_x, sec_id):
         #print(lsyn.initW)
         
     if syn_params.get('Wmax'):
-        lsyn.Wmax = 100000#8#float(syn_params['Wmax']) * lsyn.initW # par.x(1) * lsyn.initW
+        lsyn.Wmax = float(syn_params['Wmax']) * lsyn.initW#8#float(syn_params['Wmax']) * lsyn.initW # par.x(1) * lsyn.initW
     if syn_params.get('Wmin'):
         lsyn.Wmin = float(syn_params['Wmin']) * lsyn.initW # par.x(2) * lsyn.initW
     #delay = float(syn_params['initW']) # par.x(3) + delayDistance
