@@ -1,1 +1,0 @@
-These are results from the first attempt at scaling when it was just one function for close synapses and one function for far synapses.
