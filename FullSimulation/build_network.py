@@ -9,6 +9,9 @@ currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentfram
 parentdir = os.path.dirname(currentdir)
 sys.path.insert(0,parentdir) 
 
+#Add divergent inhibition
+#Change synapse counts for inhibition and excitation based on 50 um
+
 from clustering import *
 
 synapses.load()
@@ -32,14 +35,25 @@ scale_div = 1#10
 # Apic Inhibitory: 1041.0
 # Soma Inhibitory: 148
 
+# Dend Excitatory: 6509.0
+# Beta Dend Inhibitory: 650.0
+# Gamma Dend Inhibitory: 67.0
+# Apic Excitatory: 10417.0
+# Apic Inhibitory: 1041.0
+# Soma Inhibitory: 148
+
 avg_syn_per_cell = 5 #Average number of synapses from each input cell.
 
-num_dend_exc = (7186 // avg_syn_per_cell) // scale_div
+inh_syn_per_cell = 3
+
+num_dend_exc = (6509 // avg_syn_per_cell) // scale_div
 num_apic_exc = (10417 // avg_syn_per_cell) // scale_div
 
-num_dend_inh = (718 // avg_syn_per_cell) // scale_div
+num_dend_inh = (650 // avg_syn_per_cell) // scale_div
 num_apic_inh = (1041 // avg_syn_per_cell) // scale_div
-num_soma_inh = (148 // avg_syn_per_cell) // scale_div
+
+num_prox_dend_inh = (67 // inh_syn_per_cell) // scale_div
+num_soma_inh = (148 // inh_syn_per_cell) // scale_div
 
 exc_fr_mean = 0.1
 exc_fr_std = 0.5
@@ -132,13 +146,23 @@ build_edges(exc_stim, apic_groups, "apic", net)
 # External proximal inhibitory inputs
 prox_inh_stim = NetworkBuilder('prox_inh_stim')
 prox_inh_stim.add_nodes(N=num_soma_inh,
-                pop_name='prox_inh_stim',
+                pop_name='on_soma',
+                potential='exc',
+                model_type='virtual')
+
+prox_inh_stim.add_nodes(N=num_prox_dend_inh,
+                pop_name='on_dend',
                 potential='exc',
                 model_type='virtual')
 
 #Edges
-net.add_edges(source=prox_inh_stim.nodes(), target=net.nodes(),
-                connection_rule=1,
+
+def uniform_connect(source, target, low=1, high=5):
+        return np.random.uniform(low, high)
+
+#On soma.
+net.add_edges(source=prox_inh_stim.nodes(pop_name='on_soma'), target=net.nodes(),
+                connection_rule=uniform_connect,
                 #connection_params={'num_per': num_soma_inh , 'start':0},
                 syn_weight=1,
                 delay=0.1,
@@ -146,6 +170,17 @@ net.add_edges(source=prox_inh_stim.nodes(), target=net.nodes(),
                 model_template=syn['INT2PN.json']['level_of_detail'],
                 distance_range=[-2000, 2000.0],
                 target_sections=['somatic'])
+
+#On dendrites within 50 um
+net.add_edges(source=prox_inh_stim.nodes(pop_name='on_dend'), target=net.nodes(),
+                connection_rule=uniform_connect,
+                #connection_params={'num_per': num_soma_inh , 'start':0},
+                syn_weight=1,
+                delay=0.1,
+                dynamics_params='INT2PN.json',
+                model_template=syn['INT2PN.json']['level_of_detail'],
+                distance_range=[0, 50.0],
+                target_sections=['dend'])
 
 # External distal inhibitory inputs
 dist_inh_stim = NetworkBuilder('dist_inh_stim')
@@ -162,7 +197,7 @@ dist_inh_stim.add_nodes(N=num_apic_inh,
 
 #Dend edges.
 net.add_edges(source=dist_inh_stim.nodes(pop_name="dend"), target=net.nodes(),
-                connection_rule=1,
+                connection_rule=uniform_connect,
                 syn_weight=1,
                 delay=0.1,
                 dynamics_params='INT2PN.json',
@@ -172,7 +207,7 @@ net.add_edges(source=dist_inh_stim.nodes(pop_name="dend"), target=net.nodes(),
 
 #Apic edges.
 net.add_edges(source=dist_inh_stim.nodes(pop_name="apic"), target=net.nodes(),
-                connection_rule=1,
+                connection_rule=uniform_connect,
                 syn_weight=1,
                 delay=0.1,
                 dynamics_params='INT2PN.json',
@@ -241,8 +276,9 @@ def generate_spikes(psg, group, fr, times):
 
 exc_psg = PoissonSpikeGenerator(population='exc_stim')
 exc_psg.add(node_ids = range(num_apic_exc + num_dend_exc),
-                firing_rate=0.01,
-                times=(0.0*1000, seconds*1000))
+                firing_rate=exc_fr_mean,
+                #times=(0.0*1000, seconds*1000))
+                times=(0.0, seconds))
 exc_psg.to_sonata('exc_stim_spikes.h5')
 # exc_psg = PoissonSpikeGenerator(population='exc_stim')
 # for i in range(num_exc):

@@ -47,23 +47,32 @@ def analyze_area(prop):
     import pdb; pdb.set_trace()
 
     types = prop['type']
-    areas = prop['area']
+    # areas = prop['area']
     lens = prop['length']
+    dists = prop['dist']
 
     soma_ids = np.where(types == 1)[0]
-    dend_ids = np.where(types == 3)[0]
+    close_dend_ids = np.where((types == 3) & (dists < 50))[0]
+    far_dend_ids = np.where((types == 3) & (dists >= 50))[0]
     apic_ids = np.where(types == 4)[0]
 
-    soma_areas = areas[soma_ids]
-    dend_areas = areas[dend_ids]
-    apic_areas = areas[apic_ids]
+    # soma_areas = areas[soma_ids]
+    # dend_areas = areas[dend_ids]
+    # apic_areas = areas[apic_ids]
 
-    soma_lens = lens[soma_ids]
-    dend_lens = lens[dend_ids]
-    apic_lens = lens[apic_ids]
+    # soma_lens = lens[soma_ids]
+    # dend_lens = lens[dend_ids]
+    # apic_lens = lens[apic_ids]
     
-    print("Dend Excitatory:", np.trunc(sum(dend_lens) * 1.4))
-    print("Dend Inhibitory:", np.trunc(sum(dend_lens) * 0.14))
-    print("Apic Excitatory:", np.trunc(sum(apic_lens) * 1.4))
-    print("Apic Inhibitory:", np.trunc(sum(apic_lens) * 0.14))
+    # print("Dend Excitatory:", np.trunc(sum(dend_lens) * 1.4))
+    # print("Dend Inhibitory:", np.trunc(sum(dend_lens) * 0.14))
+    # print("Apic Excitatory:", np.trunc(sum(apic_lens) * 1.4))
+    # print("Apic Inhibitory:", np.trunc(sum(apic_lens) * 0.14))
+    # print("Soma Inhibitory:", 148)
+
+    print("Dend Excitatory:", np.trunc(sum(lens[far_dend_ids]) * 1.4))
+    print("Beta Dend Inhibitory:", np.trunc(sum(lens[far_dend_ids]) * 0.14))
+    print("Gamma Dend Inhibitory:", np.trunc(sum(lens[close_dend_ids]) * 0.14))
+    print("Apic Excitatory:", np.trunc(sum(lens[apic_ids]) * 1.4))
+    print("Apic Inhibitory:", np.trunc(sum(lens[apic_ids]) * 0.14))
     print("Soma Inhibitory:", 148)
