@@ -55,7 +55,7 @@ num_apic_inh = (1041 // avg_syn_per_cell) // scale_div
 num_prox_dend_inh = (67 // inh_syn_per_cell) // scale_div
 num_soma_inh = (148 // inh_syn_per_cell) // scale_div
 
-exc_fr_mean = 0.1
+exc_fr_mean = 2#0.1
 exc_fr_std = 0.5
 inh_fr = 7 #* scale_div
 
@@ -278,7 +278,7 @@ exc_psg = PoissonSpikeGenerator(population='exc_stim')
 exc_psg.add(node_ids = range(num_apic_exc + num_dend_exc),
                 firing_rate=exc_fr_mean,
                 #times=(0.0*1000, seconds*1000))
-                times=(0.0, seconds))
+                times=(0.5, seconds))
 exc_psg.to_sonata('exc_stim_spikes.h5')
 # exc_psg = PoissonSpikeGenerator(population='exc_stim')
 # for i in range(num_exc):

@@ -29,6 +29,23 @@ som.record(hobj.soma[0](0.5)._ref_v)
 syn = h.Vector()
 syn.record(conn._connector.postseg()._ref_v)
 
+##############Plot Cell and Synapses##################
+
+# import matplotlib.pyplot as plt
+
+# ps = h.PlotShape(False)
+# ax = ps.plot(plt)
+# #import pdb; pdb.set_trace()
+# for con in cell._connections:
+#     #print(con._connector.postseg())
+#     #print(p.mark)
+#     #import pdb; pdb.set_trace()
+#     ax.mark(con._connector.postseg())
+
+# plt.show()
+
+######################################################
+
 sim.run()
 
 import matplotlib.pyplot as plt
