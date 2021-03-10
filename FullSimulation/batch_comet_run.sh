@@ -23,6 +23,6 @@ rm -rf output
 echo "Running model at $(date)"
 
 #mpirun nrniv -mpi -quiet -python3 run_network.py simulation_config.json
-ibrun nrniv -mpi -python run_save_network.py
+ibrun nrniv -mpi -python run_network.py
 
 echo "Done running model at $(date)"
