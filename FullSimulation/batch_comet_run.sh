@@ -1,8 +1,8 @@
 #!/bin/bash
 
 #SBATCH --partition compute
-#SBATCH --nodes=5
-#SBATCH --ntasks-per-node=20
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=1
 #SBATCH -A TG-DBS180005
 #SBATCH --job-name=run
 #SBATCH --output=run.out

@@ -278,7 +278,7 @@ exc_psg = PoissonSpikeGenerator(population='exc_stim')
 exc_psg.add(node_ids = range(num_apic_exc + num_dend_exc),
                 firing_rate=exc_fr_mean,
                 #times=(0.0*1000, seconds*1000))
-                times=(0.5, seconds))
+                times=(0.0, seconds))
 exc_psg.to_sonata('exc_stim_spikes.h5')
 # exc_psg = PoissonSpikeGenerator(population='exc_stim')
 # for i in range(num_exc):
@@ -287,11 +287,17 @@ exc_psg.to_sonata('exc_stim_spikes.h5')
 #                 times=(0.0*1000, seconds*1000))     
 # exc_psg.to_sonata('exc_stim_spikes.h5')
 
-# inh_psg = PoissonSpikeGenerator(population='inh_stim')
-# inh_psg.add(node_ids=range(num_inh), 
-#         firing_rate=inh_fr/1000,  
-#         times=(0.0*1000, seconds*1000))   
-# inh_psg.to_sonata('inh_stim_spikes.h5')
+inh_psg = PoissonSpikeGenerator(population='prox_inh_stim')
+inh_psg.add(node_ids=range(num_soma_inh + num_prox_dend_inh), 
+        firing_rate=inh_fr,  
+        times=(0.0, seconds))   
+inh_psg.to_sonata('prox_inh_stim_spikes.h5')
+
+inh_psg = PoissonSpikeGenerator(population='dist_inh_stim')
+inh_psg.add(node_ids=range(num_apic_inh + num_dend_inh), 
+        firing_rate=inh_fr,  
+        times=(0.0, seconds))   
+inh_psg.to_sonata('dist_inh_stim_spikes.h5')
 
 # from crop_raster import crop_raster
 # crop_raster("rhythmic_inh_spikes.h5", 'inh_stim_spikes.h5', 120000, num_inh)
@@ -306,7 +312,7 @@ try:
                         report_vars=['v', 'cai'],
                         dL = 5,
                         spikes_threshold=-10,
-                        spikes_inputs=[('exc_stim', 'exc_stim_spikes.h5')],#, ('inh_stim', 'inh_stim_spikes.h5')],
+                        spikes_inputs=[('exc_stim', 'exc_stim_spikes.h5'), ('prox_inh_stim', 'prox_inh_stim_spikes.h5'), ('dist_inh_stim', 'dist_inh_stim_spikes.h5')],
                         components_dir='../biophys_components',
                         compile_mechanisms=True,
                         config_file="config.json")
@@ -317,6 +323,6 @@ except:
                         report_vars=['v', 'cai'],
                         dL = 5,
                         spikes_threshold=-10,
-                        spikes_inputs=[('exc_stim', 'exc_stim_spikes.h5')],#, ('inh_stim', 'inh_stim_spikes.h5')],
+                        spikes_inputs=[('exc_stim', 'exc_stim_spikes.h5'), ('prox_inh_stim', 'prox_inh_stim_spikes.h5'), ('dist_inh_stim', 'dist_inh_stim_spikes.h5')],
                         components_dir='../biophys_components',
                         compile_mechanisms=True)

@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import h5py
 from bmtk.utils.reports.spike_trains import PoissonSpikeGenerator
 import pandas as pd
-from scipy.fft import fft
+from scipy.fftpack import fft
 
 def zscore(x):
     return (x-np.mean(x))/np.std(x)
