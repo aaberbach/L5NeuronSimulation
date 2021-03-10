@@ -307,4 +307,5 @@ build_env_bionet(base_dir='./',
                 spikes_threshold=-10,
                 spikes_inputs=[('exc_stim', 'exc_stim_spikes.h5')],#, ('inh_stim', 'inh_stim_spikes.h5')],
                 components_dir='../biophys_components',
-                compile_mechanisms=True)
+                compile_mechanisms=True,
+                config_file="NOTREALPATH")
