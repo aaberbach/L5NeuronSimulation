@@ -299,13 +299,24 @@ exc_psg.to_sonata('exc_stim_spikes.h5')
 
 from bmtk.utils.sim_setup import build_env_bionet
 
-build_env_bionet(base_dir='./',
-                network_dir='./network',
-                dt = 0.1, tstop=seconds * 1000.0,
-                report_vars=['v', 'cai'],
-                dL = 5,
-                spikes_threshold=-10,
-                spikes_inputs=[('exc_stim', 'exc_stim_spikes.h5')],#, ('inh_stim', 'inh_stim_spikes.h5')],
-                components_dir='../biophys_components',
-                compile_mechanisms=True,
-                config_file="NOTREALPATH")
+try:
+        build_env_bionet(base_dir='./',
+                        network_dir='./network',
+                        dt = 0.1, tstop=seconds * 1000.0,
+                        report_vars=['v', 'cai'],
+                        dL = 5,
+                        spikes_threshold=-10,
+                        spikes_inputs=[('exc_stim', 'exc_stim_spikes.h5')],#, ('inh_stim', 'inh_stim_spikes.h5')],
+                        components_dir='../biophys_components',
+                        compile_mechanisms=True,
+                        config_file="config.json")
+except:
+        build_env_bionet(base_dir='./',
+                        network_dir='./network',
+                        dt = 0.1, tstop=seconds * 1000.0,
+                        report_vars=['v', 'cai'],
+                        dL = 5,
+                        spikes_threshold=-10,
+                        spikes_inputs=[('exc_stim', 'exc_stim_spikes.h5')],#, ('inh_stim', 'inh_stim_spikes.h5')],
+                        components_dir='../biophys_components',
+                        compile_mechanisms=True)
