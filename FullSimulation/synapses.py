@@ -291,7 +291,7 @@ def Pyr2Pyr(syn_params, sec_x, sec_id):
         if pyrWeight_s == 0:
             base = float(pyrWeight_m)
         else:
-            base = float(min(lognormal(pyrWeight_m, pyrWeight_s), 15))
+            base = float(min(lognormal(pyrWeight_m, pyrWeight_s), 15) / 6)
 
         # 0.9278403931213186 * ( 1.0022024845737223 ^ x )
         # 0.9131511669645764 * ( 1.0019436631560847 ^ x )

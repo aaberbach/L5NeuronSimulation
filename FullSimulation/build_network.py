@@ -2,6 +2,7 @@ from bmtk.builder import NetworkBuilder
 import numpy as np
 import sys
 import synapses   
+import h5py
 import pandas as pd       
 
 import os,sys,inspect
@@ -11,7 +12,7 @@ sys.path.insert(0,parentdir)
 
 #Add divergent inhibition
 #Change synapse counts for inhibition and excitation based on 50 um
-
+from raster_maker import *
 from clustering import *
 
 synapses.load()
@@ -60,8 +61,8 @@ exc_fr_std = 0.5
 inh_fr = 7 #* scale_div
 
 clust_per_group = 8
-num_dend_groups = 70 // scale_div
-num_apic_groups = 100 // scale_div
+num_dend_groups = 65 // scale_div
+num_apic_groups = 104 // scale_div
 
 dend_groups = []
 apic_groups = []
@@ -268,19 +269,47 @@ from bmtk.utils.reports.spike_trains.spikes_file_writers import write_csv
 # fr_df['fr_max'] = exc_maxs
 
 #fr_df.to_csv('frs_temp.csv', index=False)
-seconds = 1
+seconds = 2
+times = (0, seconds)
 
-def generate_spikes(psg, group, fr, times):
-        psg.add(node_ids=range(group.start_id, group.start_id + len(group.cells)),
-                        firing_rate=fr,
-                        times=times)
+def gen_group_spikes(group, seconds):
+        z = make_noise(num_samples=(int(seconds*1000))-1,num_traces=group.n_cells)
+        df = make_spikes(numUnits=group.n_cells,rateProf=z[0,:])
+        return df
 
-exc_psg = PoissonSpikeGenerator(population='exc_stim')
-exc_psg.add(node_ids = range(num_apic_exc + num_dend_exc),
-                firing_rate=exc_fr_mean,
-                #times=(0.0*1000, seconds*1000))
-                times=(0.0, seconds))
-exc_psg.to_sonata('exc_stim_spikes.h5')
+def raster_to_sonata(node_ids, timestamps, key, file):
+        f = h5py.File(file, 'w')
+        group = f.create_group('spikes')
+        group = group.create_group(key)
+        group.create_dataset("node_ids", data = node_ids.astype("u4"))
+        group.create_dataset("timestamps", data = timestamps)
+        f.close()
+
+def gen_spikes(dend_groups, apic_groups, times, file):
+        node_ids = []
+        timestamps = []
+
+        length = times[1] - times[0]
+        buffer = times[0]
+
+        for group in (dend_groups + apic_groups):
+                df = gen_group_spikes(group, length)
+                node_ids = np.concatenate((node_ids, np.array(df["node_ids"]) + group.start_id))
+                timestamps = np.concatenate((timestamps, np.array(df["timestamps"])))
+
+        timestamps += buffer * 1000
+        import pdb; pdb.set_trace()
+        raster_to_sonata(node_ids, timestamps, "exc_stim", file)
+        
+
+gen_spikes(dend_groups, apic_groups, times, 'exc_stim_spikes.h5')
+
+# exc_psg = PoissonSpikeGenerator(population='exc_stim')
+# exc_psg.add(node_ids = range(num_apic_exc + num_dend_exc),
+#                 firing_rate=exc_fr_mean,
+#                 #times=(0.0*1000, seconds*1000))
+#                 times=times)
+# exc_psg.to_sonata('exc_stim_spikes.h5')
 # exc_psg = PoissonSpikeGenerator(population='exc_stim')
 # for i in range(num_exc):
 #         exc_psg.add(node_ids=[i],  
@@ -291,13 +320,13 @@ exc_psg.to_sonata('exc_stim_spikes.h5')
 inh_psg = PoissonSpikeGenerator(population='prox_inh_stim')
 inh_psg.add(node_ids=range(num_soma_inh + num_prox_dend_inh), 
         firing_rate=inh_fr,  
-        times=(0.0, seconds))   
+        times=times)   
 inh_psg.to_sonata('prox_inh_stim_spikes.h5')
 
 inh_psg = PoissonSpikeGenerator(population='dist_inh_stim')
 inh_psg.add(node_ids=range(num_apic_inh + num_dend_inh), 
         firing_rate=inh_fr,  
-        times=(0.0, seconds))   
+        times=times)   
 inh_psg.to_sonata('dist_inh_stim_spikes.h5')
 
 # from crop_raster import crop_raster
@@ -310,7 +339,7 @@ try:
         build_env_bionet(base_dir='./',
                         network_dir='./network',
                         dt = 0.1, tstop=seconds * 1000.0,
-                        report_vars=['v', 'cai'],
+                        report_vars=['v'],
                         dL = 5,
                         spikes_threshold=-10,
                         spikes_inputs=[('exc_stim', 'exc_stim_spikes.h5'), ('prox_inh_stim', 'prox_inh_stim_spikes.h5'), ('dist_inh_stim', 'dist_inh_stim_spikes.h5')],
@@ -321,7 +350,7 @@ except:
         build_env_bionet(base_dir='./',
                         network_dir='./network',
                         dt = 0.1, tstop=seconds * 1000.0,
-                        report_vars=['v', 'cai'],
+                        report_vars=['v'],
                         dL = 5,
                         spikes_threshold=-10,
                         spikes_inputs=[('exc_stim', 'exc_stim_spikes.h5'), ('prox_inh_stim', 'prox_inh_stim_spikes.h5'), ('dist_inh_stim', 'dist_inh_stim_spikes.h5')],
