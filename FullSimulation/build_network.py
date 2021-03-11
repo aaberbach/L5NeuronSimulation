@@ -158,7 +158,8 @@ prox_inh_stim.add_nodes(N=num_prox_dend_inh,
 #Edges
 
 def uniform_connect(source, target, low=1, high=5):
-        return np.random.uniform(low, high)
+        #return np.random.uniform(low, high)
+        return np.random.randint(low=low, high=high + 1)
 
 #On soma.
 net.add_edges(source=prox_inh_stim.nodes(pop_name='on_soma'), target=net.nodes(),
