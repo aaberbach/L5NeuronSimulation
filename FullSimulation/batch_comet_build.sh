@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --partition compute
+#SBATCH --partition shared
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
 #SBATCH -A TG-DBS180005
@@ -11,7 +11,7 @@
 module purge
 #module load python
 module load intel
-module load openmpi_ib
+#module load openmpi_ib
 export PYTHONPATH=$HOME/neuron/nrn/lib/python:$PYTHONPATH
 export LD_LIBRARY_PATH=$HOME/neuron/nrn/x86_64/lib:$LD_LIBRARY_PATH
 export PATH=$HOME/neuron/nrn/x86_64/bin:$PATH
