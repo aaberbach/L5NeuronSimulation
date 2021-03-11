@@ -29,25 +29,41 @@ som.record(hobj.soma[0](0.5)._ref_v)
 syn = h.Vector()
 syn.record(conn._connector.postseg()._ref_v)
 
+##############Plot Cell and Synapses##################
+
+# import matplotlib.pyplot as plt
+
+# ps = h.PlotShape(False)
+# ax = ps.plot(plt)
+# #import pdb; pdb.set_trace()
+# for con in cell._connections:
+#     #print(con._connector.postseg())
+#     #print(p.mark)
+#     #import pdb; pdb.set_trace()
+#     ax.mark(con._connector.postseg())
+
+# plt.show()
+
+######################################################
+
 sim.run()
 
 import matplotlib.pyplot as plt
 
 import scipy.signal as s
 
-volt = np.array(syn)[5000:]
-print("Num Spikes:", len(s.find_peaks(volt)))
+volt = np.array(som)[5000:]
+peaks = s.find_peaks(volt)[0]
+print("Num Spikes:", len(peaks) - 1)
 
 plt.figure()
 plt.plot(np.array(syn))
+plt.scatter(peaks + 5000, np.full(len(peaks), -60))
 plt.title("Potential at synapse")
 
 plt.figure()
 plt.plot(np.array(som))
 plt.title("Potential at soma")
-
-plt.figure()
-plt.plot(np.array(fac))
 
 plt.show()
 

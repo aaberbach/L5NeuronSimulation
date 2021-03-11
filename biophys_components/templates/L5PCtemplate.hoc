@@ -26,7 +26,7 @@ proc init() {localobj nl,import
     
   nl = new Import3d_Neurolucida3()
   nl.quiet = 1
-  nl.input("/home/mizzou/Internship/L5Neuron/GoodL5NeuronSimulation/biophys_components/morphologies/cell1.asc")
+  nl.input("../biophys_components/morphologies/cell1.asc")
   import = new Import3d_GUI(nl, 0)
   import.instantiate(this)
   geom_nseg()

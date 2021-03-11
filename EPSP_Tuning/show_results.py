@@ -33,14 +33,14 @@ def plot_EPSPs(file, time = 4000):
     sb.distplot(epsps)
 
     #plt.show()
-plot_EPSPs("new_scaled_results/1_1.3_EPSPs.csv")
+plot_EPSPs("Tunings/0.95_1.3_EPSPs.csv")
 #plot_EPSPs("new_scaled_results/1.1_1.4_EPSPs.csv")
 plt.show()
 #plot_EPSPs("scaled_results/0.45_0.4_EPSPs.csv")
 
-plot_scatter("new_scaled_results/scaled_0.5_EPSPs.csv", label="scaled 0.4")
-plot_scatter("EPSP_files/0.4_EPSPs.csv", label="base 0.4")
-plt.axhline(y = 0.5, color = 'green', linestyle = '-', label="target")
+plot_scatter("scaled/scale_0.8_EPSPs.csv", label="scaled 0.8")
+plot_scatter("all_0.8_EPSPs.csv", label="base 0.8")
+plt.axhline(y = 0.8, color = 'green', linestyle = '-', label="target")
 
 plt.show()
 

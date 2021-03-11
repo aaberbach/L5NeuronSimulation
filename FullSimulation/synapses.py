@@ -2,26 +2,29 @@ import glob
 import json
 import os
 
-import re
 from bmtk.simulator.bionet.pyfunction_cache import add_synapse_model
 from neuron import h
 import random
 import numpy as np
 
-#scale = 10
-#np.random.seed(3)
-
-weight_means = {"exc": {}, "inh": {}}
-generators = []
 np.random.seed(42)
-#np_gen = np.random.RandomState()
-#np_gen.seed(42)
+generators = []
+
+pyrWeight_m = 0.95
+pyrWeight_s = 1.3
 
 def lognormal(m, s):
-    mean = np.log(m) - 0.5 * np.log((s/m)**2+1)
-    std = np.sqrt(np.log((s/m)**2 + 1))
-    return max(np.random.lognormal(mean, std, 1), 0.0000000001)
-    
+        mean = np.log(m) - 0.5 * np.log((s/m)**2+1)
+        std = np.sqrt(np.log((s/m)**2 + 1))
+        #import pdb; pdb.set_trace()
+        return max(np.random.lognormal(mean, std, 1), 0.00000001)
+
+def set_pyr_w(m, s):
+    global pyrWeight_m
+    global pyrWeight_s
+    pyrWeight_m = m
+    pyrWeight_s = s
+
 def Bg2Pyr(syn_params, sec_x, sec_id):
     """Create a bg2pyr synapse
     :param syn_params: parameters of a synapse
@@ -162,14 +165,6 @@ def Int2Pyr(syn_params, sec_x, sec_id):
     :return: NEURON synapse object
     """
 
-    # trg_cell_nid = int(str(sec_id).split("[")[1].split("]")[0])
-    # # if trg_cell_nid > 0:
-    # #     import pdb; pdb.set_trace()
-    # if trg_cell_nid in weight_means["inh"].keys():
-    #     mean_weight = weight_means["inh"][trg_cell_nid]
-    # else:
-    #     weight_means["inh"][trg_cell_nid] = mean_weight = np.random.uniform(3.171729 - 1.5, 3.171729 + 0.1)
-
     lsyn = h.int2pyr(sec_x, sec=sec_id)
 
     if syn_params.get('AlphaTmax_ampa'):
@@ -196,12 +191,8 @@ def Int2Pyr(syn_params, sec_x, sec_id):
     
     if syn_params.get('initW'):
         #lsyn.initW = float(syn_params['initW']) * random.uniform(0.5,1.0) # par.x(0) * rC.uniform(0.5,1.0)//rand.normal(0.5,1.5) //`rand.repick() 
-        #lsyn.initW = float(min(lognormal(0.11, 0.05), 5) * scale)
-        lsyn.initW = 12#float(min(lognormal(0.4, 0.09), 5) * scale)
-        #float(lognormal(3.171729, 0.5173616067) * scale * 20)
-        #lsyn.initW = float(lognormal(mean_weight, 0.5173616067) * scale)
-        #lsyn.initW = min(float(lognormal(mean_weight, 1)), 11) * scale
-        #lsyn.initW = 3.171729*10
+        lsyn.initW = float(np.random.normal(12, np.sqrt(2)))#float(pyrWeight)
+
     if syn_params.get('Wmax'):
         lsyn.Wmax = float(syn_params['Wmax']) * lsyn.initW # par.x(1) * lsyn.initW
     if syn_params.get('Wmin'):
@@ -241,7 +232,6 @@ def int2pyr(syn_params, xs, secs):
     :param secs: target sections
     :return: list of NEURON synpase objects
     """
-    np.random.seed(3)
     syns = []
     for x, sec in zip(xs, secs):
         syn = Int2Pyr(syn_params, x, sec)
@@ -256,15 +246,6 @@ def Pyr2Pyr(syn_params, sec_x, sec_id):
     :param sec_id: target section
     :return: NEURON synapse object
     """
-    # #import pdb; pdb.set_trace()
-    # trg_cell_nid = int(str(sec_id).split("[")[1].split("]")[0])
-    # # if trg_cell_nid > 0:
-    # #     import pdb; pdb.set_trace()
-    # if trg_cell_nid in weight_means["exc"].keys():
-    #     mean_weight = weight_means["exc"][trg_cell_nid]
-    # else:
-    #     weight_means["exc"][trg_cell_nid] = mean_weight = np.random.uniform(0.18181829517744805 - 0.18, 0.18181829517744805 + 0.28)
-    #     #weight_means["exc"][trg_cell_nid] = mean_weight = np.random.uniform(0.18181829517744805 + 0.32, 0.18181829517744805 + 0.35)
 
     lsyn = h.pyr2pyr(sec_x, sec=sec_id)
 
@@ -276,10 +257,7 @@ def Pyr2Pyr(syn_params, sec_x, sec_id):
 
     generators.append(r)
 
-    #lsyn.P_0 = np_gen.uniform(0.16,0.9)#np.random.uniform(0.16, 0.9)
-    lsyn.P_0 = np.random.uniform(0.16, 0.9)
-    print(lsyn.P_0)
-    #import pdb; pdb.set_trace()
+    lsyn.P_0 = np.random.uniform(0.16, 0.9)#Release probability
 
     if syn_params.get('AlphaTmax_ampa'):
         lsyn.AlphaTmax_ampa = float(syn_params['AlphaTmax_ampa']) # par.x(21)
@@ -302,34 +280,49 @@ def Pyr2Pyr(syn_params, sec_x, sec_id):
         lsyn.gbar_nmda = float(syn_params['gbar_nmda']) # par.x(28)
     if syn_params.get('Erev_nmda'):
         lsyn.Erev_nmda = float(syn_params['Erev_nmda']) # par.x(16)
-    #global max_exc
+    
     if syn_params.get('initW'):
-        #lsyn.initW = float(syn_params['initW']) * random.uniform(0.5,1.0) # par.x(0) * rC.uniform(0.5,1.0)//rand.normal(0.5,1.5) //`rand.repick() 
-        #lsyn.initW = float(min(lognormal(2.5*0.18181829517744805, 0.13993260156705545), 0.8) * scale)
-        lsyn.initW = 20#0.5#float(min(lognormal(0.495, 0.09), 0.8) * scale)
-        #lsyn.initW = 5
-        # if (lsyn.initW > max_exc):
-        #     max_exc = lsyn.initW
-        #lsyn.initW = float(lognormal(mean_weight, 0.13993260156705545) * scale)
-        #lsyn.initW = float(min(lognormal(mean_weight, 0.22), 1.20) * scale)
-        #lsyn.initW = 0.18181829517744805 * 10
-        #print(lsyn.initW)
-        
-    # if syn_params.get('Wmax'):
-    #     lsyn.Wmax = 8#float(syn_params['Wmax']) * lsyn.initW # par.x(1) * lsyn.initW
-    # if syn_params.get('Wmin'):
-    #     lsyn.Wmin = float(syn_params['Wmin']) * lsyn.initW # par.x(2) * lsyn.initW
+        h.distance(sec=sec_id.cell().soma[0])
+        dist = h.distance(sec_id(sec_x))
+        fullsecname = sec_id.name()
+        sec_type = fullsecname.split(".")[1][:4]
+        sec_id = int(fullsecname.split("[")[-1].split("]")[0])
+
+        if pyrWeight_s == 0:
+            base = float(pyrWeight_m)
+        else:
+            base = float(min(lognormal(pyrWeight_m, pyrWeight_s), 15))
+
+        # 0.9278403931213186 * ( 1.0022024845737223 ^ x )
+        # 0.9131511669645764 * ( 1.0019436631560847 ^ x )
+        # 0.16857988107990907 * ( 1.0039628707324273 ^ x )
+
+        if sec_type == "dend":
+            lsyn.initW = base * (0.9278403931213186 * ( 1.0022024845737223 ** dist ))
+        elif sec_type == "apic":
+            if dist < 750:
+                lsyn.initW = base * (0.9131511669645764 * ( 1.0019436631560847 ** dist))
+            else:
+                lsyn.initW = base * (0.16857988107990907 * ( 1.0039628707324273 ** dist))
+
+        lsyn.initW = min(float(lsyn.initW), 60)
+
+
+    if syn_params.get('Wmax'):
+        lsyn.Wmax = float(syn_params['Wmax']) * lsyn.initW # par.x(1) * lsyn.initW
+    if syn_params.get('Wmin'):
+        lsyn.Wmin = float(syn_params['Wmin']) * lsyn.initW # par.x(2) * lsyn.initW
     #delay = float(syn_params['initW']) # par.x(3) + delayDistance
     #lcon = new NetCon(&v(0.5), lsyn, 0, delay, 1)
 
-    # if syn_params.get('lambda1'):
-    #     lsyn.lambda1 = float(syn_params['lambda1']) # par.x(6)
-    # if syn_params.get('lambda2'):
-    #     lsyn.lambda2 = float(syn_params['lambda2']) # par.x(7)
-    # if syn_params.get('threshold1'):
-    #     lsyn.threshold1 = float(syn_params['threshold1']) # par.x(8)
-    # if syn_params.get('threshold2'):
-    #     lsyn.threshold2 = float(syn_params['threshold2']) # par.x(9)
+    if syn_params.get('lambda1'):
+        lsyn.lambda1 = float(syn_params['lambda1']) # par.x(6)
+    if syn_params.get('lambda2'):
+        lsyn.lambda2 = float(syn_params['lambda2']) # par.x(7)
+    if syn_params.get('threshold1'):
+        lsyn.threshold1 = float(syn_params['threshold1']) # par.x(8)
+    if syn_params.get('threshold2'):
+        lsyn.threshold2 = float(syn_params['threshold2']) # par.x(9)
     if syn_params.get('tauD1'):
         lsyn.tauD1 = float(syn_params['tauD1']) # par.x(10)
     if syn_params.get('d1'):
@@ -343,14 +336,14 @@ def Pyr2Pyr(syn_params, sec_x, sec_id):
     if syn_params.get('f'):
         lsyn.f = float(syn_params['f']) # par.x(15)
 
-    # if syn_params.get('bACH'):
-    #     lsyn.bACH = float(syn_params['bACH']) # par.x(17)
-    # if syn_params.get('aDA'):
-    #     lsyn.aDA = float(syn_params['aDA']) # par.x(18)
-    # if syn_params.get('bDA'):
-    #     lsyn.bDA = float(syn_params['bDA']) # par.x(19)
-    # if syn_params.get('wACH'):
-    #     lsyn.wACH = float(syn_params['wACH']) # par.x(20)
+    if syn_params.get('bACH'):
+        lsyn.bACH = float(syn_params['bACH']) # par.x(17)
+    if syn_params.get('aDA'):
+        lsyn.aDA = float(syn_params['aDA']) # par.x(18)
+    if syn_params.get('bDA'):
+        lsyn.bDA = float(syn_params['bDA']) # par.x(19)
+    if syn_params.get('wACH'):
+        lsyn.wACH = float(syn_params['wACH']) # par.x(20)
     
     return lsyn
 
@@ -362,7 +355,7 @@ def pyr2pyr(syn_params, xs, secs):
     :param secs: target sections
     :return: list of NEURON synpase objects
     """
-
+    np.random.seed(2129)
     syns = []
     for x, sec in zip(xs, secs):
         syn = Pyr2Pyr(syn_params, x, sec)
@@ -371,7 +364,6 @@ def pyr2pyr(syn_params, xs, secs):
 
 
 def load():
-    #import pdb; pdb.set_trace()
     add_synapse_model(Bg2Pyr, 'bg2pyr', overwrite=False)
     add_synapse_model(Bg2Pyr, overwrite=False)
     add_synapse_model(Pyr2Pyr, 'pyr2pyr', overwrite=False)
@@ -379,9 +371,7 @@ def load():
     add_synapse_model(Pyr2Int, 'pyr2int', overwrite=False)
     add_synapse_model(Pyr2Int, overwrite=False)
     add_synapse_model(Int2Pyr, 'int2pyr', overwrite=False)
-    #import pdb; pdb.set_trace()
     add_synapse_model(Int2Pyr, overwrite=False)
-    #import pdb; pdb.set_trace()
     return
 
 def syn_params_dicts(syn_dir='../biophys_components/synaptic_models'):

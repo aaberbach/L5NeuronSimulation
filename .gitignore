@@ -11,6 +11,8 @@ network/
 output/
 exc_stim_spikes.h5
 inh_stim_spikes.h5
+prox_inh_stim_spikes.h5
+dist_inh_stim_spikes.h5
 node_sets.json
 simulation_config.json
 run_bionet.py

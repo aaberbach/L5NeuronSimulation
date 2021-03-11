@@ -34,7 +34,7 @@ try:
     fac.record(conn._syn._ref_igaba)
 except:
     fac.record(conn._syn._ref_facfactor)
-import pdb; pdb.set_trace()
+#import pdb; pdb.set_trace()
 sim.run()
 
 import matplotlib.pyplot as plt
@@ -43,11 +43,16 @@ plt.plot(np.array(syn))
 plt.title("Potential at synapse")
 
 plt.figure()
-plt.plot(np.array(som))
-plt.title("Potential at soma")
+plt.plot(np.arange(0, len(som)) / 10, np.array(som))
+plt.title("PN->PN")
+plt.ylabel("Voltage at Soma (mV)")
+plt.xlabel("time (ms)")
 
 plt.figure()
-plt.plot(np.array(fac))
+plt.title("Gabba curent FSI->PN")
+plt.xlabel("time (ms)")
+plt.ylabel("Current (nA)")
+plt.plot(np.arange(0, len(fac)) / 10, np.array(fac))
 
 plt.show()
 

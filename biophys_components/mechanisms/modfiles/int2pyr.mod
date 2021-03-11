@@ -240,8 +240,8 @@ if (flag == 0) {  : Short term plasticity was implemented(Varela et. al 1997):
 	
 	if (F > 3) { 
 	F=3	}	
-	if (facfactor < 0.2) { 
-	facfactor=0.2
+	if (facfactor < 0.15) { 
+	facfactor=0.15
 	}
 	D1 = D1 * d1
 	D2 = D2 * d2

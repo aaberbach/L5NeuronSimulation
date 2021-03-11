@@ -54,12 +54,15 @@ net.add_edges(source=inh_stim.nodes(), target=net.nodes(),
 #Excitatory on basal dendrites.
 net.add_edges(source=exc_stim.nodes(), target=net.nodes(),
                 connection_rule=1,
+                #syn_weight=500,
                 syn_weight=1,
                 target_sections=['dend'],
                 delay=0.1,
                 distance_range=[50.0, 2000.0],
                 dynamics_params='PN2PN.json',
                 model_template=syn['PN2PN.json']['level_of_detail'])
+                # dynamics_params='AMPA_ExcToExc.json',
+                # model_template='exp2syn')
 
 # #Excitatory on apical dendrites.
 # net.add_edges(source=exc_stim.nodes(), target=net.nodes(),
@@ -83,14 +86,16 @@ exc_stim.save_nodes(output_dir='network')
 inh_stim.build()
 inh_stim.save_nodes(output_dir='network')
 
-spacing = 10#30#10
-num_AP = 13#9#13
-node_ids = np.full(num_AP, 0)
-timestamps = np.linspace(0 + 500, (num_AP-1)*spacing + 500, num_AP)
+# spacing = 30#10
+# num_AP = 9#13
+# node_ids = np.full(num_AP, 0)
+# timestamps = np.linspace(0 + 500, (num_AP-1)*spacing + 500, num_AP)
 #timestamps *= 10
 #import pdb; pdb.set_trace()
+node_ids = np.full(1, 0)
+timestamps = np.array([500])
 import h5py
-key = 'inh_stim'
+key = 'exc_stim'
 f = h5py.File('stim_spikes.h5', 'w')
 group = f.create_group('spikes')
 group = group.create_group(key)

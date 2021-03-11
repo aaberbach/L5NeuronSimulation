@@ -7,6 +7,9 @@ from neuron import h
 import random
 import numpy as np
 
+np.random.seed(42)
+generators = []
+
 pyrWeight_m = 1
 pyrWeight_s = 1
 
@@ -246,6 +249,14 @@ def Pyr2Pyr(syn_params, sec_x, sec_id):
 
     lsyn = h.pyr2pyr(sec_x, sec=sec_id)
 
+    #Assigns random generator of release probability.
+    r = h.Random()
+    r.MCellRan4()
+    r.uniform(0,1)
+    lsyn.setRandObjRef(r)
+
+    generators.append(r)
+
     if syn_params.get('AlphaTmax_ampa'):
         lsyn.AlphaTmax_ampa = float(syn_params['AlphaTmax_ampa']) # par.x(21)
     if syn_params.get('Beta_ampa'):
@@ -282,31 +293,29 @@ def Pyr2Pyr(syn_params, sec_x, sec_id):
         sec_type = fullsecname.split(".")[1][:4]
         sec_id = int(fullsecname.split("[")[-1].split("]")[0])
 
-        # [0.00159513 1.01897285] Dend Lin
-        # [0.59768734 1.00326839] Far Apic Exp (High IDs)
-        # [0.62153507 1.00248601] Far Apic Exp (Low IDs)
-        # [0.97717162 1.00195518] Close Apic Exp
-
         if pyrWeight_s == 0:
             base = float(pyrWeight_m)
         else:
-            base = float(min(lognormal(pyrWeight_m, pyrWeight_s), 8))
+            base = float(min(lognormal(pyrWeight_m, pyrWeight_s), 15))
             #base = np.random.lognormal(pyrWeight_m, np.sqrt(pyrWeight_s), 1)
 
+        # 0.9278403931213186 * ( 1.0022024845737223 ^ x )
+        # 0.9131511669645764 * ( 1.0019436631560847 ^ x )
+        # 0.16857988107990907 * ( 1.0039628707324273 ^ x )
 
         if sec_type == "dend":
-            lsyn.initW = base * (0.9371285272684119 * ( 1.0017027151340998 ** dist))
+            lsyn.initW = base * (0.9278403931213186 * ( 1.0022024845737223 ** dist ))
         elif sec_type == "apic":
-            if dist < 500:
-                lsyn.initW = base * (0.8842233502464731 * ( 1.001970475980598 ** dist))
+            if dist < 750:
+                lsyn.initW = base * (0.9131511669645764 * ( 1.0019436631560847 ** dist))
             else:
-                lsyn.initW = base * (0.15197845065030272 * ( 1.0040953610902503 ** dist))
+                lsyn.initW = base * (0.16857988107990907 * ( 1.0039628707324273 ** dist))
                 # if sec_id >= 60:
                 #     lsyn.initW = base * (0.59768734 * (1.00326839 ** dist))
                 # else:
                 #     lsyn.initW = base * (0.62153507 * (1.00248601 ** dist))
 
-        lsyn.initW = min(float(lsyn.initW), 10)#11 no over, 
+        lsyn.initW = min(float(lsyn.initW), 60)
 
         #lsyn.initW = np.random.uniform(0.02, 2)
 
