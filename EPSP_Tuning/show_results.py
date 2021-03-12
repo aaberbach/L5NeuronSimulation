@@ -33,7 +33,17 @@ def plot_EPSPs(file, time = 4000):
     sb.distplot(epsps)
 
     #plt.show()
-plot_EPSPs("Tunings/0.95_1.3_EPSPs.csv")
+
+# plot_scatter("scaled/scale_0.4_EPSPs.csv", label="scaled 0.4")
+# #plot_scatter("EPSP_files/0.4_EPSPs.csv", label="base 0.4")
+# plt.axhline(y = 0.4, color = 'green', linestyle = '-', label="target1") 
+# plt.xlabel("Distance from soma (um)")
+# plt.ylabel("Somatic EPSP magnitude")
+# plt.legend()
+
+# plt.show()
+
+plot_EPSPs("Tunings/0.45_0.35_EPSPs.csv")
 #plot_EPSPs("new_scaled_results/1.1_1.4_EPSPs.csv")
 plt.show()
 #plot_EPSPs("scaled_results/0.45_0.4_EPSPs.csv")

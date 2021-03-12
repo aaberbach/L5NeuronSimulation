@@ -15,9 +15,9 @@ def lognormal(m, s):
 #         return np.sqrt((m**2) * np.exp(v) - 1)
 
 #import pdb; pdb.set_trace()
-m = 0.77#0.401
+m = 0.5#0.77#0.401
 #s = 0.31
-s=0.918#0.31
+s=0.45#0.918#0.31
 
 #import pdb; pdb.set_trace()
 arr = [float(lognormal(m, s)) for i in range(5000)]
