@@ -69,7 +69,7 @@ def make_noise(num_traces=100,num_samples=4999, mean_fr = 1, std_fr = 1):
         invfn[i,:] = zscore(ss.lfilter(B, A, wn));                             # Create '1/f' Noise
     return invfn[:,2000:]
 
-def make_spikes(numUnits=100,rateProf=None):
+def make_spikes(exp, dist, numUnits=100,rateProf=None):
     rateProf=rateProf
     rateProf[rateProf<0] = 0
     #meanRates = np.mean(rateProf)
@@ -79,7 +79,11 @@ def make_spikes(numUnits=100,rateProf=None):
 
     for i in np.arange(0,numUnits):
         rate_temp=[];simSpks_temp=[];
-        rate_temp = normRateProf + np.exp(st.levy_stable.rvs(alpha=1.37, beta=-1.00, loc=0.92, scale=0.44, size=1))
+        if exp:
+            rate_temp = normRateProf + np.exp(dist())
+        else:
+            rate_temp = normRateProf + dist()
+        #rate_temp = normRateProf + np.exp(st.levy_stable.rvs(alpha=1.37, beta=-1.00, loc=0.92, scale=0.44, size=1))
         numbPoints = scipy.stats.poisson(rate_temp/1000).rvs()#Poisson number of points
 
         simSpks=np.where(numbPoints>0)[0]
