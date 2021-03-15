@@ -74,7 +74,7 @@ proc biophys() {localobj bp
 	distance()
 	access soma
 
-  bp = new L5PCbiophys()
+  bp = new L5PCbiophysPassive()
   bp.biophys(this)
 }
 
