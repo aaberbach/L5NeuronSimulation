@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#SBATCH --partition compute
+#SBATCH --partition shared
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
 #SBATCH -A TG-DBS180005
@@ -23,6 +23,7 @@ rm -rf output
 echo "Running model at $(date)"
 
 #mpirun nrniv -mpi -quiet -python3 run_network.py simulation_config.json
-ibrun nrniv -mpi -python run_network.py
+#ibrun nrniv -mpi -python run_network.py
+python run_network.py
 
 echo "Done running model at $(date)"

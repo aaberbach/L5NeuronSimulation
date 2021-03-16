@@ -10,8 +10,8 @@ import numpy as np
 np.random.seed(42)
 generators = []
 
-pyrWeight_m = 0.95
-pyrWeight_s = 1.3
+pyrWeight_m = 1
+pyrWeight_s = 1
 
 def lognormal(m, s):
         mean = np.log(m) - 0.5 * np.log((s/m)**2+1)
@@ -191,7 +191,7 @@ def Int2Pyr(syn_params, sec_x, sec_id):
     
     if syn_params.get('initW'):
         #lsyn.initW = float(syn_params['initW']) * random.uniform(0.5,1.0) # par.x(0) * rC.uniform(0.5,1.0)//rand.normal(0.5,1.5) //`rand.repick() 
-        lsyn.initW = float(np.random.normal(12, np.sqrt(2)))#float(pyrWeight)
+        lsyn.initW = float(np.random.normal(pyrWeight_m, pyrWeight_s))#float(pyrWeight)
 
     if syn_params.get('Wmax'):
         lsyn.Wmax = float(syn_params['Wmax']) * lsyn.initW # par.x(1) * lsyn.initW
@@ -257,8 +257,6 @@ def Pyr2Pyr(syn_params, sec_x, sec_id):
 
     generators.append(r)
 
-    lsyn.P_0 = np.random.uniform(0.16, 0.9)#Release probability
-
     if syn_params.get('AlphaTmax_ampa'):
         lsyn.AlphaTmax_ampa = float(syn_params['AlphaTmax_ampa']) # par.x(21)
     if syn_params.get('Beta_ampa'):
@@ -282,6 +280,13 @@ def Pyr2Pyr(syn_params, sec_x, sec_id):
         lsyn.Erev_nmda = float(syn_params['Erev_nmda']) # par.x(16)
     
     if syn_params.get('initW'):
+        #lsyn.initW = float(syn_params['initW']) * 0.0000001#random.uniform(0.5,1.0) # par.x(0) * rC.uniform(0.5,1.0)//rand.normal(0.5,1.5) //`rand.repick() 
+        #lsyn.initW = float(pyrWeight)
+        #lsyn.initW = float(np.random.uniform(pyrWeight_m - pyrWeight_s, pyrWeight_m + pyrWeight_s))
+        #import pdb; pdb.set_trace()
+        #import pdb; pdb.set_trace()
+
+
         h.distance(sec=sec_id.cell().soma[0])
         dist = h.distance(sec_id(sec_x))
         fullsecname = sec_id.name()
@@ -291,7 +296,8 @@ def Pyr2Pyr(syn_params, sec_x, sec_id):
         if pyrWeight_s == 0:
             base = float(pyrWeight_m)
         else:
-            base = float(min(lognormal(pyrWeight_m, pyrWeight_s), 15) / 6)
+            base = float(min(lognormal(pyrWeight_m, pyrWeight_s), 15))
+            #base = np.random.lognormal(pyrWeight_m, np.sqrt(pyrWeight_s), 1)
 
         # 0.9278403931213186 * ( 1.0022024845737223 ^ x )
         # 0.9131511669645764 * ( 1.0019436631560847 ^ x )
@@ -304,8 +310,18 @@ def Pyr2Pyr(syn_params, sec_x, sec_id):
                 lsyn.initW = base * (0.9131511669645764 * ( 1.0019436631560847 ** dist))
             else:
                 lsyn.initW = base * (0.16857988107990907 * ( 1.0039628707324273 ** dist))
+                # if sec_id >= 60:
+                #     lsyn.initW = base * (0.59768734 * (1.00326839 ** dist))
+                # else:
+                #     lsyn.initW = base * (0.62153507 * (1.00248601 ** dist))
 
         lsyn.initW = min(float(lsyn.initW), 60)
+
+        #lsyn.initW = np.random.uniform(0.02, 2)
+
+        #lsyn.initW = pyrWeight_m
+
+        #lsyn.initW = float(min(lognormal(pyrWeight_m, pyrWeight_s), 8))
 
 
     if syn_params.get('Wmax'):

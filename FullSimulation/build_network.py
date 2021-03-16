@@ -2,6 +2,7 @@ from bmtk.builder import NetworkBuilder
 import numpy as np
 import sys
 import synapses   
+import h5py
 import pandas as pd       
 
 import os,sys,inspect
@@ -11,7 +12,7 @@ sys.path.insert(0,parentdir)
 
 #Add divergent inhibition
 #Change synapse counts for inhibition and excitation based on 50 um
-
+from raster_maker import *
 from clustering import *
 
 synapses.load()
@@ -49,19 +50,24 @@ inh_syn_per_cell = 3
 num_dend_exc = (6509 // avg_syn_per_cell) // scale_div
 num_apic_exc = (10417 // avg_syn_per_cell) // scale_div
 
-num_dend_inh = (650 // avg_syn_per_cell) // scale_div
-num_apic_inh = (1041 // avg_syn_per_cell) // scale_div
+num_dend_inh = (650 // inh_syn_per_cell) // scale_div
+num_apic_inh = (1041 // inh_syn_per_cell) // scale_div
 
 num_prox_dend_inh = (67 // inh_syn_per_cell) // scale_div
 num_soma_inh = (148 // inh_syn_per_cell) // scale_div
 
-exc_fr_mean = 2#0.1
-exc_fr_std = 0.5
-inh_fr = 7 #* scale_div
+# exc_fr_mean = 2#0.1
+# exc_fr_std = 0.5
+
+prox_fr_mean = 16.9
+prox_fr_std = 14.3
+
+dist_fr_mean = 3.9
+dist_fr_std = 4.9
 
 clust_per_group = 8
-num_dend_groups = 70 // scale_div
-num_apic_groups = 100 // scale_div
+num_dend_groups = 65 // scale_div
+num_apic_groups = 104 // scale_div
 
 dend_groups = []
 apic_groups = []
@@ -158,7 +164,8 @@ prox_inh_stim.add_nodes(N=num_prox_dend_inh,
 #Edges
 
 def uniform_connect(source, target, low=1, high=5):
-        return np.random.uniform(low, high)
+        #return np.random.uniform(low, high)
+        return np.random.randint(low=low, high=high + 1)
 
 #On soma.
 net.add_edges(source=prox_inh_stim.nodes(pop_name='on_soma'), target=net.nodes(),
@@ -267,19 +274,52 @@ from bmtk.utils.reports.spike_trains.spikes_file_writers import write_csv
 # fr_df['fr_max'] = exc_maxs
 
 #fr_df.to_csv('frs_temp.csv', index=False)
-seconds = 1
+seconds = 2
+times = (0, seconds)
 
-def generate_spikes(psg, group, fr, times):
-        psg.add(node_ids=range(group.start_id, group.start_id + len(group.cells)),
-                        firing_rate=fr,
-                        times=times)
+import scipy.stats as st
+from functools import partial
 
-exc_psg = PoissonSpikeGenerator(population='exc_stim')
-exc_psg.add(node_ids = range(num_apic_exc + num_dend_exc),
-                firing_rate=exc_fr_mean,
-                #times=(0.0*1000, seconds*1000))
-                times=(0.0, seconds))
-exc_psg.to_sonata('exc_stim_spikes.h5')
+levy_dist = partial(st.levy_stable.rvs, alpha=1.37, beta=-1.00, loc=0.92, scale=0.44, size=1)
+
+#Generates the spike raster for a given group.
+#The group has the same noise.
+def gen_group_spikes(group, seconds):
+        z = make_noise(num_samples=(int(seconds*1000))-1,num_traces=group.n_cells)
+        df = make_spikes(True, levy_dist, numUnits=group.n_cells,rateProf=z[0,:])
+        return df
+
+def raster_to_sonata(node_ids, timestamps, key, file):
+        f = h5py.File(file, 'w')
+        group = f.create_group('spikes')
+        group = group.create_group(key)
+        group.create_dataset("node_ids", data = node_ids.astype("u4"))
+        group.create_dataset("timestamps", data = timestamps)
+        f.close()
+
+def gen_spikes(dend_groups, apic_groups, times, file):
+        node_ids = []
+        timestamps = []
+
+        length = times[1] - times[0]
+        buffer = times[0]
+
+        for group in (dend_groups + apic_groups):
+                df = gen_group_spikes(group, length)
+                node_ids = np.concatenate((node_ids, np.array(df["node_ids"]) + group.start_id))
+                timestamps = np.concatenate((timestamps, np.array(df["timestamps"])))
+
+        timestamps += buffer * 1000
+        raster_to_sonata(node_ids, timestamps, "exc_stim", file)
+        
+
+gen_spikes(dend_groups, apic_groups, times, 'exc_stim_spikes.h5')
+# exc_psg = PoissonSpikeGenerator(population='exc_stim')
+# exc_psg.add(node_ids = range(num_apic_exc + num_dend_exc),
+#                 firing_rate=exc_fr_mean,
+#                 #times=(0.0*1000, seconds*1000))
+#                 times=times)
+# exc_psg.to_sonata('exc_stim_spikes.h5')
 # exc_psg = PoissonSpikeGenerator(population='exc_stim')
 # for i in range(num_exc):
 #         exc_psg.add(node_ids=[i],  
@@ -287,17 +327,39 @@ exc_psg.to_sonata('exc_stim_spikes.h5')
 #                 times=(0.0*1000, seconds*1000))     
 # exc_psg.to_sonata('exc_stim_spikes.h5')
 
-inh_psg = PoissonSpikeGenerator(population='prox_inh_stim')
-inh_psg.add(node_ids=range(num_soma_inh + num_prox_dend_inh), 
-        firing_rate=inh_fr,  
-        times=(0.0, seconds))   
-inh_psg.to_sonata('prox_inh_stim_spikes.h5')
+def positive_normal(mean, std):
+        return max(np.random.normal(loc=mean, scale=std), 0.01)
 
-inh_psg = PoissonSpikeGenerator(population='dist_inh_stim')
-inh_psg.add(node_ids=range(num_apic_inh + num_dend_inh), 
-        firing_rate=inh_fr,  
-        times=(0.0, seconds))   
-inh_psg.to_sonata('dist_inh_stim_spikes.h5')
+#Makes a spike raster with each cell having its own noise trace.
+def gen_inh_spikes(n_cells, mean_fr, std_fr, key, file):
+        node_ids = []
+        timestamps = []
+
+        length = times[1] - times[0]
+        buffer = times[0]
+
+        for i in range(n_cells):
+                z = make_noise(num_samples=(int(length*1000))-1,num_traces=1)
+                df = make_spikes(False, partial(positive_normal, mean=mean_fr, std=std_fr), numUnits=1,rateProf=z[0,:])
+                node_ids = np.concatenate((node_ids, np.array(df["node_ids"]) + i))
+                timestamps = np.concatenate((timestamps, np.array(df["timestamps"])))
+
+        timestamps += buffer * 1000
+        raster_to_sonata(node_ids, timestamps, key, file)
+
+gen_inh_spikes(num_soma_inh + num_prox_dend_inh, prox_fr_mean, prox_fr_std, "prox_inh_stim", 'prox_inh_stim_spikes.h5')
+gen_inh_spikes(num_apic_inh + num_dend_inh, dist_fr_mean, dist_fr_std, "dist_inh_stim", 'dist_inh_stim_spikes.h5')
+# inh_psg = PoissonSpikeGenerator(population='prox_inh_stim')
+# inh_psg.add(node_ids=range(num_soma_inh + num_prox_dend_inh), 
+#         firing_rate=inh_fr,  
+#         times=times)   
+# inh_psg.to_sonata('prox_inh_stim_spikes.h5')
+
+# inh_psg = PoissonSpikeGenerator(population='dist_inh_stim')
+# inh_psg.add(node_ids=range(num_apic_inh + num_dend_inh), 
+#         firing_rate=inh_fr,  
+#         times=times)   
+# inh_psg.to_sonata('dist_inh_stim_spikes.h5')
 
 # from crop_raster import crop_raster
 # crop_raster("rhythmic_inh_spikes.h5", 'inh_stim_spikes.h5', 120000, num_inh)
@@ -309,7 +371,7 @@ try:
         build_env_bionet(base_dir='./',
                         network_dir='./network',
                         dt = 0.1, tstop=seconds * 1000.0,
-                        report_vars=['v', 'cai'],
+                        report_vars=['v'],
                         dL = 5,
                         spikes_threshold=-10,
                         spikes_inputs=[('exc_stim', 'exc_stim_spikes.h5'), ('prox_inh_stim', 'prox_inh_stim_spikes.h5'), ('dist_inh_stim', 'dist_inh_stim_spikes.h5')],
@@ -320,7 +382,7 @@ except:
         build_env_bionet(base_dir='./',
                         network_dir='./network',
                         dt = 0.1, tstop=seconds * 1000.0,
-                        report_vars=['v', 'cai'],
+                        report_vars=['v'],
                         dL = 5,
                         spikes_threshold=-10,
                         spikes_inputs=[('exc_stim', 'exc_stim_spikes.h5'), ('prox_inh_stim', 'prox_inh_stim_spikes.h5'), ('dist_inh_stim', 'dist_inh_stim_spikes.h5')],

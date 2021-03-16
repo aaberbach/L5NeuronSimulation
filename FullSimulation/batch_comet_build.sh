@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --partition compute
+#SBATCH --partition shared
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
 #SBATCH -A TG-DBS180005
