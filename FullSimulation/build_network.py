@@ -287,7 +287,7 @@ norm_dist = partial(st.norm.rvs, loc=5, scale=1, size=1)
 #The group has the same noise.
 def gen_group_spikes(group, seconds):
         z = make_noise(num_samples=(int(seconds*1000))-1,num_traces=group.n_cells)
-        df = make_spikes(exp=False, dist=norm_dist, numUnits=group.n_cells,rateProf=z[0,:])
+        df = make_spikes(exp=True, dist=levy_dist, numUnits=group.n_cells,rateProf=z[0,:])
         return df
 
 def raster_to_sonata(node_ids, timestamps, key, file):
