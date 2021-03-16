@@ -59,7 +59,6 @@ def moving_average(x, w):
     return np.convolve(x, np.ones(w), 'valid') / w
 
 def make_noise(num_traces=100,num_samples=4999, mean_fr = 1, std_fr = 1):
-    num_samples = num_samples+2000
     #fv = np.linspace(0, 1, 40);                                # Normalised Frequencies
     #a = 1/(1+2*fv);                                      # Amplitudes Of '1/f'
     #b = ss.firls(43, fv, a);                                   # Filter Numerator Coefficients
@@ -68,27 +67,29 @@ def make_noise(num_traces=100,num_samples=4999, mean_fr = 1, std_fr = 1):
     invfn = np.zeros((num_traces,num_samples))
     for i in np.arange(0,num_traces):
         wn = np.random.normal(loc=1,
- 			   scale=0.5,size=num_samples)
-        invfn[i,:] = minmax(ss.lfilter(B, A, wn));                             # Create '1/f' Noise
-    return invfn[:,2000:]
+ 			   scale=0.5,size=num_samples+2000)
+        invfn[i,:] = minmax(ss.lfilter(B, A, wn)[2000:])+0.5;                             # Create '1/f' Noise
+             
+    return invfn
 
-def make_spikes(exp, dist, numUnits=100,rateProf=None):
+def make_spikes(exp=None, dist=None, numUnits=100,rateProf=None):
     rateProf=rateProf
     rateProf[rateProf<0] = 0
     #meanRates = np.mean(rateProf)
     normRateProf= rateProf
-
     df_full = pd.DataFrame({'timestamps':[],'node_ids':[]})
 
     for i in np.arange(0,numUnits):
         rate_temp=[];simSpks_temp=[];
-        if exp:
+        if exp==True:
             rate_temp = normRateProf*np.exp(dist())
         else:
             rate_temp = normRateProf*dist()
         #rate_temp = normRateProf + np.exp(st.levy_stable.rvs(alpha=1.37, beta=-1.00, loc=0.92, scale=0.44, size=1))
-        numbPoints = scipy.stats.poisson(rate_temp/1000).rvs()#Poisson number of points
-
+        try:
+            numbPoints = scipy.stats.poisson(rate_temp/1000).rvs()#Poisson number of points
+        except:
+            import pdb; pdb.set_trace()
         simSpks=np.where(numbPoints>0)[0]
 
         timestamps=simSpks

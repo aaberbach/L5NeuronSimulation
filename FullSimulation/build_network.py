@@ -282,11 +282,12 @@ from functools import partial
 
 levy_dist = partial(st.levy_stable.rvs, alpha=1.37, beta=-1.00, loc=0.92, scale=0.44, size=1)
 
+norm_dist = partial(st.norm.rvs, loc=5, scale=1, size=1)
 #Generates the spike raster for a given group.
 #The group has the same noise.
 def gen_group_spikes(group, seconds):
         z = make_noise(num_samples=(int(seconds*1000))-1,num_traces=group.n_cells)
-        df = make_spikes(True, levy_dist, numUnits=group.n_cells,rateProf=z[0,:])
+        df = make_spikes(exp=False, dist=norm_dist, numUnits=group.n_cells,rateProf=z[0,:])
         return df
 
 def raster_to_sonata(node_ids, timestamps, key, file):
@@ -321,6 +322,9 @@ f = h5py.File('exc_stim_spikes.h5')
 ts = f['spikes']['exc_stim']['timestamps']
 nid = f['spikes']['exc_stim']['node_ids']
 
+
+
+
 h = np.histogram(ts,bins=np.arange(0,seconds*1000,1))
 
 #scale_factor = 3.47
@@ -331,12 +335,12 @@ h = np.histogram(ts,bins=np.arange(0,seconds*1000,1))
 
 fr_prof = h[0]/(0.001*(np.max(nid)+1))
 
-plt.plot(h[1][1:], (fr_prof-np.min(fr_prof))/(np.max(fr_prof)-np.min(fr_prof)),label='scaled, baseline')
+plt.plot(h[1][1:],0.5+(fr_prof-np.min(fr_prof))/(np.max(fr_prof)-np.min(fr_prof)),label='scaled, baseline')
 time_shift = 4 # ms
 wrap = fr_prof[-4:]
 fr_prof[4:] = fr_prof[0:-4]
 fr_prof[0:4] = wrap
-plt.plot(h[1][1:], (fr_prof-np.min(fr_prof))/(np.max(fr_prof)-np.min(fr_prof)),label='scaled, time shift')
+plt.plot(h[1][1:],0.5+(fr_prof-np.min(fr_prof))/(np.max(fr_prof)-np.min(fr_prof)),label='scaled, time shift')
 plt.legend()
 plt.show()
 
