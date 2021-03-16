@@ -314,6 +314,28 @@ def gen_spikes(dend_groups, apic_groups, times, file):
         
 
 gen_spikes(dend_groups, apic_groups, times, 'exc_stim_spikes.h5')
+
+################ INH FR PROFILES FROM EXC RASTER #########
+
+f = h5py.File('exc_stim_spikes.h5')
+ts = f['spikes']['exc_stim']['timestamps']
+nid = f['spikes']['exc_stim']['node_ids']
+h = np.histogram(ts,bins=np.arange(0,seconds*1000,1))
+
+scale_factor = 3.47
+plt.plot(h[1][1:],scale_factor*h[0]/(0.001*(np.max(nid)+1)),label='scaled, not shifted')
+plt.title('FR: {} +/- {}'.format(np.mean(scale_factor*h[0]/(0.001*(np.max(nid)+1))),
+				 np.std(scale_factor*h[0]/(0.001*(np.max(nid)+1)))))
+
+fr_prof = scale_factor*h[0]/(0.001*(np.max(nid)+1))
+time_shift = 4 # ms
+wrap = fr_prof[-4:]
+fr_prof[4:] = fr_prof[0:-4]
+fr_prof[0:4] = wrap
+plt.plot(h[1][1:], fr_prof,label='scaled, time shift')
+plt.legend()
+plt.show()
+
 # exc_psg = PoissonSpikeGenerator(population='exc_stim')
 # exc_psg.add(node_ids = range(num_apic_exc + num_dend_exc),
 #                 firing_rate=exc_fr_mean,
