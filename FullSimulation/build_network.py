@@ -320,19 +320,23 @@ gen_spikes(dend_groups, apic_groups, times, 'exc_stim_spikes.h5')
 f = h5py.File('exc_stim_spikes.h5')
 ts = f['spikes']['exc_stim']['timestamps']
 nid = f['spikes']['exc_stim']['node_ids']
+
 h = np.histogram(ts,bins=np.arange(0,seconds*1000,1))
 
-scale_factor = 3.47
-plt.plot(h[1][1:],scale_factor*h[0]/(0.001*(np.max(nid)+1)),label='scaled, not shifted')
-plt.title('FR: {} +/- {}'.format(np.mean(scale_factor*h[0]/(0.001*(np.max(nid)+1))),
-				 np.std(scale_factor*h[0]/(0.001*(np.max(nid)+1)))))
+#scale_factor = 3.47
+#plt.plot(h[1][1:],scale_factor*h[0]/(0.001*(np.max(nid)+1)),label='scaled, not shifted')
+#plt.title('FR: {} +/- {}'.format(np.mean(scale_factor*h[0]/(0.001*(np.max(nid)+1))),
+#				 np.std(scale_factor*h[0]/(0.001*(np.max(nid)+1)))))
 
-fr_prof = scale_factor*h[0]/(0.001*(np.max(nid)+1))
+
+fr_prof = h[0]/(0.001*(np.max(nid)+1))
+
+plt.plot(h[1][1:], (fr_prof-np.min(fr_prof))/(np.max(fr_prof)-np.min(fr_prof)),label='scaled, baseline')
 time_shift = 4 # ms
 wrap = fr_prof[-4:]
 fr_prof[4:] = fr_prof[0:-4]
 fr_prof[0:4] = wrap
-plt.plot(h[1][1:], fr_prof,label='scaled, time shift')
+plt.plot(h[1][1:], (fr_prof-np.min(fr_prof))/(np.max(fr_prof)-np.min(fr_prof)),label='scaled, time shift')
 plt.legend()
 plt.show()
 
