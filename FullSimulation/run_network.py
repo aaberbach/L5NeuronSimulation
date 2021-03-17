@@ -23,5 +23,14 @@ conf.build_env()
 graph = bionet.BioNetwork.from_config(conf)
 sim = bionet.BioSimulator.from_config(conf, network=graph)
 
+# def integerize(val):
+#     return int(val)
+
+# v_mod = sim._sim_mods[0]
+
+# v_mod._transforms["v"] = integerize
+# v_mod._variables = []
+
+#import pdb; pdb.set_trace()
 sim.run()
 # pc.barrier()

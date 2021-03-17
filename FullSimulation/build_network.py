@@ -274,14 +274,14 @@ from bmtk.utils.reports.spike_trains.spikes_file_writers import write_csv
 # fr_df['fr_max'] = exc_maxs
 
 #fr_df.to_csv('frs_temp.csv', index=False)
-seconds = 2
+seconds = 10
 times = (0, seconds)
 
 import scipy.stats as st
 from functools import partial
 
 levy_dist = partial(st.levy_stable.rvs, alpha=1.37, beta=-1.00, loc=0.92, scale=0.44, size=1)
-
+norm_dist = partial(st.norm.rvs, loc=5, scale=1, size=1)
 #Generates the spike raster for a given group.
 #The group has the same noise.
 def gen_group_spikes(group, seconds):
@@ -289,6 +289,7 @@ def gen_group_spikes(group, seconds):
         df = make_spikes(True, levy_dist, numUnits=group.n_cells,rateProf=z[0,:])
         return df
 
+#Converts a node_ids and timestamps list to an acceptable h5 file.
 def raster_to_sonata(node_ids, timestamps, key, file):
         f = h5py.File(file, 'w')
         group = f.create_group('spikes')
@@ -297,6 +298,7 @@ def raster_to_sonata(node_ids, timestamps, key, file):
         group.create_dataset("timestamps", data = timestamps)
         f.close()
 
+#Creates the excitatory input raster from the given list of functional groups.
 def gen_spikes(dend_groups, apic_groups, times, file):
         node_ids = []
         timestamps = []
@@ -315,26 +317,26 @@ def gen_spikes(dend_groups, apic_groups, times, file):
 
 gen_spikes(dend_groups, apic_groups, times, 'exc_stim_spikes.h5')
 
-################ INH FR PROFILES FROM EXC RASTER #########
+# ################ INH FR PROFILES FROM EXC RASTER #########
 
-f = h5py.File('exc_stim_spikes.h5')
-ts = f['spikes']['exc_stim']['timestamps']
-nid = f['spikes']['exc_stim']['node_ids']
-h = np.histogram(ts,bins=np.arange(0,seconds*1000,1))
+# f = h5py.File('exc_stim_spikes.h5')
+# ts = f['spikes']['exc_stim']['timestamps']
+# nid = f['spikes']['exc_stim']['node_ids']
+# h = np.histogram(ts,bins=np.arange(0,seconds*1000,1))
 
-scale_factor = 3.47
-plt.plot(h[1][1:],scale_factor*h[0]/(0.001*(np.max(nid)+1)),label='scaled, not shifted')
-plt.title('FR: {} +/- {}'.format(np.mean(scale_factor*h[0]/(0.001*(np.max(nid)+1))),
-				 np.std(scale_factor*h[0]/(0.001*(np.max(nid)+1)))))
+# scale_factor = 3.47
+# # plt.plot(h[1][1:],scale_factor*h[0]/(0.001*(np.max(nid)+1)),label='scaled, not shifted')
+# # plt.title('FR: {} +/- {}'.format(np.mean(scale_factor*h[0]/(0.001*(np.max(nid)+1))),
+# # 				 np.std(scale_factor*h[0]/(0.001*(np.max(nid)+1)))))
 
-fr_prof = scale_factor*h[0]/(0.001*(np.max(nid)+1))
-time_shift = 4 # ms
-wrap = fr_prof[-4:]
-fr_prof[4:] = fr_prof[0:-4]
-fr_prof[0:4] = wrap
-plt.plot(h[1][1:], fr_prof,label='scaled, time shift')
-plt.legend()
-plt.show()
+# fr_prof = scale_factor*h[0]/(0.001*(np.max(nid)+1))
+# time_shift = 4 # ms
+# wrap = fr_prof[-4:]
+# fr_prof[4:] = fr_prof[0:-4]
+# fr_prof[0:4] = wrap
+# # plt.plot(h[1][1:], fr_prof,label='scaled, time shift')
+# # plt.legend()
+# # plt.show()
 
 # exc_psg = PoissonSpikeGenerator(population='exc_stim')
 # exc_psg.add(node_ids = range(num_apic_exc + num_dend_exc),
@@ -349,11 +351,14 @@ plt.show()
 #                 times=(0.0*1000, seconds*1000))     
 # exc_psg.to_sonata('exc_stim_spikes.h5')
 
+#Blocks off the bottom of a normal distribution.
 def positive_normal(mean, std):
-        return max(np.random.normal(loc=mean, scale=std), 0.01)
+        return max(st.norm.rvs(loc=mean, scale=std, size=1), 0.001)
+        #partial(st.norm.rvs, loc=5, scale=1, size=1)
+        #return max(np.random.normal(loc=mean, scale=std), 0.01)
 
 #Makes a spike raster with each cell having its own noise trace.
-def gen_inh_spikes(n_cells, mean_fr, std_fr, key, file):
+def gen_inh_spikes(n_cells, mean_fr, std_fr, key, file, times):
         node_ids = []
         timestamps = []
 
@@ -369,8 +374,32 @@ def gen_inh_spikes(n_cells, mean_fr, std_fr, key, file):
         timestamps += buffer * 1000
         raster_to_sonata(node_ids, timestamps, key, file)
 
-gen_inh_spikes(num_soma_inh + num_prox_dend_inh, prox_fr_mean, prox_fr_std, "prox_inh_stim", 'prox_inh_stim_spikes.h5')
-gen_inh_spikes(num_apic_inh + num_dend_inh, dist_fr_mean, dist_fr_std, "dist_inh_stim", 'dist_inh_stim_spikes.h5')
+#Creates a apike raster with each cell having the same noise coming from the a shifted average of excitation.
+def gen_shifted_spikes(n_cells, mean_fr, std_fr, key, file, times, time_shift=4):
+        node_ids = []
+        timestamps = []
+
+        f = h5py.File("exc_stim_spikes.h5", "r")
+        ts = f['spikes']["exc_stim"]['timestamps']
+        nid = f['spikes']["exc_stim"]['node_ids']
+
+        z = shift_exc_noise(ts, nid, times[1], time_shift=time_shift)
+
+        for i in range(n_cells):
+                df = make_spikes(False, partial(positive_normal, mean=mean_fr, std=std_fr), numUnits=1,rateProf=z)#z[0,:])
+                node_ids = np.concatenate((node_ids, np.array(df["node_ids"]) + i))
+                timestamps = np.concatenate((timestamps, np.array(df["timestamps"])))
+
+        raster_to_sonata(node_ids, timestamps, key, file)
+
+use_shifted_inh = True
+
+if(use_shifted_inh):
+        gen_shifted_spikes(num_soma_inh + num_prox_dend_inh, prox_fr_mean, prox_fr_std, "prox_inh_stim", 'prox_inh_stim_spikes.h5', times)
+        gen_shifted_spikes(num_apic_inh + num_dend_inh, dist_fr_mean, dist_fr_std, "dist_inh_stim", 'dist_inh_stim_spikes.h5', times)
+else:
+        gen_inh_spikes(num_soma_inh + num_prox_dend_inh, prox_fr_mean, prox_fr_std, "prox_inh_stim", 'prox_inh_stim_spikes.h5', times)
+        gen_inh_spikes(num_apic_inh + num_dend_inh, dist_fr_mean, dist_fr_std, "dist_inh_stim", 'dist_inh_stim_spikes.h5', times)
 # inh_psg = PoissonSpikeGenerator(population='prox_inh_stim')
 # inh_psg.add(node_ids=range(num_soma_inh + num_prox_dend_inh), 
 #         firing_rate=inh_fr,  

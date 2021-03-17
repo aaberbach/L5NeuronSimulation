@@ -10,8 +10,8 @@ import numpy as np
 np.random.seed(42)
 generators = []
 
-pyrWeight_m = 0.95
-pyrWeight_s = 1.3
+pyrWeight_m = 0.45#0.95
+pyrWeight_s = 0.35#1.3
 
 def lognormal(m, s):
         mean = np.log(m) - 0.5 * np.log((s/m)**2+1)
@@ -191,7 +191,7 @@ def Int2Pyr(syn_params, sec_x, sec_id):
     
     if syn_params.get('initW'):
         #lsyn.initW = float(syn_params['initW']) * random.uniform(0.5,1.0) # par.x(0) * rC.uniform(0.5,1.0)//rand.normal(0.5,1.5) //`rand.repick() 
-        lsyn.initW = float(np.random.normal(12, np.sqrt(2)))#float(pyrWeight)
+        lsyn.initW = 3*float(max(np.random.normal(36, 18), 0.01))#2 * float(np.random.normal(12, np.sqrt(2)))#float(pyrWeight)
 
     if syn_params.get('Wmax'):
         lsyn.Wmax = float(syn_params['Wmax']) * lsyn.initW # par.x(1) * lsyn.initW
@@ -291,7 +291,7 @@ def Pyr2Pyr(syn_params, sec_x, sec_id):
         if pyrWeight_s == 0:
             base = float(pyrWeight_m)
         else:
-            base = float(min(lognormal(pyrWeight_m, pyrWeight_s), 15) / 6)
+            base = float(min(lognormal(pyrWeight_m, pyrWeight_s), 15))
 
         # 0.9278403931213186 * ( 1.0022024845737223 ^ x )
         # 0.9131511669645764 * ( 1.0019436631560847 ^ x )
@@ -305,7 +305,7 @@ def Pyr2Pyr(syn_params, sec_x, sec_id):
             else:
                 lsyn.initW = base * (0.16857988107990907 * ( 1.0039628707324273 ** dist))
 
-        lsyn.initW = min(float(lsyn.initW), 60)
+        lsyn.initW = min(float(lsyn.initW), 30)
 
 
     if syn_params.get('Wmax'):
