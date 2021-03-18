@@ -52,11 +52,14 @@ import statsmodels.api as sm
 def zscore(x):
     return (x-np.mean(x))/np.std(x)
 
+def minmax(x):
+    return (x - np.min(x))/(np.max(x)-np.min(x))
+
 def moving_average(x, w):
     return np.convolve(x, np.ones(w), 'valid') / w
 
 def make_noise(num_traces=100,num_samples=4999, mean_fr = 1, std_fr = 1):
-    num_samples = num_samples+2000
+    #num_samples = num_samples+2000
     #fv = np.linspace(0, 1, 40);                                # Normalised Frequencies
     #a = 1/(1+2*fv);                                      # Amplitudes Of '1/f'
     #b = ss.firls(43, fv, a);                                   # Filter Numerator Coefficients
@@ -65,9 +68,32 @@ def make_noise(num_traces=100,num_samples=4999, mean_fr = 1, std_fr = 1):
     invfn = np.zeros((num_traces,num_samples))
     for i in np.arange(0,num_traces):
         wn = np.random.normal(loc=1,
- 			   scale=0.5,size=num_samples)
-        invfn[i,:] = zscore(ss.lfilter(B, A, wn));                             # Create '1/f' Noise
-    return invfn[:,2000:]
+ 			   scale=0.5,size=num_samples+2000)
+        invfn[i,:] = minmax(ss.lfilter(B, A, wn)[2000:])+0.5                             # Create '1/f' Noise
+    return invfn
+
+
+def shift_exc_noise(ts, nid, seconds, time_shift=4):
+    # f = h5py.File(file, "r")
+    # ts = f['spikes'][key]['timestamps']
+    # nid = f['spikes'][key]['node_ids']
+    #import pdb; pdb.set_trace()
+    h = np.histogram(ts,bins=np.arange(0,seconds*1000,1))
+
+    # plt.plot(h[1][1:],h[0]/(0.001*(np.max(nid)+1)),label='scaled, not shifted')
+    # plt.title('FR: {} +/- {}'.format(np.mean(h[0]/(0.001*(np.max(nid)+1))),
+    # 				 np.std(h[0]/(0.001*(np.max(nid)+1)))))
+
+    fr_prof = h[0]/(0.001*(np.max(nid)+1))
+    wrap = fr_prof[-4:]
+    fr_prof[4:] = fr_prof[0:-4]
+    fr_prof[0:4] = wrap
+
+    fr_prof = minmax(fr_prof)+0.5
+    # plt.plot(h[1][1:], fr_prof,label='scaled, time shift')
+    # plt.legend()
+    # plt.show()
+    return fr_prof
 
 def make_spikes(exp, dist, numUnits=100,rateProf=None):
     rateProf=rateProf
@@ -80,11 +106,15 @@ def make_spikes(exp, dist, numUnits=100,rateProf=None):
     for i in np.arange(0,numUnits):
         rate_temp=[];simSpks_temp=[];
         if exp:
-            rate_temp = normRateProf + np.exp(dist())
+            rate_temp = normRateProf*np.exp(dist())
         else:
-            rate_temp = normRateProf + dist()
+            rate_temp = normRateProf*dist()
         #rate_temp = normRateProf + np.exp(st.levy_stable.rvs(alpha=1.37, beta=-1.00, loc=0.92, scale=0.44, size=1))
+        # try:
         numbPoints = scipy.stats.poisson(rate_temp/1000).rvs()#Poisson number of points
+        # except:
+        #     print("numPoints Poisson Failed.")
+        #     import pdb; pdb.set_trace()
 
         simSpks=np.where(numbPoints>0)[0]
 
