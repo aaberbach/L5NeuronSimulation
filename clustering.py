@@ -23,9 +23,10 @@ def make_seg_sphere(segments, center, radius=50):
 
 
 class FunctionalGroup:
-    def __init__(self, seg_list, center, num_cells, num_clusters, name, start_id, grouping_func, clustering_func):
+    def __init__(self, seg_list, center, num_cells, num_clusters, name, start_id, grouping_func, clustering_func, syn_per_cell=[2, 8]):
         self.center = center
         self.n_cells = num_cells
+        self.syn_per_cell = syn_per_cell
         self.n_clusters = num_clusters
         self.name =  name
         self.start_id = start_id
@@ -54,7 +55,7 @@ class FunctionalGroup:
     #Distributes the cell's synapses onto clusters.
     def create_cells(self):
         for i in range(self.n_cells):
-            cell = Cell(np.random.randint(low=2, high=8 + 1))
+            cell = Cell(np.random.randint(low=self.syn_per_cell[0], high=self.syn_per_cell[1] + 1))
             cluster_ids = np.random.choice(range(0, self.n_clusters), cell.n_syns, replace=False)
             for id in cluster_ids:
                 #import pdb; pdb.set_trace()
