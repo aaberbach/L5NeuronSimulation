@@ -257,6 +257,8 @@ def Pyr2Pyr(syn_params, sec_x, sec_id):
 
     generators.append(r)
 
+    lsyn.P_0 = np.random.uniform(0.16, 0.9)#Release probability
+
     if syn_params.get('AlphaTmax_ampa'):
         lsyn.AlphaTmax_ampa = float(syn_params['AlphaTmax_ampa']) # par.x(21)
     if syn_params.get('Beta_ampa'):
@@ -299,17 +301,27 @@ def Pyr2Pyr(syn_params, sec_x, sec_id):
             base = float(min(lognormal(pyrWeight_m, pyrWeight_s), 15))
             #base = np.random.lognormal(pyrWeight_m, np.sqrt(pyrWeight_s), 1)
 
-        # 0.9278403931213186 * ( 1.0022024845737223 ^ x )
-        # 0.9131511669645764 * ( 1.0019436631560847 ^ x )
-        # 0.16857988107990907 * ( 1.0039628707324273 ^ x )
+        ####OLD
+        # dend = lambda x: 0.9278403931213186 * ( 1.0022024845737223 ** x )
+        # close_apic = lambda x: 0.9131511669645764 * ( 1.0019436631560847 ** x )
+        # far_apic = lambda x: 0.16857988107990907 * ( 1.0039628707324273 ** x )
+        #############
+
+        dend = lambda x: 0.9475625702815389 * ( 1.001318965242205 ** x )
+        close_apic = lambda x: 0.8522367331040966 * ( 1.0020433032052223 ** x )
+        far_apic = lambda x: 0.09043087364217033 * ( 1.004632615014859 ** x )
+
 
         if sec_type == "dend":
-            lsyn.initW = base * (0.9278403931213186 * ( 1.0022024845737223 ** dist ))
+            #lsyn.initW = base * (0.9278403931213186 * ( 1.0022024845737223 ** dist ))
+            lsyn.initW = base * dend(dist)
         elif sec_type == "apic":
             if dist < 750:
-                lsyn.initW = base * (0.9131511669645764 * ( 1.0019436631560847 ** dist))
+                #lsyn.initW = base * (0.9131511669645764 * ( 1.0019436631560847 ** dist))
+                lsyn.initW = base * close_apic(dist)
             else:
-                lsyn.initW = base * (0.16857988107990907 * ( 1.0039628707324273 ** dist))
+                lsyn.initW = base * far_apic(dist)
+                #lsyn.initW = base * (0.16857988107990907 * ( 1.0039628707324273 ** dist))
                 # if sec_id >= 60:
                 #     lsyn.initW = base * (0.59768734 * (1.00326839 ** dist))
                 # else:

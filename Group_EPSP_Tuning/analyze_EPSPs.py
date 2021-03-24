@@ -12,6 +12,29 @@ import pandas as pd
 
 #Takes a voltage trace and returns the magnitude of an EPSP
 #resulting from an input at time time.
+def calc_EPSC(c, time = 4000):
+
+    # plt.plot(c)
+    # plt.show()
+
+    base = c[time - 2]
+    peak = min(c[time - 2:])
+    return peak - base
+
+#Takes a file with some number of voltage traces, each with one EPSP.
+#Returns an array of EPSP magnitudes.
+def calc_EPSCs(file, time = 4000):
+    #import pdb; pdb.set_trace()
+    data = np.array(my_plotting.load_dataset(file, groups=1))
+    epscs = np.zeros(data.shape[1])
+
+    for i in range(len(epscs)):
+        epscs[i] = calc_EPSC(data[:, i], time=time)
+
+    return epscs
+
+#Takes a voltage trace and returns the magnitude of an EPSP
+#resulting from an input at time time.
 def calc_EPSP(v, time = 4000):
     base = v[time - 2]
     peak = max(v[time - 2:])

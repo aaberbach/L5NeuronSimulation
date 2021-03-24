@@ -51,7 +51,6 @@ cells = graph.get_local_cells()
 
 #########################################################################
 
-import pdb; pdb.set_trace()
 sec_types = []
 weights = []
 dists = []

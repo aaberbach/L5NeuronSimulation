@@ -1,5 +1,7 @@
-python build_network.py 20 #500
-python run_network.py 0.2 0
+#python build_network.py 300
+python build_EPSCs.py 300
+python run_network.py 0.358 0.799
+#python run_network.py 0.291 0.564
 #python run_network.py 0.45 0.35
 #python build_all_segs.py
 #python run_network.py 0.8 0

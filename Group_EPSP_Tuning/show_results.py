@@ -1,5 +1,18 @@
 from analyze_EPSPs import *
 from scipy.stats import lognorm
+from analyze_EPSPs import *
+
+def plot_EPSCs(file, time=4000):
+    epscs = calc_EPSCs(file, time)
+
+    print("Mean: ", np.mean(epscs))
+    print("Std: ", np.std(epscs))
+    plt.figure()
+    sb.distplot(epscs, fit=lognorm, bins = 100)
+    plt.xscale('log')
+
+    plt.figure()
+    sb.distplot(epscs)
 
 def plot_EPSPs(file, time = 4000):
     df = pd.read_csv(file)
@@ -42,8 +55,11 @@ def plot_EPSPs(file, time = 4000):
 # plt.legend()
 
 # plt.show()
-
-plot_EPSPs("Tunings/0.45_0.35_EPSPs.csv")
+plot_EPSCs("se_clamp_report.h5")
+plt.show()
+#plot_EPSPs("group_EPSPs.csv")
+plot_EPSPs("Tunings/0.358_0.799_EPSPs.csv")
+#plot_EPSPs("Tunings/0.45_0.35_EPSPs.csv")
 #plot_EPSPs("new_scaled_results/1.1_1.4_EPSPs.csv")
 plt.show()
 #plot_EPSPs("scaled_results/0.45_0.4_EPSPs.csv")
