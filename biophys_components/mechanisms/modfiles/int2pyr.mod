@@ -15,6 +15,12 @@ NEURON {
 	RANGE F, f, tauF, D1, d1, tauD1, D2, d2, tauD2
 	RANGE facfactor
     RANGE neuroM,type
+
+	:Release probability
+	RANGE random, P, P_0
+
+	THREADSAFE
+	POINTER randObjPtr
 }
 
 UNITS {
@@ -96,6 +102,8 @@ PARAMETER {
 	NE_t2 = 1 :1 : 0.7 : 0.8
 	NE_t3 = 1
 	NE_S = 1 : 0.4
+
+	P_0 = 1 (1) < 0, 1 >               : base release probability	
 }
 
 ASSIGNED {
@@ -133,6 +141,11 @@ ASSIGNED {
 	F
 	D1
 	D2	
+
+	:Release probability
+	P				        : instantaneous release probability
+    randObjPtr              : pointer to a hoc random number generator Random.uniform(0,1)
+    random   
 }
 
 STATE { r_nmda r_gaba capoolcon W }
@@ -158,6 +171,9 @@ INITIAL {
 	F = 1
 	D1 = 1
 	D2 = 1	
+
+	P = P_0
+	random = 1
 }
 
 BREAKPOINT {
@@ -210,7 +226,9 @@ DERIVATIVE release {
 }
 
 NET_RECEIVE(dummy_weight) {
-      if (flag==0) {           :a spike arrived, start onset state if not already on
+	random = randGen()
+
+      if (flag==0 && random < P_0) {           :a spike arrived, start onset state if not already on
          if ((!on_gaba)){       :this synpase joins the set of synapses in onset state
            t0=t
 	      on_gaba=1		
@@ -224,7 +242,7 @@ NET_RECEIVE(dummy_weight) {
 	on_gaba=0
     }
 	
-if (flag == 0) {  : Short term plasticity was implemented(Varela et. al 1997):
+if (flag == 0 && random < P_0) {  : Short term plasticity was implemented(Varela et. al 1997):
 	rp = unirand()	
 	
 	:F  = 1 + (F-1)* exp(-(t - tsyn)/tauF)
@@ -622,4 +640,35 @@ FUNCTION GAP1(GAPstart1 (ms), GAPstop1 (ms)) {
 }
 FUNCTION unirand() {    : uniform random numbers between 0 and 1
         unirand = scop_random()
+}
+
+VERBATIM
+double nrn_random_pick(void* r);
+void* nrn_random_arg(int argpos);
+ENDVERBATIM
+
+FUNCTION randGen() {
+VERBATIM
+   if (_p_randObjPtr) {
+      /*
+      :Supports separate independent but reproducible streams for
+      : each instance. However, the corresponding hoc Random
+      : distribution MUST be set to Random.uniform(0,1)
+      */
+      _lrandGen = nrn_random_pick(_p_randObjPtr);
+   }else{
+      hoc_execerror("Random object ref not set correctly for randObjPtr"," only via hoc Random");
+   }
+ENDVERBATIM
+}
+
+PROCEDURE setRandObjRef() {
+VERBATIM
+   void** pv4 = (void**)(&_p_randObjPtr);
+   if (ifarg(1)) {
+      *pv4 = nrn_random_arg(1);
+   }else{
+      *pv4 = (void*)0;
+   }
+ENDVERBATIM
 }
