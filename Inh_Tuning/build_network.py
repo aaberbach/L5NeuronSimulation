@@ -60,11 +60,11 @@ inh_stim.add_nodes(N=1,
 
 # Create connections between Exc --> Pyr cells
 net.add_edges(source=inh_stim.nodes(), target=net.nodes(),
-                connection_rule=1,
+                connection_rule=3,
                 syn_weight=1,
-                target_sections=['soma'],
+                target_sections=['dend'],
                 delay=0.1,
-                distance_range=[0, 50],#(2013, Pouille et al.)
+                distance_range=[50, 2000],#(2013, Pouille et al.)
                 dynamics_params='INT2PN.json',
                 model_template=syn['INT2PN.json']['level_of_detail'])
 
@@ -86,17 +86,20 @@ f.close()
 
 from bmtk.utils.sim_setup import build_env_bionet
 
+holding_v = -80
+
 build_env_bionet(base_dir='./',
                 network_dir='./network',
                 tstop=500.0, dt = 0.1,
                 report_vars=['v'],
                 spikes_threshold=-10,
-                current_clamp={           # Creates a step current from 500.ms to 1500.0 ms  
-                     'amp': 0.2,
-                     'delay': 300,
-                     'duration': 2000,
-                     'gids':"all"
-                 },
+                clamp_reports=['se'],#Records se clamp currents.
+                se_voltage_clamp={
+                     "amps":[[holding_v, holding_v, holding_v]],
+                     "durations": [[500, 0, 0]],
+                     'gids': "all",
+                     'rs': [0.01 for _ in range(N)],
+                },
                 spikes_inputs=[('inh_stim', 'inh_stim_spikes.h5')],
                 components_dir='../biophys_components',
                 compile_mechanisms=True)

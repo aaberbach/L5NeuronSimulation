@@ -42,17 +42,44 @@ for cell in cells.values():
     node_ids.append(cell.node_id)
     #import pdb; pdb.set_trace()
     h.distance(sec=cell.hobj.soma[0])
-    con = cell.connections()[0]._connector
-    syn = con.syn()
-    weights.append(float(syn.initW))
 
-    seg = con.postseg()
-    fullsecname = seg.sec.name()
-    names.append(fullsecname)
-    #import pdb; pdb.set_trace()
-    dists.append(float(h.distance(seg)))
-    sec_types.append(fullsecname.split(".")[1][:4])
+    ws = []
+    ns = []
+    ds = []
 
+    st = None
+
+    for c in cell.connections():
+        con = c._connector
+        syn = con.syn()
+
+        ws.append(float(syn.initW))
+        seg = con.postseg()
+
+        fullsecname = seg.sec.name()
+        ns.append(fullsecname)
+
+        if st == None:
+            st = fullsecname.split(".")[1][:4]
+
+        ds.append(float(h.distance(seg)))
+
+    weights.append(ws)
+    names.append(ns)
+    dists.append(ds)
+
+    sec_types.append(st)
+    # con = cell.connections()[0]._connector
+    # syn = con.syn()
+    # weights.append(float(syn.initW))
+
+    # seg = con.postseg()
+    # fullsecname = seg.sec.name()
+    # names.append(fullsecname)
+    # #import pdb; pdb.set_trace()
+    # dists.append(float(h.distance(seg)))
+    # sec_types.append(fullsecname.split(".")[1][:4])
+#import pdb; pdb.set_trace()
 df = pd.DataFrame()
 df["Node ID"] = node_ids
 df["Distance"] = dists
@@ -66,11 +93,11 @@ df["Name"] = names
 
 sim.run()
 
-from analyze_EPSPs import calc_EPSPs
-epsps = calc_EPSPs("output/v_report.h5")
-df["EPSP"] = epsps
+from analyze_IPSCs import calc_IPSCs
+ipscs = calc_IPSCs("output/se_clamp_report.h5")
+df["IPSC"] = ipscs
 
-df.to_csv("EPSPs.csv", index=False)
+df.to_csv("IPSCs.csv", index=False)
 # mem_pot_file = './output/v_report.h5'
 
 # # load 
