@@ -172,6 +172,33 @@ def Int2Pyr(syn_params, sec_x, sec_id):
 
     lsyn = h.int2pyr(sec_x, sec=sec_id)
 
+    h.distance(sec=sec_id.cell().soma[0])
+    dist = h.distance(sec_id(sec_x))
+    fullsecname = sec_id.name()
+    sec_type = fullsecname.split(".")[1][:4]
+    #sec_id = int(fullsecname.split("[")[-1].split("]")[0])
+
+    #Assigns random generator of release probability.
+    r = h.Random()
+    r.MCellRan4()
+    r.uniform(0,1)
+    lsyn.setRandObjRef(r)
+
+    generators.append(r)
+
+    #lsyn.P_0 = np_gen.uniform(0.16,0.9)#np.random.uniform(0.16, 0.9)
+
+    if sec_type == "soma":
+        lsyn.P_0 = max(np.random.normal(0.877, 0.052), 0)
+    if sec_type == "dend":
+        if dist <= 50:
+            lsyn.P_0 = max(np.random.normal(0.877, 0.052), 0)
+        else:
+            lsyn.P_0 = max(np.random.normal(0.72, 0.1), 0)
+    if sec_type == "apic":
+        lsyn.P_0 = max(np.random.normal(0.3, 0.08), 0)
+    print(lsyn.P_0)
+
     if syn_params.get('AlphaTmax_ampa'):
         lsyn.AlphaTmax_ampa = float(syn_params['AlphaTmax_ampa']) # par.x(21)
     if syn_params.get('Beta_ampa'):
@@ -277,7 +304,7 @@ def Pyr2Pyr(syn_params, sec_x, sec_id):
     generators.append(r)
 
     #lsyn.P_0 = np_gen.uniform(0.16,0.9)#np.random.uniform(0.16, 0.9)
-    lsyn.P_0 = np.random.uniform(0.16, 0.9)
+    lsyn.P_0 = np.max(np.random.normal(0.53, 0.22), 0)#np.random.uniform(0.16, 0.9)
     print(lsyn.P_0)
     #import pdb; pdb.set_trace()
 

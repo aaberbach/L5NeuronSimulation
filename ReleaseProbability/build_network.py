@@ -30,24 +30,24 @@ exc_stim.add_nodes(N=1,
                 model_type='virtual')
 
 # External inhibitory inputs
-# inh_stim = NetworkBuilder('inh_stim')
-# inh_stim.add_nodes(N=1,
-#                 pop_name='inh_stim',
-#                 potential='exc',
-#                 model_type='virtual')
+inh_stim = NetworkBuilder('inh_stim')
+inh_stim.add_nodes(N=1,
+                pop_name='inh_stim',
+                potential='exc',
+                model_type='virtual')
 
 ##################################################################################
 ###################################Edges##########################################
 
 #Inhibitory on soma.
-# net.add_edges(source=inh_stim.nodes(), target=net.nodes(),
-#                 connection_rule=1,
-#                 syn_weight=1,
-#                 delay=0.1,
-#                 dynamics_params='INT2PN.json',
-#                 model_template=syn['INT2PN.json']['level_of_detail'],
-#                 distance_range=[-2000, 2000.0],
-#                 target_sections=['somatic'])
+net.add_edges(source=inh_stim.nodes(), target=net.nodes(),
+                connection_rule=1,
+                syn_weight=1,
+                delay=0.1,
+                dynamics_params='INT2PN.json',
+                model_template=syn['INT2PN.json']['level_of_detail'],
+                distance_range=[-2000, 2000.0],
+                target_sections=['somatic'])
 
 # Create connections between Exc --> Pyr cells
 
@@ -80,13 +80,16 @@ net.save_edges(output_dir='network')
 exc_stim.build()
 exc_stim.save_nodes(output_dir='network')
 
+inh_stim.build()
+inh_stim.save_nodes(output_dir='network')
+
 spacing = 30
 num_AP = 30
 node_ids = np.full(num_AP, 0)
 timestamps = np.linspace(0 + 500, (num_AP-1)*spacing + 500, num_AP)
 
 import h5py
-key = 'exc_stim'
+key = 'inh_stim'
 f = h5py.File('stim_spikes.h5', 'w')
 group = f.create_group('spikes')
 group = group.create_group(key)
