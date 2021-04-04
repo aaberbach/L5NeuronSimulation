@@ -1,0 +1,1 @@
+These are tunings I did before realizing I forgot to only target basal dendrites more than 50 um from the soma.

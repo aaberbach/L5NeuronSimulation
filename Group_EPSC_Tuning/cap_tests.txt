@@ -1,0 +1,15 @@
+This is looking at the affect of weight capping on apical EPSC distribution.
+
+----At 0.24575+-0.345----
+Cap Dist
+NO  23+-22
+60  23+-22
+30  23+-22
+10  23+-22
+
+----At 3+-0----
+Cap Dist
+No  203+-167
+100 203+-167
+50  203+-167
+10  186+-160
