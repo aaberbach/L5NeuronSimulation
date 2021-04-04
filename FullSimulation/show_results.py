@@ -22,6 +22,19 @@ def plot_raster_trace(file, seconds, show=True, shift=0):
     if show:
         plt.show()
 
+def print_raster_fr(file, seconds):
+    data = load_dataset(file)
+    ts = np.array(data['timestamps'])
+    nid = np.array(data['node_ids'])
+
+    print(file,":", (len(ts)/(max(nid+1)))/seconds)
+
+print_raster_fr("exc_stim_spikes.h5", 10)
+print_raster_fr("dist_inh_stim_spikes.h5", 10)
+print_raster_fr("prox_inh_stim_spikes.h5", 10)
+print_raster_fr("output/spikes.h5", 10)
+import pdb; pdb.set_trace()
+
 #plot_raster_trace("prox_inh_stim_spikes.h5", seconds=2, show=False, shift=-4)
 # plot_raster_trace("dist_inh_stim_spikes.h5", seconds=2, show=False, shift=-4)
 # plot_raster_trace("exc_stim_spikes.h5", seconds=2, show=False)

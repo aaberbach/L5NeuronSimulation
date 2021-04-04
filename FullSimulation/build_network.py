@@ -43,6 +43,12 @@ scale_div = 1#10
 # Apic Inhibitory: 1041.0
 # Soma Inhibitory: 148
 
+#0.22 per um inhibition
+#1.72 per um excitation
+#150 som inhibition
+
+#inhibtino lognormal conductance
+
 avg_syn_per_cell = 5 #Average number of synapses from each input cell.
 
 inh_syn_per_cell = 3
@@ -92,7 +98,8 @@ from clustering import *
 exc_stim = NetworkBuilder('exc_stim')
 
 df = pd.read_csv("Segments.csv")
-dends = df[df["Type"] == "dend"]
+#dends = df[df["Type"] == "dend"]
+dends = df[(df["Type"] == "dend") & (df["Distance"] >= 50)]
 apics = df[(df["Type"] == "apic")]
 
 #Sets the number of synapses for each input cell.
@@ -392,7 +399,7 @@ def gen_shifted_spikes(n_cells, mean_fr, std_fr, key, file, times, time_shift=4)
 
         raster_to_sonata(node_ids, timestamps, key, file)
 
-use_shifted_inh = True
+use_shifted_inh = False
 
 if(use_shifted_inh):
         gen_shifted_spikes(num_soma_inh + num_prox_dend_inh, prox_fr_mean, prox_fr_std, "prox_inh_stim", 'prox_inh_stim_spikes.h5', times)
