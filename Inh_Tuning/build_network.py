@@ -7,6 +7,7 @@ import pandas as pd
 if __name__ == '__main__':
     if __file__ != sys.argv[-1]:
         inp = sys.argv[-1]
+        inh_type = sys.argv[-2]
     else:
         raise Exception("no work" + str(sys.argv[-1]))
 
@@ -20,6 +21,19 @@ if __name__ == '__main__':
 # N = len(dendrites)
 N = int(inp)
 
+proportions = {"Perisomatic": [150/256, 106/256, 0, 0],
+                "Basal": [0, 0, 1, 0],
+                "Apical": [0, 0, 0, 1]}
+
+#inh_type = "Perisomatic"
+
+props = proportions[inh_type]
+
+n_soma = int(N * props[0])
+n_close_dend = int(N * props[1])
+n_far_dend = int(N * props[2])
+n_apic = int(N * props[3])
+
 np.random.seed(2129)
 #np.random.seed(42)
 
@@ -28,7 +42,25 @@ syn = synapses.syn_params_dicts()
 
 net = NetworkBuilder("biophysical")
 
-net.add_nodes(N=N, pop_name='Pyrc',
+net.add_nodes(N=n_soma, pop_name='Soma',
+    potental='exc',
+    model_type='biophysical',
+    model_template='hoc:L5PCtemplate',
+    morphology = None)
+
+net.add_nodes(N=n_close_dend, pop_name='Close Dend',
+    potental='exc',
+    model_type='biophysical',
+    model_template='hoc:L5PCtemplate',
+    morphology = None)
+
+net.add_nodes(N=n_far_dend, pop_name='Far Dend',
+    potental='exc',
+    model_type='biophysical',
+    model_template='hoc:L5PCtemplate',
+    morphology = None)
+
+net.add_nodes(N=n_apic, pop_name='Apic',
     potental='exc',
     model_type='biophysical',
     model_template='hoc:L5PCtemplate',
@@ -58,11 +90,51 @@ inh_stim.add_nodes(N=1,
 #                     dynamics_params='PN2PN.json',
 #                     model_template=syn['PN2PN.json']['level_of_detail'])
 
-# Create connections between Exc --> Pyr cells
-net.add_edges(source=inh_stim.nodes(), target=net.nodes(),
-                connection_rule=3,
+def uniform_connect(source, target, low=1, high=5):
+        return np.random.randint(low=low, high=high + 1)
+
+# Create connections on the soma
+net.add_edges(source=inh_stim.nodes(), target=net.nodes(pop_name="Soma"),
+                connection_rule=uniform_connect,
+                connection_params={"low":1, "high":5},
+                syn_weight=1,
+                target_sections=['soma'],
+                delay=0.1,
+                distance_range=[0, 2000],#(2013, Pouille et al.)
+                dynamics_params='INT2PN.json',
+                model_template=syn['INT2PN.json']['level_of_detail'])
+
+# Create connections on dendrites <50 um from the soma
+net.add_edges(source=inh_stim.nodes(), target=net.nodes(pop_name="Close Dend"),
+                connection_rule=uniform_connect,
+                connection_params={"low":1, "high":5},
                 syn_weight=1,
                 target_sections=['dend'],
+                delay=0.1,
+                distance_range=[0, 50],#(2013, Pouille et al.)
+                dynamics_params='INT2PN.json',
+                model_template=syn['INT2PN.json']['level_of_detail'])
+
+# Create connections on dendrites >50 um from the soma
+net.add_edges(source=inh_stim.nodes(), target=net.nodes(pop_name="Far Dend"),
+                connection_rule=uniform_connect,
+                connection_params={"low":1, "high":5},
+                syn_weight=1,
+                target_sections=['dend'],
+                delay=0.1,
+                distance_range=[50, 2000],#(2013, Pouille et al.)
+                dynamics_params='INT2PN.json',
+                model_template=syn['INT2PN.json']['level_of_detail'])
+
+def norm_connect(source, target, m=12, s=3):
+        return int(max(np.random.normal(m, s), 0))
+
+# Create connections on apical dendrites
+net.add_edges(source=inh_stim.nodes(), target=net.nodes(pop_name="Apic"),
+                connection_rule=norm_connect,
+                connection_params={"m":12, "s":3},
+                syn_weight=1,
+                target_sections=['apic'],
                 delay=0.1,
                 distance_range=[50, 2000],#(2013, Pouille et al.)
                 dynamics_params='INT2PN.json',

@@ -32,6 +32,27 @@ sim = bionet.BioSimulator.from_config(conf, network=graph)
 #import pdb; pdb.set_trace()
 cells = graph.get_local_cells()
 
+##################PLOT SYNAPSE PLACEMENTS#########################
+
+import matplotlib.pyplot as plt
+sl = h.SectionList([sec for sec in cells[1].hobj.all])
+for cell in cells.values():
+    ps = h.PlotShape(sl, False)
+    ax = ps.plot(plt)
+
+    n_syn = 0
+    #import pdb; pdb.set_trace()
+    for con in cell._connections:
+        #print(con._connector.postseg())
+        #print(p.mark)
+        #import pdb; pdb.set_trace()
+        n_syn += 1
+        ax.mark(con._connector.postseg())
+
+    print("N_syns:", n_syn)
+    plt.show()
+
+########################################################################
 
 sec_types = []
 weights = []
