@@ -37,6 +37,17 @@ def plot_v(file, show=False, ms=False):
     if(show):
         plt.show()
 
+def plot_all_v(file, ms=False):
+    data = load_dataset(file)
+    #import pdb; pdb.set_trace()
+    x = np.arange(0, np.array(data['data']).shape[0])
+    if ms:
+        x = x / 10
+
+    for i in range(data['data'].shape[1]):
+        plt.plot(x, data['data'][:, i])
+        plt.show()
+
 def plot_se(file, show=False):
     data = load_dataset(file, groups=1)
     plt.plot(data[:, 0])

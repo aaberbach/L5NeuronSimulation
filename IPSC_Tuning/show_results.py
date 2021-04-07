@@ -36,6 +36,9 @@ def plot_IPSCs(file, time = 4000):
     # plt.xscale("log")
     print("Mean: ", np.mean(ipscs))
     print("Std: ", np.std(ipscs))
+
+    print("Max:", max(ipscs))
+    print("Min:", min(ipscs))
     # plt.figure()
     # sb.distplot(ipscs, fit=lognorm, bins = 100)
     # plt.xscale('log')
@@ -45,7 +48,9 @@ def plot_IPSCs(file, time = 4000):
     plt.title(file)
 
     plt.show()
+#plot_IPSCs("ApicalTunings/150_0_IPSCs.csv")
 
+plot_IPSCs("IPSCs.csv")
 plot_IPSCs("dend_27.79_0.21_IPSCs.csv")
 plot_IPSCs("som_IPSCs.csv")
 plot_IPSCs("som_dend_IPSCs.csv")

@@ -1,7 +1,7 @@
-python build_network.py 500
-python run_network.py 0.45 0.35
-#python build_all_segs.py
-#python run_network.py 0.8 0
+#python build_network.py 500
+#python run_network.py 0.45 0.35
+python build_all_segs.py
+python run_network.py 0.1 0
 #python run_network.py 0.4 0
 #python run_network.py 0.45 0.4
 #python run_network.py 0.77 0.918

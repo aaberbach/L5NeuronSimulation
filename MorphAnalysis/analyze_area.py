@@ -41,10 +41,10 @@ def make_seg_df(cell):
     df["Coord Z"] = pz
 
     df.to_csv("Segments.csv", index=False)
-    import pdb; pdb.set_trace()
+    #import pdb; pdb.set_trace()
 
 def analyze_area(prop):
-    import pdb; pdb.set_trace()
+    #import pdb; pdb.set_trace()
 
     types = prop['type']
     # areas = prop['area']
@@ -56,6 +56,11 @@ def analyze_area(prop):
     far_dend_ids = np.where((types == 3) & (dists >= 50))[0]
     apic_ids = np.where(types == 4)[0]
 
+    print("LENGTHS:")
+    print("Close Dend:", np.trunc(sum(lens[close_dend_ids])))
+    print("Further Dend:", np.trunc(sum(lens[far_dend_ids])))
+    print("Apic:", np.trunc(sum(lens[apic_ids])))
+    print()
     # soma_areas = areas[soma_ids]
     # dend_areas = areas[dend_ids]
     # apic_areas = areas[apic_ids]

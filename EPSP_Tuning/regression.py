@@ -47,7 +47,12 @@ def comb(ids1, ids2):
 
 #df = pd.read_csv("EPSP_files/500_0.4_EPSPs.csv")
 #df = pd.read_csv("uniform_all_EPSPs.csv")
-df = pd.read_csv("all_0.8_EPSPs.csv")
+df = pd.read_csv("all_0.3_EPSPs.csv")
+
+#####Adding EPSPs from multiple conductances for fitting#######
+#df = pd.concat([df, pd.read_csv("all_0.3_EPSPs.csv"), pd.read_csv("all_0.1_EPSPs.csv")])
+##################3
+
 
 names = np.array(df["Name"])
 syn_ids = np.zeros(len(names))
@@ -55,6 +60,7 @@ for i in range(len(names)):
     syn_ids[i] = int(names[i].split("[")[-1].split("]")[0])
 
 epsps = np.array(df["EPSP"])
+#epsps[epsps < 0.001] = 0.001
 distances = np.array(df["Distance"])
 types = np.array(df["Type"])
 conductances = np.array(df["Conductance"])
@@ -108,13 +114,13 @@ plt.show()
 # # 0.5445742651968998 * ( 1.002486954925083 ^ x )
 # # 0.8850976665990996 * ( 1.0020475630798096 ^ x )
 
-# # 0.9371285272684119 * ( 1.0017027151340998 ^ x )
-# get_opts(distances[dends], epsps[dends], conductances[dends], func, plot=True, title="Dend")
-# # 0.47555389722370983 * ( 1.0032837561151722 ^ x )
-# get_opts(distances[comb(comb(apics,high_ids),fars)], epsps[comb(comb(apics,high_ids),fars)], conductances[comb(comb(apics,high_ids),fars)], func, plot=True ,title="Far Apic (High IDs)")
-# # 0.5309901629694934 * ( 1.0025102142106757 ^ x )
-# get_opts(distances[comb(comb(apics,low_ids),fars)], epsps[comb(comb(apics,low_ids),fars)], conductances[comb(comb(apics,low_ids),fars)], func, plot=True ,title="Far Apic (Low IDs)")
-# # 0.8842233502464731 * ( 1.001970475980598 ^ x )
-# get_opts(distances[comb(apics,closes)], epsps[comb(apics,closes)], conductances[comb(apics,closes)], func, plot=True, title="Close Apic")
+# 0.9371285272684119 * ( 1.0017027151340998 ^ x )
+get_opts(distances[dends], epsps[dends], conductances[dends], func, plot=True, title="Dend")
+# 0.47555389722370983 * ( 1.0032837561151722 ^ x )
+get_opts(distances[comb(comb(apics,high_ids),fars)], epsps[comb(comb(apics,high_ids),fars)], conductances[comb(comb(apics,high_ids),fars)], func, plot=True ,title="Far Apic (High IDs)")
+# 0.5309901629694934 * ( 1.0025102142106757 ^ x )
+get_opts(distances[comb(comb(apics,low_ids),fars)], epsps[comb(comb(apics,low_ids),fars)], conductances[comb(comb(apics,low_ids),fars)], func, plot=True ,title="Far Apic (Low IDs)")
+# 0.8842233502464731 * ( 1.001970475980598 ^ x )
+get_opts(distances[comb(apics,closes)], epsps[comb(apics,closes)], conductances[comb(apics,closes)], func, plot=True, title="Close Apic")
 
 plt.show()

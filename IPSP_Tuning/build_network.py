@@ -90,13 +90,13 @@ inh_stim.add_nodes(N=1,
 #                     dynamics_params='PN2PN.json',
 #                     model_template=syn['PN2PN.json']['level_of_detail'])
 
-def uniform_connect(source, target, low=1, high=5):
-        return np.random.randint(low=low, high=high + 1)
+def norm_connect(source, target, m, s, low, high):
+        return int(min(max(np.random.normal(m, s), low), high))
 
 # Create connections on the soma
 net.add_edges(source=inh_stim.nodes(), target=net.nodes(pop_name="Soma"),
-                connection_rule=uniform_connect,
-                connection_params={"low":1, "high":5},
+                connection_rule=norm_connect,
+                connection_params={"m":2.2, "s":1.4, "low":1, "high":5},
                 syn_weight=1,
                 target_sections=['soma'],
                 delay=0.1,
@@ -106,8 +106,8 @@ net.add_edges(source=inh_stim.nodes(), target=net.nodes(pop_name="Soma"),
 
 # Create connections on dendrites <50 um from the soma
 net.add_edges(source=inh_stim.nodes(), target=net.nodes(pop_name="Close Dend"),
-                connection_rule=uniform_connect,
-                connection_params={"low":1, "high":5},
+                connection_rule=norm_connect,
+                connection_params={"m":2.2, "s":1.4, "low":1, "high":5},
                 syn_weight=1,
                 target_sections=['dend'],
                 delay=0.1,
@@ -117,8 +117,8 @@ net.add_edges(source=inh_stim.nodes(), target=net.nodes(pop_name="Close Dend"),
 
 # Create connections on dendrites >50 um from the soma
 net.add_edges(source=inh_stim.nodes(), target=net.nodes(pop_name="Far Dend"),
-                connection_rule=uniform_connect,
-                connection_params={"low":1, "high":5},
+                connection_rule=norm_connect,
+                connection_params={"m":2.7, "s":1.6, "low":1, "high":5},
                 syn_weight=1,
                 target_sections=['dend'],
                 delay=0.1,
@@ -126,13 +126,10 @@ net.add_edges(source=inh_stim.nodes(), target=net.nodes(pop_name="Far Dend"),
                 dynamics_params='INT2PN.json',
                 model_template=syn['INT2PN.json']['level_of_detail'])
 
-def norm_connect(source, target, m=12, s=3):
-        return int(max(np.random.normal(m, s), 0))
-
 # Create connections on apical dendrites
 net.add_edges(source=inh_stim.nodes(), target=net.nodes(pop_name="Apic"),
                 connection_rule=norm_connect,
-                connection_params={"m":12, "s":3},
+                connection_params={"m":12, "s":3, "low":6, "high":18},
                 syn_weight=1,
                 target_sections=['apic'],
                 delay=0.1,
@@ -158,20 +155,19 @@ f.close()
 
 from bmtk.utils.sim_setup import build_env_bionet
 
-holding_v = -80
+clamp_amp = 0.345 #-> ~-60.1 mV
 
 build_env_bionet(base_dir='./',
                 network_dir='./network',
                 tstop=500.0, dt = 0.1,
                 report_vars=['v'],
                 spikes_threshold=-10,
-                clamp_reports=['se'],#Records se clamp currents.
-                se_voltage_clamp={
-                     "amps":[[holding_v, holding_v, holding_v]],
-                     "durations": [[500, 0, 0]],
-                     'gids': "all",
-                     'rs': [0.01 for _ in range(N)],
-                },
+                current_clamp={           
+                     'amp': clamp_amp,
+                     'delay': [100 for i in range(N)],
+                     'duration': [2000 for i in range(N)],
+                     'gids':"all"
+                 },
                 spikes_inputs=[('inh_stim', 'inh_stim_spikes.h5')],
                 components_dir='../biophys_components',
                 compile_mechanisms=True)

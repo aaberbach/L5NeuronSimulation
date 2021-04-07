@@ -167,6 +167,32 @@ def Int2Pyr(syn_params, sec_x, sec_id):
 
     lsyn = h.int2pyr(sec_x, sec=sec_id)
 
+    h.distance(sec=sec_id.cell().soma[0])
+    dist = h.distance(sec_id(sec_x))
+    fullsecname = sec_id.name()
+    sec_type = fullsecname.split(".")[1][:4]
+    #sec_id = int(fullsecname.split("[")[-1].split("]")[0])
+
+    #Assigns random generator of release probability.
+    r = h.Random()
+    r.MCellRan4()
+    r.uniform(0,1)
+    lsyn.setRandObjRef(r)
+
+    generators.append(r)
+
+    #lsyn.P_0 = np_gen.uniform(0.16,0.9)#np.random.uniform(0.16, 0.9)
+
+    if sec_type == "soma":
+        lsyn.P_0 = max(np.random.normal(0.877, 0.052), 0)
+    if sec_type == "dend":
+        if dist <= 50:
+            lsyn.P_0 = max(np.random.normal(0.877, 0.052), 0)
+        else:
+            lsyn.P_0 = max(np.random.normal(0.72, 0.1), 0)
+    if sec_type == "apic":
+        lsyn.P_0 = max(np.random.normal(0.3, 0.08), 0)
+
     if syn_params.get('AlphaTmax_ampa'):
         lsyn.AlphaTmax_ampa = float(syn_params['AlphaTmax_ampa']) # par.x(21)
     if syn_params.get('Beta_ampa'):
@@ -191,7 +217,7 @@ def Int2Pyr(syn_params, sec_x, sec_id):
     
     if syn_params.get('initW'):
         #lsyn.initW = float(syn_params['initW']) * random.uniform(0.5,1.0) # par.x(0) * rC.uniform(0.5,1.0)//rand.normal(0.5,1.5) //`rand.repick() 
-        lsyn.initW = float(pyrWeight)
+        lsyn.initW = float(lognormal(pyrWeight_m, pyrWeight_s))#float(pyrWeight)
 
     if syn_params.get('Wmax'):
         lsyn.Wmax = float(syn_params['Wmax']) * lsyn.initW # par.x(1) * lsyn.initW
@@ -287,39 +313,39 @@ def Pyr2Pyr(syn_params, sec_x, sec_id):
         #import pdb; pdb.set_trace()
 
 
-        # h.distance(sec=sec_id.cell().soma[0])
-        # dist = h.distance(sec_id(sec_x))
-        # fullsecname = sec_id.name()
-        # sec_type = fullsecname.split(".")[1][:4]
-        # sec_id = int(fullsecname.split("[")[-1].split("]")[0])
+        h.distance(sec=sec_id.cell().soma[0])
+        dist = h.distance(sec_id(sec_x))
+        fullsecname = sec_id.name()
+        sec_type = fullsecname.split(".")[1][:4]
+        sec_id = int(fullsecname.split("[")[-1].split("]")[0])
 
-        # if pyrWeight_s == 0:
-        #     base = float(pyrWeight_m)
-        # else:
-        #     base = float(min(lognormal(pyrWeight_m, pyrWeight_s), 15))
-        #     #base = np.random.lognormal(pyrWeight_m, np.sqrt(pyrWeight_s), 1)
+        if pyrWeight_s == 0:
+            base = float(pyrWeight_m)
+        else:
+            base = float(min(lognormal(pyrWeight_m, pyrWeight_s), 15))
+            #base = np.random.lognormal(pyrWeight_m, np.sqrt(pyrWeight_s), 1)
 
-        # # 0.9278403931213186 * ( 1.0022024845737223 ^ x )
-        # # 0.9131511669645764 * ( 1.0019436631560847 ^ x )
-        # # 0.16857988107990907 * ( 1.0039628707324273 ^ x )
+        # 0.9278403931213186 * ( 1.0022024845737223 ^ x )
+        # 0.9131511669645764 * ( 1.0019436631560847 ^ x )
+        # 0.16857988107990907 * ( 1.0039628707324273 ^ x )
 
-        # if sec_type == "dend":
-        #     lsyn.initW = base * (0.9278403931213186 * ( 1.0022024845737223 ** dist ))
-        # elif sec_type == "apic":
-        #     if dist < 750:
-        #         lsyn.initW = base * (0.9131511669645764 * ( 1.0019436631560847 ** dist))
-        #     else:
-        #         lsyn.initW = base * (0.16857988107990907 * ( 1.0039628707324273 ** dist))
-        #         # if sec_id >= 60:
-        #         #     lsyn.initW = base * (0.59768734 * (1.00326839 ** dist))
-        #         # else:
-        #         #     lsyn.initW = base * (0.62153507 * (1.00248601 ** dist))
+        if sec_type == "dend":
+            lsyn.initW = base * (0.9278403931213186 * ( 1.0022024845737223 ** dist ))
+        elif sec_type == "apic":
+            if dist < 750:
+                lsyn.initW = base * (0.9131511669645764 * ( 1.0019436631560847 ** dist))
+            else:
+                lsyn.initW = base * (0.16857988107990907 * ( 1.0039628707324273 ** dist))
+                # if sec_id >= 60:
+                #     lsyn.initW = base * (0.59768734 * (1.00326839 ** dist))
+                # else:
+                #     lsyn.initW = base * (0.62153507 * (1.00248601 ** dist))
 
-        # lsyn.initW = min(float(lsyn.initW), 60)
+        lsyn.initW = min(float(lsyn.initW), 60)
 
         #lsyn.initW = np.random.uniform(0.02, 2)
 
-        lsyn.initW = pyrWeight_m
+        #lsyn.initW = pyrWeight_m
 
         #lsyn.initW = float(min(lognormal(pyrWeight_m, pyrWeight_s), 8))
 

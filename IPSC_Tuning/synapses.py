@@ -217,7 +217,7 @@ def Int2Pyr(syn_params, sec_x, sec_id):
     
     if syn_params.get('initW'):
         #lsyn.initW = float(syn_params['initW']) * random.uniform(0.5,1.0) # par.x(0) * rC.uniform(0.5,1.0)//rand.normal(0.5,1.5) //`rand.repick() 
-        lsyn.initW = max(float(np.random.lognormal(pyrWeight_m, pyrWeight_s)), 0)#float(pyrWeight)
+        lsyn.initW = float(lognormal(pyrWeight_m, pyrWeight_s))#float(pyrWeight)
 
     if syn_params.get('Wmax'):
         lsyn.Wmax = float(syn_params['Wmax']) * lsyn.initW # par.x(1) * lsyn.initW
