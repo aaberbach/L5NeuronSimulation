@@ -48,7 +48,8 @@ def plot_IPSCs(file, time = 4000):
     plt.title(file)
 
     plt.show()
-#plot_IPSCs("ApicalTunings/150_0_IPSCs.csv")
+# plot_IPSCs("ApicalTunings/150_0_IPSCs.csv")
+# plot_IPSCs("ApicalTunings/GOOD_143.7_0_IPSCs.csv")
 
 plot_IPSCs("IPSCs.csv")
 plot_IPSCs("dend_27.79_0.21_IPSCs.csv")

@@ -42,7 +42,8 @@ def plot_traces(file):
         plt.plot(traces[:, i])
         plt.show()
     
-
+plot_EPSCs("Tunings/0.229_0.345_EPSCs.csv")
+plot_EPSCs("Tunings/apic_0.229_0.345_EPSCs.csv")
 #plot_traces("output/se_clamp_report.h5")
 plot_EPSCs("EPSCs.csv")
 #plot_EPSCs("Tunings/0.1_0.65_EPSCs.csv")

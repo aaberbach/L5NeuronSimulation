@@ -96,7 +96,7 @@ def norm_connect(source, target, m, s, low, high):
 # Create connections on the soma
 net.add_edges(source=inh_stim.nodes(), target=net.nodes(pop_name="Soma"),
                 connection_rule=norm_connect,
-                connection_params={"m":2.2, "s":1.4, "low":1, "high":5},
+                connection_params={"m":2.8, "s":1.9, "low":1, "high":5},
                 syn_weight=1,
                 target_sections=['soma'],
                 delay=0.1,
@@ -107,7 +107,7 @@ net.add_edges(source=inh_stim.nodes(), target=net.nodes(pop_name="Soma"),
 # Create connections on dendrites <50 um from the soma
 net.add_edges(source=inh_stim.nodes(), target=net.nodes(pop_name="Close Dend"),
                 connection_rule=norm_connect,
-                connection_params={"m":2.2, "s":1.4, "low":1, "high":5},
+                connection_params={"m":2.8, "s":1.9, "low":1, "high":5},
                 syn_weight=1,
                 target_sections=['dend'],
                 delay=0.1,
