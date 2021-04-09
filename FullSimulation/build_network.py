@@ -30,37 +30,31 @@ def lognormal(m, s):
 
 scale_div = 1#10
 
-# Dend Excitatory: 7186.0
-# Dend Inhibitory: 718.0
-# Apic Excitatory: 10417.0
-# Apic Inhibitory: 1041.0
-# Soma Inhibitory: 148
-
-# Dend Excitatory: 6509.0
-# Beta Dend Inhibitory: 650.0
-# Gamma Dend Inhibitory: 67.0
-# Apic Excitatory: 10417.0
-# Apic Inhibitory: 1041.0
-# Soma Inhibitory: 148
-
 #0.22 per um inhibition
 #1.72 per um excitation
 #150 som inhibition
+
+# Excitatory: 
+#       12797(1.72syns/um * 7440um)on apical dendrites, 
+#       7996(1.72syns/um * 4649um)on basal dendrites.
+# Inhibitory: 
+#       150 on soma  (Egger et al., 2020; Markram et al., 2015; Reimann et al., 2015)+ 
+#       0.22*483= 256perisomatic, 
+#       1637(0.22syns/um * 7440um) on apical dendrites, 
+#       1023(0.22syns/um * 4649um)on basal dendrites.
 
 #inhibtino lognormal conductance
 
 avg_syn_per_cell = 5 #Average number of synapses from each input cell.
 
-inh_syn_per_cell = 3
+num_dend_exc = (7996 // avg_syn_per_cell) // scale_div
+num_apic_exc = (12797 // avg_syn_per_cell) // scale_div
 
-num_dend_exc = (6509 // avg_syn_per_cell) // scale_div
-num_apic_exc = (10417 // avg_syn_per_cell) // scale_div
+num_dend_inh = int(1023 // 2.7) // scale_div
+num_apic_inh = (1637 // 12) // scale_div
 
-num_dend_inh = (650 // inh_syn_per_cell) // scale_div
-num_apic_inh = (1041 // inh_syn_per_cell) // scale_div
-
-num_prox_dend_inh = (67 // inh_syn_per_cell) // scale_div
-num_soma_inh = (148 // inh_syn_per_cell) // scale_div
+num_prox_dend_inh = int(106 // 2.8) // scale_div
+num_soma_inh = int(150 // 2.8) // scale_div
 
 # exc_fr_mean = 2#0.1
 # exc_fr_std = 0.5
@@ -72,8 +66,10 @@ dist_fr_mean = 3.9
 dist_fr_std = 4.9
 
 clust_per_group = 8
-num_dend_groups = 65 // scale_div
-num_apic_groups = 104 // scale_div
+cells_per_group = 100
+
+num_dend_groups = num_dend_exc // cells_per_group // scale_div#65 // scale_div
+num_apic_groups = num_apic_exc // cells_per_group // scale_div#104 // scale_div
 
 dend_groups = []
 apic_groups = []
@@ -170,14 +166,17 @@ prox_inh_stim.add_nodes(N=num_prox_dend_inh,
 
 #Edges
 
-def uniform_connect(source, target, low=1, high=5):
-        #return np.random.uniform(low, high)
-        return np.random.randint(low=low, high=high + 1)
+# def uniform_connect(source, target, low=1, high=5):
+#         #return np.random.uniform(low, high)
+#         return np.random.randint(low=low, high=high + 1)
+
+def norm_connect(source, target, m, s, low, high):
+        return int(min(max(np.random.normal(m, s), low), high))
 
 #On soma.
 net.add_edges(source=prox_inh_stim.nodes(pop_name='on_soma'), target=net.nodes(),
-                connection_rule=uniform_connect,
-                #connection_params={'num_per': num_soma_inh , 'start':0},
+                connection_rule=norm_connect,
+                connection_params={"m":2.8, "s":1.9, "low":1, "high":5},
                 syn_weight=1,
                 delay=0.1,
                 dynamics_params='INT2PN.json',
@@ -187,8 +186,8 @@ net.add_edges(source=prox_inh_stim.nodes(pop_name='on_soma'), target=net.nodes()
 
 #On dendrites within 50 um
 net.add_edges(source=prox_inh_stim.nodes(pop_name='on_dend'), target=net.nodes(),
-                connection_rule=uniform_connect,
-                #connection_params={'num_per': num_soma_inh , 'start':0},
+                connection_rule=norm_connect,
+                connection_params={"m":2.8, "s":1.9, "low":1, "high":5},
                 syn_weight=1,
                 delay=0.1,
                 dynamics_params='INT2PN.json',
@@ -211,7 +210,8 @@ dist_inh_stim.add_nodes(N=num_apic_inh,
 
 #Dend edges.
 net.add_edges(source=dist_inh_stim.nodes(pop_name="dend"), target=net.nodes(),
-                connection_rule=uniform_connect,
+                connection_rule=norm_connect,
+                connection_params={"m":2.7, "s":1.6, "low":1, "high":5},
                 syn_weight=1,
                 delay=0.1,
                 dynamics_params='INT2PN.json',
@@ -221,7 +221,8 @@ net.add_edges(source=dist_inh_stim.nodes(pop_name="dend"), target=net.nodes(),
 
 #Apic edges.
 net.add_edges(source=dist_inh_stim.nodes(pop_name="apic"), target=net.nodes(),
-                connection_rule=uniform_connect,
+                connection_rule=norm_connect,
+                connection_params={"m":12, "s":3, "low":6, "high":18},
                 syn_weight=1,
                 delay=0.1,
                 dynamics_params='INT2PN.json',
@@ -399,11 +400,12 @@ def gen_shifted_spikes(n_cells, mean_fr, std_fr, key, file, times, time_shift=4)
 
         raster_to_sonata(node_ids, timestamps, key, file)
 
-use_shifted_inh = False
+use_shifted_inh = True
+inh_shift = 2
 
 if(use_shifted_inh):
-        gen_shifted_spikes(num_soma_inh + num_prox_dend_inh, prox_fr_mean, prox_fr_std, "prox_inh_stim", 'prox_inh_stim_spikes.h5', times)
-        gen_shifted_spikes(num_apic_inh + num_dend_inh, dist_fr_mean, dist_fr_std, "dist_inh_stim", 'dist_inh_stim_spikes.h5', times)
+        gen_shifted_spikes(num_soma_inh + num_prox_dend_inh, prox_fr_mean, prox_fr_std, "prox_inh_stim", 'prox_inh_stim_spikes.h5', times, time_shift=inh_shift)
+        gen_shifted_spikes(num_apic_inh + num_dend_inh, dist_fr_mean, dist_fr_std, "dist_inh_stim", 'dist_inh_stim_spikes.h5', times, time_shift=inh_shift)
 else:
         gen_inh_spikes(num_soma_inh + num_prox_dend_inh, prox_fr_mean, prox_fr_std, "prox_inh_stim", 'prox_inh_stim_spikes.h5', times)
         gen_inh_spikes(num_apic_inh + num_dend_inh, dist_fr_mean, dist_fr_std, "dist_inh_stim", 'dist_inh_stim_spikes.h5', times)

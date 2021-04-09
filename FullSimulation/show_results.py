@@ -29,11 +29,11 @@ def print_raster_fr(file, seconds):
 
     print(file,":", (len(ts)/(max(nid+1)))/seconds)
 
-print_raster_fr("exc_stim_spikes.h5", 10)
-print_raster_fr("dist_inh_stim_spikes.h5", 10)
-print_raster_fr("prox_inh_stim_spikes.h5", 10)
-print_raster_fr("output/spikes.h5", 10)
-import pdb; pdb.set_trace()
+# print_raster_fr("exc_stim_spikes.h5", 10)
+# print_raster_fr("dist_inh_stim_spikes.h5", 10)
+# print_raster_fr("prox_inh_stim_spikes.h5", 10)
+# print_raster_fr("output/spikes.h5", 10)
+# import pdb; pdb.set_trace()
 
 #plot_raster_trace("prox_inh_stim_spikes.h5", seconds=2, show=False, shift=-4)
 # plot_raster_trace("dist_inh_stim_spikes.h5", seconds=2, show=False, shift=-4)
@@ -44,12 +44,13 @@ import pdb; pdb.set_trace()
 data = load_dataset("output/spikes.h5")
 ts = np.array(data['timestamps'])
 nid = np.array(data['node_ids'])
-print("FR:", len(ts) / 10)
 
-plot_v("shift_output/v_report.h5")
-plt.title("With Shift")
+print("FR:", len(np.where(ts >= 2000)[0]) / 8)
+
+# plot_v("shift_output/v_report.h5")
+# plt.title("With Shift")
 plt.figure()
 plot_v("output/v_report.h5", show=True)
 
-plot_spikes("exc_stim_spikes.h5", time_scale=1, show=True)
-plot_spikes("prox_inh_stim_spikes.h5", time_scale=1, show=True)
+# plot_spikes("exc_stim_spikes.h5", time_scale=1, show=True)
+# plot_spikes("prox_inh_stim_spikes.h5", time_scale=1, show=True)

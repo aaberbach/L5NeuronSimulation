@@ -10,8 +10,8 @@ import numpy as np
 np.random.seed(42)
 generators = []
 
-pyrWeight_m = 0.45#0.95
-pyrWeight_s = 0.35#1.3
+pyrWeight_m = 0.229#0.24575#0.95
+pyrWeight_s = 0.345#1.3
 
 def lognormal(m, s):
         mean = np.log(m) - 0.5 * np.log((s/m)**2+1)
@@ -167,6 +167,42 @@ def Int2Pyr(syn_params, sec_x, sec_id):
 
     lsyn = h.int2pyr(sec_x, sec=sec_id)
 
+    h.distance(sec=sec_id.cell().soma[0])
+    dist = h.distance(sec_id(sec_x))
+    fullsecname = sec_id.name()
+    sec_type = fullsecname.split(".")[1][:4]
+    #sec_id = int(fullsecname.split("[")[-1].split("]")[0])
+
+    #Assigns random generator of release probability.
+    r = h.Random()
+    r.MCellRan4()
+    r.uniform(0,1)
+    lsyn.setRandObjRef(r)
+
+    generators.append(r)
+
+    #lsyn.P_0 = np_gen.uniform(0.16,0.9)#np.random.uniform(0.16, 0.9)
+
+    ###Weights###
+    # Perisomatic: 58.53
+    # Basal: 54.6
+    # Apical: 143.7
+    #############
+
+    if sec_type == "soma":
+        lsyn.P_0 = max(np.random.normal(0.877, 0.052), 0)
+        lsyn.initW = 62.31
+    if sec_type == "dend":
+        if dist <= 50:
+            lsyn.P_0 = max(np.random.normal(0.877, 0.052), 0)
+            lsyn.initW = 62.31
+        else:
+            lsyn.P_0 = max(np.random.normal(0.72, 0.1), 0)
+            lsyn.initW = 66.6
+    if sec_type == "apic":
+        lsyn.P_0 = max(np.random.normal(0.3, 0.08), 0)
+        lsyn.initW = 168.7
+
     if syn_params.get('AlphaTmax_ampa'):
         lsyn.AlphaTmax_ampa = float(syn_params['AlphaTmax_ampa']) # par.x(21)
     if syn_params.get('Beta_ampa'):
@@ -189,9 +225,9 @@ def Int2Pyr(syn_params, sec_x, sec_id):
     if syn_params.get('Erev_nmda'):
         lsyn.Erev_nmda = float(syn_params['Erev_nmda']) # par.x(16)
     
-    if syn_params.get('initW'):
-        #lsyn.initW = float(syn_params['initW']) * random.uniform(0.5,1.0) # par.x(0) * rC.uniform(0.5,1.0)//rand.normal(0.5,1.5) //`rand.repick() 
-        lsyn.initW = 3*float(max(np.random.normal(36, 18), 0.01))#2 * float(np.random.normal(12, np.sqrt(2)))#float(pyrWeight)
+    # if syn_params.get('initW'):
+    #     #lsyn.initW = float(syn_params['initW']) * random.uniform(0.5,1.0) # par.x(0) * rC.uniform(0.5,1.0)//rand.normal(0.5,1.5) //`rand.repick() 
+    #     lsyn.initW = 3*float(max(np.random.normal(36, 18), 0.01))#2 * float(np.random.normal(12, np.sqrt(2)))#float(pyrWeight)
 
     if syn_params.get('Wmax'):
         lsyn.Wmax = float(syn_params['Wmax']) * lsyn.initW # par.x(1) * lsyn.initW
@@ -257,7 +293,8 @@ def Pyr2Pyr(syn_params, sec_x, sec_id):
 
     generators.append(r)
 
-    lsyn.P_0 = np.random.uniform(0.16, 0.9)#Release probability
+    #lsyn.P_0 = np.random.uniform(0.16, 0.9)#Release probability
+    lsyn.P_0 = np.max(np.random.normal(0.53, 0.22), 0)#Release probability
 
     if syn_params.get('AlphaTmax_ampa'):
         lsyn.AlphaTmax_ampa = float(syn_params['AlphaTmax_ampa']) # par.x(21)
@@ -293,19 +330,25 @@ def Pyr2Pyr(syn_params, sec_x, sec_id):
         else:
             base = float(min(lognormal(pyrWeight_m, pyrWeight_s), 15))
 
-        # 0.9278403931213186 * ( 1.0022024845737223 ^ x )
-        # 0.9131511669645764 * ( 1.0019436631560847 ^ x )
-        # 0.16857988107990907 * ( 1.0039628707324273 ^ x )
+        ####OLD
+        # dend = lambda x: 0.9278403931213186 * ( 1.0022024845737223 ** x )
+        # close_apic = lambda x: 0.9131511669645764 * ( 1.0019436631560847 ** x )
+        # far_apic = lambda x: 0.16857988107990907 * ( 1.0039628707324273 ** x )
+        #############
+
+        dend = lambda x: 0.9475625702815389 * ( 1.001318965242205 ** x )
+        close_apic = lambda x: 0.8522367331040966 * ( 1.0020433032052223 ** x )
+        far_apic = lambda x: 0.09043087364217033 * ( 1.004632615014859 ** x )
 
         if sec_type == "dend":
-            lsyn.initW = base * (0.9278403931213186 * ( 1.0022024845737223 ** dist ))
+            lsyn.initW = base * dend(dist)
         elif sec_type == "apic":
             if dist < 750:
-                lsyn.initW = base * (0.9131511669645764 * ( 1.0019436631560847 ** dist))
+                lsyn.initW = base * close_apic(dist)
             else:
-                lsyn.initW = base * (0.16857988107990907 * ( 1.0039628707324273 ** dist))
+                lsyn.initW = base * far_apic(dist)
 
-        lsyn.initW = min(float(lsyn.initW), 30)
+        lsyn.initW = min(float(lsyn.initW), 50)
 
 
     if syn_params.get('Wmax'):
