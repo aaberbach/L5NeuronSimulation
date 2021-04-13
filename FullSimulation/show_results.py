@@ -45,12 +45,13 @@ data = load_dataset("output/spikes.h5")
 ts = np.array(data['timestamps'])
 nid = np.array(data['node_ids'])
 
-print("FR:", len(np.where(ts >= 2000)[0]) / 8)
-
+print("FR:", len(np.where(ts >= 2000)[0]) / 58)
+#import pdb; pdb.set_trace()
 # plot_v("shift_output/v_report.h5")
 # plt.title("With Shift")
 plt.figure()
 plot_v("output/v_report.h5", show=True)
 
-# plot_spikes("exc_stim_spikes.h5", time_scale=1, show=True)
-# plot_spikes("prox_inh_stim_spikes.h5", time_scale=1, show=True)
+plot_spikes("exc_stim_spikes.h5", time_scale=1, show=True)
+plot_spikes("prox_inh_stim_spikes.h5", time_scale=1, show=True)
+plot_spikes("dist_inh_stim_spikes.h5", time_scale=1, show=True)

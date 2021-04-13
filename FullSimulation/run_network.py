@@ -71,6 +71,6 @@ df.to_csv("Connections.csv", index=False)
 # v_mod._transforms["v"] = integerize
 # v_mod._variables = []
 
-import pdb; pdb.set_trace()
+#import pdb; pdb.set_trace()
 sim.run()
 # pc.barrier()
