@@ -283,7 +283,7 @@ from bmtk.utils.reports.spike_trains.spikes_file_writers import write_csv
 
 #fr_df.to_csv('frs_temp.csv', index=False)
 #import pdb; pdb.set_trace()
-seconds = 3600#3600#10
+seconds = 3600 * 6#10
 times = (0, seconds)
 
 import scipy.stats as st
@@ -291,36 +291,43 @@ from functools import partial
 
 levy_dist = partial(st.levy_stable.rvs, alpha=1.37, beta=-1.00, loc=0.92, scale=0.44, size=1)
 norm_dist = partial(st.norm.rvs, loc=5, scale=1, size=1)
-
-
 #Generates the spike raster for a given group.
 #The group has the same noise.
-def gen_group_spikes(writer, group, seconds, start_time):
-        z = make_noise(num_samples=(int(seconds*1000))-1,num_traces=group.n_cells)
-        make_save_spikes(writer, True, levy_dist, numUnits=group.n_cells,rateProf=z[0,:],start_id=group.start_id,start_time=start_time)
+def gen_group_spikes(group, seconds):
 
-# #Converts a node_ids and timestamps list to an acceptable h5 file.
-# def raster_to_sonata(node_ids, timestamps, key, file):
-#         f = h5py.File(file, 'w')
-#         group = f.create_group('spikes')
-#         group = group.create_group(key)
-#         group.create_dataset("node_ids", data = node_ids.astype("u4"))
-#         group.create_dataset("timestamps", data = timestamps)
-#         f.close()
+        z = make_noise(num_samples=(int(seconds*1000))-1,num_traces=1)
+        #import pdb; pdb.set_trace()
+        df = make_spikes(True, levy_dist, numUnits=group.n_cells,rateProf=z[0,:])
+        return df
+
+#Converts a node_ids and timestamps list to an acceptable h5 file.
+def raster_to_sonata(node_ids, timestamps, key, file):
+        f = h5py.File(file, 'w')
+        group = f.create_group('spikes')
+        group = group.create_group(key)
+        group.create_dataset("node_ids", data = node_ids.astype("u4"))
+        group.create_dataset("timestamps", data = timestamps)
+        f.close()
 
 #Creates the excitatory input raster from the given list of functional groups.
 def gen_spikes(dend_groups, apic_groups, times, file):
+        node_ids = []
+        timestamps = []
+
         length = times[1] - times[0]
         buffer = times[0]
 
-        writer = SonataWriter(file, ["spikes", "exc_stim"], ["timestamps", "node_ids"], [np.float, np.int])
-
         for group in (dend_groups + apic_groups):
-                gen_group_spikes(writer, group, length, buffer*1000)
+                df = gen_group_spikes(group, length)
+                node_ids = np.concatenate((node_ids, np.array(df["node_ids"]) + group.start_id))
+                timestamps = np.concatenate((timestamps, np.array(df["timestamps"])))
+
+        timestamps += buffer * 1000
+        raster_to_sonata(node_ids, timestamps, "exc_stim", file)
         
 
 gen_spikes(dend_groups, apic_groups, times, 'exc_stim_spikes.h5')
-#import pdb; pdb.set_trace()
+
 # ################ INH FR PROFILES FROM EXC RASTER #########
 
 # f = h5py.File('exc_stim_spikes.h5')
@@ -363,16 +370,20 @@ def positive_normal(mean, std):
 
 #Makes a spike raster with each cell having its own noise trace.
 def gen_inh_spikes(n_cells, mean_fr, std_fr, key, file, times):
-        # node_ids = []
-        # timestamps = []
+        node_ids = []
+        timestamps = []
 
         length = times[1] - times[0]
         buffer = times[0]
 
-        writer = SonataWriter(file, ["spikes", key], ["timestamps", "node_ids"], [np.float, np.int])
+        for i in range(n_cells):
+                z = make_noise(num_samples=(int(length*1000))-1,num_traces=1)
+                df = make_spikes(False, partial(positive_normal, mean=mean_fr, std=std_fr), numUnits=1,rateProf=z[0,:])
+                node_ids = np.concatenate((node_ids, np.array(df["node_ids"]) + i))
+                timestamps = np.concatenate((timestamps, np.array(df["timestamps"])))
 
-        z = make_noise(num_samples=(int(length*1000))-1,num_traces=1)
-        make_save_spikes(writer, False, partial(positive_normal, mean=mean_fr, std=std_fr), numUnits=n_cells,rateProf=z[0,:],start_time=buffer*1000)
+        timestamps += buffer * 1000
+        raster_to_sonata(node_ids, timestamps, key, file)
 
 #Creates a apike raster with each cell having the same noise coming from the a shifted average of excitation.
 def gen_shifted_spikes(n_cells, mean_fr, std_fr, key, file, times, time_shift=4):
@@ -384,9 +395,13 @@ def gen_shifted_spikes(n_cells, mean_fr, std_fr, key, file, times, time_shift=4)
         nid = f['spikes']["exc_stim"]['node_ids']
 
         z = shift_exc_noise(ts, nid, times[1], time_shift=time_shift)
-        writer = SonataWriter(file, ["spikes", key], ["timestamps", "node_ids"], [np.float, np.int])
 
-        make_save_spikes(writer, False, partial(positive_normal, mean=mean_fr, std=std_fr), numUnits=n_cells,rateProf=z)
+        for i in range(n_cells):
+                df = make_spikes(False, partial(positive_normal, mean=mean_fr, std=std_fr), numUnits=1,rateProf=z)#z[0,:])
+                node_ids = np.concatenate((node_ids, np.array(df["node_ids"]) + i))
+                timestamps = np.concatenate((timestamps, np.array(df["timestamps"])))
+
+        raster_to_sonata(node_ids, timestamps, key, file)
 
 use_shifted_inh = True
 inh_shift = 2
