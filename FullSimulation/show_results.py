@@ -45,7 +45,7 @@ data = load_dataset("output/spikes.h5")
 ts = np.array(data['timestamps'])
 nid = np.array(data['node_ids'])
 
-print("FR:", len(np.where(ts >= 2000)[0]) / 58)
+print("FR:", len(np.where(ts >= 000)[0]) / 1.5)
 #import pdb; pdb.set_trace()
 # plot_v("shift_output/v_report.h5")
 # plt.title("With Shift")

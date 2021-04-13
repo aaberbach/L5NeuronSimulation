@@ -282,7 +282,8 @@ from bmtk.utils.reports.spike_trains.spikes_file_writers import write_csv
 # fr_df['fr_max'] = exc_maxs
 
 #fr_df.to_csv('frs_temp.csv', index=False)
-seconds = 60#10
+#import pdb; pdb.set_trace()
+seconds = 3600#10
 times = (0, seconds)
 
 import scipy.stats as st
@@ -293,7 +294,9 @@ norm_dist = partial(st.norm.rvs, loc=5, scale=1, size=1)
 #Generates the spike raster for a given group.
 #The group has the same noise.
 def gen_group_spikes(group, seconds):
-        z = make_noise(num_samples=(int(seconds*1000))-1,num_traces=group.n_cells)
+
+        z = make_noise(num_samples=(int(seconds*1000))-1,num_traces=1)
+        #import pdb; pdb.set_trace()
         df = make_spikes(True, levy_dist, numUnits=group.n_cells,rateProf=z[0,:])
         return df
 
