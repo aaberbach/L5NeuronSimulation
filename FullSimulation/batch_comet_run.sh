@@ -3,7 +3,7 @@
 #SBATCH --partition shared
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
-#SBATCH --acount=umc110
+#SBATCH --account=umc110
 #SBATCH --job-name=run
 #SBATCH --output=run.out
 #SBATCH --time 0-00:05
@@ -14,10 +14,10 @@ module load cpu
 module load intel
 module load intel-mpi
 module load ncurses
-export PATH=$HOME/nrn-7.6/x86_64/bin:$PATH
-export LD_LIBRARY_PATH=$HOME/nrn-7.6/x86_64/lib:$LD_LIBRARY_PATH
-export PYTHONPATH=$HOME/nrn-7.6/lib/python:$PYTHONPATH
-export PATH=$HOME/nrn-7.6/x86_64/bin:$PATH
+export PATH=$HOME/nrn/x86_64/bin:$PATH
+export LD_LIBRARY_PATH=$HOME/nrn/x86_64/lib:$LD_LIBRARY_PATH
+export PYTHONPATH=$HOME/nrn/lib/python:$PYTHONPATH
+export PATH=$HOME/nrn/x86_64/bin:$PATH
 
 rm -rf output
 
