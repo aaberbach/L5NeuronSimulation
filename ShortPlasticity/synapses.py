@@ -168,6 +168,14 @@ def Int2Pyr(syn_params, sec_x, sec_id):
     #     weight_means["inh"][trg_cell_nid] = mean_weight = np.random.uniform(3.171729 - 1.5, 3.171729 + 0.1)
 
     lsyn = h.int2pyr(sec_x, sec=sec_id)
+    
+    #Assigns random generator of release probability.
+    r = h.Random()
+    r.MCellRan4()
+    r.uniform(0,1)
+    lsyn.setRandObjRef(r)
+
+    generators.append(r)
 
     if syn_params.get('AlphaTmax_ampa'):
         lsyn.AlphaTmax_ampa = float(syn_params['AlphaTmax_ampa']) # par.x(21)
