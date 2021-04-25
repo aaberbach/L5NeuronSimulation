@@ -203,6 +203,32 @@ def Int2Pyr(syn_params, sec_x, sec_id):
         lsyn.P_0 = max(np.random.normal(0.3, 0.08), 0)
         lsyn.initW = 168.7
 
+    #Short Term Plasticity
+    #######################
+    # SOM+
+    #   d1: 0.96, tauD1: 40
+    # PV+
+    #   d1: 0.6, tauD1: 50
+    #######################
+
+    if sec_type == "soma":
+        #PV+
+        lsyn.d1 = 0.6
+        lsyn.tauD1 = 50
+    if sec_type == "dend":
+        if dist <= 50:
+            #PV+
+            lsyn.d1 = 0.6
+            lsyn.tauD1 = 50
+        else:
+            #SOM+
+            lsyn.d1 = 0.96
+            lsyn.tauD1 = 40
+    if sec_type == "apic":
+        #SOM+
+        lsyn.d1 = 0.96
+        lsyn.tauD1 = 40
+
     if syn_params.get('AlphaTmax_ampa'):
         lsyn.AlphaTmax_ampa = float(syn_params['AlphaTmax_ampa']) # par.x(21)
     if syn_params.get('Beta_ampa'):

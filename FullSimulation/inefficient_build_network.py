@@ -283,7 +283,7 @@ from bmtk.utils.reports.spike_trains.spikes_file_writers import write_csv
 
 #fr_df.to_csv('frs_temp.csv', index=False)
 #import pdb; pdb.set_trace()
-seconds = 3600 * 6#10
+seconds = 60#10
 times = (0, seconds)
 
 import scipy.stats as st

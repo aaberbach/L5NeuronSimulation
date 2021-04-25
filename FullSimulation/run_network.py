@@ -35,19 +35,22 @@ dists = []
 node_ids = []
 names = []
 source_pops = []
+release_probs = []
 
 for c in cell.connections():
     con = c._connector
     source = c.source_node
     syn = con.syn()
     seg = con.postseg()
+    #import pdb; pdb.set_trace()
     fullsecname = seg.sec.name()
 
     source_pops.append(source._population)
     node_ids.append(source._node_id)
 
     weights.append(float(syn.initW))
-    names.append(fullsecname)
+    release_probs.append(float(syn.P_0))
+    names.append(str(seg))
     sec_types.append(fullsecname.split(".")[1][:4])
     dists.append(float(h.distance(seg)))
 
@@ -58,6 +61,7 @@ df["Conductance"] = weights
 df["Type"] = sec_types
 df["Name"] = names
 df["Source Population"] = source_pops
+df["Release Probability"] = release_probs
 #df["Node ID"] = node_ids
 #import pdb; pdb.set_trace()
 # df.to_csv("EPSPs.csv", index=False)

@@ -281,9 +281,24 @@ from bmtk.utils.reports.spike_trains.spikes_file_writers import write_csv
 # fr_df['fr_std'] = exc_stds
 # fr_df['fr_max'] = exc_maxs
 
+#Saves functional groups as csv
+all_groups = dend_groups + apic_groups
+node_ids = []
+func_groups = []
+
+for func_id, group in enumerate(all_groups):
+        for i in range(group.start_id, group.start_id + group.n_cells):
+                node_ids.append(i)
+                func_groups.append(func_id)
+
+df = pd.DataFrame()
+df["Node ID"] = node_ids
+df["Functional Group"] = func_groups
+df.to_csv("FunctionalGroups.csv", index=False)
+
 #fr_df.to_csv('frs_temp.csv', index=False)
 #import pdb; pdb.set_trace()
-seconds = 3600#3600#10
+seconds = 3600#10
 times = (0, seconds)
 
 import scipy.stats as st
@@ -292,7 +307,7 @@ from functools import partial
 levy_dist = partial(st.levy_stable.rvs, alpha=1.37, beta=-1.00, loc=0.92, scale=0.44, size=1)
 norm_dist = partial(st.norm.rvs, loc=5, scale=1, size=1)
 
-
+#import pdb; pdb.set_trace()
 #Generates the spike raster for a given group.
 #The group has the same noise.
 def gen_group_spikes(writer, group, seconds, start_time):

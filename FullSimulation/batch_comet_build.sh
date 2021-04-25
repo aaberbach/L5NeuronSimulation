@@ -4,8 +4,9 @@
 #SBATCH --ntasks-per-node=1
 #SBATCH --account=umc110
 #SBATCH --job-name=build
+#SBATCH --mem=8G
 #SBATCH --output=build.out
-#SBATCH --time 0-00:05
+#SBATCH --time 0-02:00
 
 
 module purge

@@ -6,7 +6,8 @@
 #SBATCH --account=umc110
 #SBATCH --job-name=run
 #SBATCH --output=run.out
-#SBATCH --time 0-00:05
+#SBATCH --mem=8G
+#SBATCH --time 0-48:00
 
 module purge
 module load slurm
