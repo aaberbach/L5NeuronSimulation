@@ -177,6 +177,36 @@ def Int2Pyr(syn_params, sec_x, sec_id):
 
     generators.append(r)
 
+    h.distance(sec=sec_id.cell().soma[0])
+    dist = h.distance(sec_id(sec_x))
+    fullsecname = sec_id.name()
+    sec_type = fullsecname.split(".")[1][:4]
+
+    #######################
+    # SOM+
+    #   d1: 0.96, tauD1: 40
+    # PV+
+    #   d1: 0.6, tauD1: 50
+    #######################
+
+    if sec_type == "soma":
+        #PV+
+        lsyn.d1 = 0.6
+        lsyn.tauD1 = 50
+    if sec_type == "dend":
+        if dist <= 50:
+            #PV+
+            lsyn.d1 = 0.6
+            lsyn.tauD1 = 50
+        else:
+            #SOM+
+            lsyn.d1 = 0.96
+            lsyn.tauD1 = 40
+    if sec_type == "apic":
+        #SOM+
+        lsyn.d1 = 0.96
+        lsyn.tauD1 = 40
+
     if syn_params.get('AlphaTmax_ampa'):
         lsyn.AlphaTmax_ampa = float(syn_params['AlphaTmax_ampa']) # par.x(21)
     if syn_params.get('Beta_ampa'):
