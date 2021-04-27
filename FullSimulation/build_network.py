@@ -10,8 +10,8 @@ currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentfram
 parentdir = os.path.dirname(currentdir)
 sys.path.insert(0,parentdir) 
 
-#Add divergent inhibition
-#Change synapse counts for inhibition and excitation based on 50 um
+#Change number of clusters per functional group to get the ~17.2 per cluster.
+#Send a function that gives pre-scaled conductance.
 from raster_maker import *
 from clustering import *
 
@@ -47,8 +47,11 @@ scale_div = 1#10
 
 avg_syn_per_cell = 5 #Average number of synapses from each input cell.
 
-num_dend_exc = (7996 // avg_syn_per_cell) // scale_div
-num_apic_exc = (12797 // avg_syn_per_cell) // scale_div
+# num_dend_exc = (7996 // avg_syn_per_cell) // scale_div
+# num_apic_exc = (12797 // avg_syn_per_cell) // scale_div
+
+num_dend_exc = (int((2.16/1.72)*7996) // avg_syn_per_cell) // scale_div
+num_apic_exc = (int((2.16/1.72)*12797) // avg_syn_per_cell) // scale_div
 
 num_dend_inh = int(1023 // 2.7) // scale_div
 num_apic_inh = (1637 // 12) // scale_div
@@ -65,8 +68,19 @@ prox_fr_std = 14.3
 dist_fr_mean = 3.9
 dist_fr_std = 4.9
 
-clust_per_group = 8
+
+#clust_per_group = 8
 cells_per_group = 100
+
+###########Calculate clust_per_group based on cells_per_group##############
+#We want ~17.2 synapses per cluster
+#Each cell will be on avg_syn_per_cell clusters on average -> total_synapses = cells_per_group * avg_syn_per_cell
+#We want total_synapses/clust_per_group = 17.2.
+#clust_per_group ~= total_synapses//17.2
+
+clust_per_group = int((cells_per_group * avg_syn_per_cell) // 17.2)
+
+###########################################################################
 
 num_dend_groups = num_dend_exc // cells_per_group // scale_div#65 // scale_div
 num_apic_groups = num_apic_exc // cells_per_group // scale_div#104 // scale_div
@@ -451,3 +465,4 @@ except:
                         spikes_inputs=[('exc_stim', 'exc_stim_spikes.h5'), ('prox_inh_stim', 'prox_inh_stim_spikes.h5'), ('dist_inh_stim', 'dist_inh_stim_spikes.h5')],
                         components_dir='../biophys_components',
                         compile_mechanisms=True)
+#import pdb; pdb.set_trace()
