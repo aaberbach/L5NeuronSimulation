@@ -46,8 +46,10 @@ net.add_edges(source=inh_stim.nodes(), target=net.nodes(),
                 delay=0.1,
                 dynamics_params='INT2PN.json',
                 model_template=syn['INT2PN.json']['level_of_detail'],
-                distance_range=[-2000, 2000.0],
-                target_sections=['somatic'])
+                # distance_range=[-2000, 2000.0],
+                # target_sections=['somatic'])
+                distance_range=[100, 2000.0],
+                target_sections=['dend'])
 
 # Create connections between Exc --> Pyr cells
 
@@ -83,14 +85,14 @@ exc_stim.save_nodes(output_dir='network')
 inh_stim.build()
 inh_stim.save_nodes(output_dir='network')
 
-spacing = 30#10
-num_AP = 9#13
+spacing = 15#10
+num_AP = 10#13
 node_ids = np.full(num_AP, 0)
 timestamps = np.linspace(0 + 500, (num_AP-1)*spacing + 500, num_AP)
 #timestamps *= 10
 #import pdb; pdb.set_trace()
 import h5py
-key = 'exc_stim'
+key = 'inh_stim'
 f = h5py.File('stim_spikes.h5', 'w')
 group = f.create_group('spikes')
 group = group.create_group(key)

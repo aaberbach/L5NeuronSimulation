@@ -1,7 +1,7 @@
 #python build_network.py 300
 python build_network.py 300
 #python run_network.py 0.24575 0.345 #REALLY GOOD
-python run_network.py 0.229 0.345
+python run_network.py 0.26252 0.345
 #python run_network.py 3 0
 #python run_network.py 0.291 0.564
 #python run_network.py 0.45 0.35
