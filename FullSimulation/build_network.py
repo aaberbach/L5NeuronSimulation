@@ -10,7 +10,7 @@ currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentfram
 parentdir = os.path.dirname(currentdir)
 sys.path.insert(0,parentdir) 
 
-#Change number of clusters per functional group to get the ~17.2 per cluster.
+#Change number of clusters per functional group to get the ~21.6 per cluster.
 #Send a function that gives pre-scaled conductance.
 from raster_maker import *
 from clustering import *
@@ -73,12 +73,12 @@ dist_fr_std = 4.9
 cells_per_group = 100
 
 ###########Calculate clust_per_group based on cells_per_group##############
-#We want ~17.2 synapses per cluster
+#We want ~21.6 synapses per cluster
 #Each cell will be on avg_syn_per_cell clusters on average -> total_synapses = cells_per_group * avg_syn_per_cell
-#We want total_synapses/clust_per_group = 17.2.
-#clust_per_group ~= total_synapses//17.2
+#We want total_synapses/clust_per_group = 21.6.
+#clust_per_group ~= total_synapses//21.6
 
-clust_per_group = int((cells_per_group * avg_syn_per_cell) // 17.2)
+clust_per_group = int((cells_per_group * avg_syn_per_cell) // 21.6)
 
 ###########################################################################
 
