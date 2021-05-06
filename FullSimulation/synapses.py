@@ -270,10 +270,10 @@ def Int2Pyr(syn_params, sec_x, sec_id):
         lsyn.threshold1 = float(syn_params['threshold1']) # par.x(8)
     if syn_params.get('threshold2'):
         lsyn.threshold2 = float(syn_params['threshold2']) # par.x(9)
-    if syn_params.get('tauD1'):
-        lsyn.tauD1 = float(syn_params['tauD1']) # par.x(10)
-    if syn_params.get('d1'):
-        lsyn.d1 = float(syn_params['d1']) # par.x(11)
+    # if syn_params.get('tauD1'):
+    #     lsyn.tauD1 = float(syn_params['tauD1']) # par.x(10)
+    # if syn_params.get('d1'):
+    #     lsyn.d1 = float(syn_params['d1']) # par.x(11)
     if syn_params.get('tauD2'):
         lsyn.tauD2 = float(syn_params['tauD2']) # par.x(12)
     if syn_params.get('d2'):
