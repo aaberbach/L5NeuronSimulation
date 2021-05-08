@@ -41,17 +41,22 @@ def print_raster_fr(file, seconds):
 # plt.legend()
 # plt.show()
 
-data = load_dataset("output/spikes.h5")
-ts = np.array(data['timestamps'])
-nid = np.array(data['node_ids'])
+# data = load_dataset("output/spikes.h5")
+# ts = np.array(data['timestamps'])
+# nid = np.array(data['node_ids'])
 
-print("FR:", len(np.where(ts >= 10000)[0]) / 10)
-#import pdb; pdb.set_trace()
-# plot_v("shift_output/v_report.h5")
-# plt.title("With Shift")
-plt.figure()
-plot_v("output/v_report.h5", show=True)
+# print("FR:", len(np.where(ts >= 10000)[0]) / 10)
+# #import pdb; pdb.set_trace()
+# # plot_v("shift_output/v_report.h5")
+# # plt.title("With Shift")
+# plt.figure()
+# plot_v("output/v_report.h5", show=True)
 
-plot_spikes("exc_stim_spikes.h5", time_scale=1, show=True)
+plot_spikes("exc_stim_spikes.h5", time_scale=1, show=False)
+plot_spikes("new_exc_stim_spikes.h5", time_scale=1, show=True)
+
+plot_spikes("new_prox_inh_stim_spikes.h5", time_scale=1, show=False)
 plot_spikes("prox_inh_stim_spikes.h5", time_scale=1, show=True)
-plot_spikes("dist_inh_stim_spikes.h5", time_scale=1, show=True)
+
+plot_spikes("dist_inh_stim_spikes.h5", time_scale=1, show=False)
+plot_spikes("new_dist_inh_stim_spikes.h5", time_scale=1, show=True)

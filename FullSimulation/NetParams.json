@@ -1,0 +1,42 @@
+{
+    "lengths":
+    {
+        "basal_dist": 4649,
+        "basal_prox": 483,
+        "apic": 7440
+    },
+
+    "syn_density":
+    {
+        "exc": 2.16,
+        "inh": 0.22
+    },
+
+    "n_soma_syns": 150,
+
+    "divergence":
+    {
+        "exc": {"min":2, "max":8},
+        "peri_inh": {"m":2.8, "s":1.9, "min":1, "max":5},
+        "basal_inh": {"m":2.7, "s":1.6, "min":1 , "max":5},
+        "apic_inh": {"m":12, "s":3, "min":6 , "max":18}
+    },
+
+    "groups":
+    {
+        "cells_per_group": 100,
+        "cluster_radius": 5,
+        "group_radius": 100
+    },
+
+    "inh_frs":
+    {
+        "proximal": {"m":16.9, "s":14.3},
+        "distal": {"m":3.9, "s":4.9}
+    },
+
+    "time": {"start":0,"stop":1},
+    "dL": 5,
+
+    "inh_shift": 2
+}
