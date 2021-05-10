@@ -1,3 +1,5 @@
+"""The script used to build the network for the simulation run in run_network.py
+"""
 from bmtk.builder import NetworkBuilder
 from bmtk.utils.sim_setup import build_env_bionet
 import numpy as np
@@ -18,11 +20,6 @@ from raster_maker import *
 from clustering import *
 
 np.random.seed(2129)
-
-def lognormal(m, s):
-        mean = np.log(m) - 0.5 * np.log((s/m)**2+1)
-        std = np.sqrt(np.log((s/m)**2 + 1))
-        return max(np.random.lognormal(mean, std, 1), 0)
 
 class SimulationBuilder:
         """Class used to build our BMTK simulation.

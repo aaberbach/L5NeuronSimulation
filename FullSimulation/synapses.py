@@ -181,14 +181,7 @@ def Int2Pyr(syn_params, sec_x, sec_id):
 
     generators.append(r)
 
-    #lsyn.P_0 = np_gen.uniform(0.16,0.9)#np.random.uniform(0.16, 0.9)
-
-    ###Weights###
-    # Perisomatic: 58.53
-    # Basal: 54.6
-    # Apical: 143.7
-    #############
-
+    #Assigns release probabilty and conductance based on location of the synapse.
     if sec_type == "soma":
         lsyn.P_0 = max(np.random.normal(0.877, 0.052), 0)
         lsyn.initW = 54.75#62.31
@@ -317,9 +310,9 @@ def Pyr2Pyr(syn_params, sec_x, sec_id):
     r.uniform(0,1)
     lsyn.setRandObjRef(r)
 
+    #A list of random generators is kept so that they are not automatically garbaged.
     generators.append(r)
 
-    #lsyn.P_0 = np.random.uniform(0.16, 0.9)#Release probability
     lsyn.P_0 = np.max(np.random.normal(0.53, 0.22), 0)#Release probability
 
     if syn_params.get('AlphaTmax_ampa'):
@@ -362,6 +355,7 @@ def Pyr2Pyr(syn_params, sec_x, sec_id):
         # far_apic = lambda x: 0.16857988107990907 * ( 1.0039628707324273 ** x )
         #############
 
+        #distance based conductance scaling functions.
         dend = lambda x: 0.9475625702815389 * ( 1.001318965242205 ** x )
         close_apic = lambda x: 0.8522367331040966 * ( 1.0020433032052223 ** x )
         far_apic = lambda x: 0.09043087364217033 * ( 1.004632615014859 ** x )

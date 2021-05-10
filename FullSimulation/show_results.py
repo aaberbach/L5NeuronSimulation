@@ -8,11 +8,23 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 def zscore(x):
+    """Returns the z-scored version of the array x.
+
+    Parameters
+    ----------
+    x : array
+        original array to be z-scored
+
+    Returns
+    -------
+    array
+        z-scored version of x
+    """    
     return (x-np.mean(x))/np.std(x)
 
 def plot_raster_trace(file, seconds, show=True, shift=0):
     data = load_dataset(file)
-    #import pdb; pdb.set_trace()
+    
     ts = np.array(data['timestamps'])
     nid = np.array(data['node_ids'])
 

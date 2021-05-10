@@ -1,3 +1,9 @@
+"""Script for running the network built in build_network.py
+
+Also saves a file called Connections.csv that consists of information about
+each synapse in the simulation.
+"""
+
 from bmtk.simulator import bionet
 import numpy as np
 from neuron import h
@@ -9,16 +15,8 @@ syn = synapses.syn_params_dicts()
 
 np.random.seed(42)
 
-# pc = h.ParallelContext()  # object to access MPI methods
-# MPI_size = int(pc.nhost())
-# MPI_rank = int(pc.id())
-
 config_file = 'simulation_config.json'
-try:
-    conf = bionet.Config.from_json("config.json", validate=True)
-except:
-    conf = bionet.Config.from_json(config_file, validate=True)
-
+conf = bionet.Config.from_json(config_file, validate=True)
 conf.build_env()
 
 graph = bionet.BioNetwork.from_config(conf)
@@ -27,22 +25,21 @@ sim = bionet.BioSimulator.from_config(conf, network=graph)
 cells = graph.get_local_cells()
 cell = cells[list(cells.keys())[0]]
 
-h.distance(sec=cell.hobj.soma[0])
+h.distance(sec=cell.hobj.soma[0])#Makes the distances correct.
 
-sec_types = []
-weights = []
-dists = []
-node_ids = []
-names = []
-source_pops = []
-release_probs = []
+sec_types = []#soma, apic, or dend
+weights = []#scaled conductances (initW)
+dists = []#distance from soma
+node_ids = []#node id within respective node population (exc, prox_inh, dist_inh)
+names = []#full NEURON str representation of postsynaptic segment
+source_pops = []#node population
+release_probs = []#propability of release.
 
 for c in cell.connections():
     con = c._connector
     source = c.source_node
     syn = con.syn()
     seg = con.postseg()
-    #import pdb; pdb.set_trace()
     fullsecname = seg.sec.name()
 
     source_pops.append(source._population)
@@ -62,19 +59,6 @@ df["Type"] = sec_types
 df["Name"] = names
 df["Source Population"] = source_pops
 df["Release Probability"] = release_probs
-#df["Node ID"] = node_ids
-#import pdb; pdb.set_trace()
-# df.to_csv("EPSPs.csv", index=False)
-# import pdb; pdb.set_trace()
 df.to_csv("Connections.csv", index=False)
-# def integerize(val):
-#     return int(val)
 
-# v_mod = sim._sim_mods[0]
-
-# v_mod._transforms["v"] = integerize
-# v_mod._variables = []
-
-#import pdb; pdb.set_trace()
 sim.run()
-# pc.barrier()

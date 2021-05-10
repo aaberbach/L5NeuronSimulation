@@ -35,7 +35,7 @@
         "distal": {"m":3.9, "s":4.9}
     },
 
-    "time": {"start":0,"stop":1},
+    "time": {"start":0,"stop":3600},
     "dL": 5,
 
     "inh_shift": 2
