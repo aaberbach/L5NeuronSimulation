@@ -51,11 +51,14 @@ def plot_IPSCs(file, time = 4000):
 # plot_IPSCs("ApicalTunings/150_0_IPSCs.csv")
 # plot_IPSCs("ApicalTunings/GOOD_143.7_0_IPSCs.csv")
 
-plot_IPSCs("IPSCs.csv")
-plot_IPSCs("dend_27.79_0.21_IPSCs.csv")
-plot_IPSCs("som_IPSCs.csv")
-plot_IPSCs("som_dend_IPSCs.csv")
-plot_IPSCs("dend_42.76_2_IPSCs.csv")
+print("Apical:")
+plot_IPSCs("ApicalTunings/LOW_118.7_IPSCs.csv")
+
+print("\nBasal:")
+plot_IPSCs("BasalTunings/LOW_42.6_IPSCs.csv")
+
+print("\nPerisomatic:")
+plot_IPSCs("PerisomaticTunings/LOW_54.75_IPSCs.csv")
 
 plot_v("output/v_report.h5", show=False)
 plt.title("Voltage")

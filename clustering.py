@@ -1,3 +1,9 @@
+"""Clustering Tools
+
+This script contains classes and functions for implementing synaptic clustering
+in the build step of the simulation.
+"""
+
 import numpy as np
 import pandas as pd
 from mpl_toolkits import mplot3d

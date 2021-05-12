@@ -19,11 +19,7 @@ Connections.csv - Contains information for each synapse in the simulation. Creat
 
 FunctionalGroups.csv - contains the functional group id for each excitatory presynaptic node
 
-inefficient_build_network.py - an old/unused version of build_network.py **REMOVE**
-
 NetParams.json - contains parameters for the simulation that SimulationBuilder uses
-
-old_build_network.py - an old/unused version of build_network.py **REMOVE**
 
 output_FRs.txt - contains firing rate for various combinations of synaptic weight distributions **REMOVE**
 
@@ -32,7 +28,5 @@ run_network.py - runs the simulation and save Connections.csv
 Segments.csv - contains information about every segment in the morphology
 
 show_results - used to plot and print various aspects of the simulation **CAN REMOVE IF NOT NEEDED**
-
-spike_trains.py - an old document used at some point **REMOVE**
 
 synapses.py- used to set the correct parameters for the synapses during the run step

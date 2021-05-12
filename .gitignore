@@ -6,7 +6,7 @@ __pycache__/
 # C extensions
 *.so
 
-#bmtk
+#Custom
 network/
 output/
 exc_stim_spikes.h5
@@ -18,6 +18,10 @@ simulation_config.json
 run_bionet.py
 circuit_config.json
 frs_temp.csv
+show_results.py
+Connections.csv
+FunctionalGroups.csv
+
 
 # Distribution / packaging
 .Python

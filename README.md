@@ -9,21 +9,7 @@ Analyzing the firing properties of a single, detailed L5b PC neuron.
 
 Attenuation - investigated the attenuation of the cell.
 
-Base - what used to be the core simulation. **PROBABLY REMOVE**
-
-EfficientBuild - merely a folder I used to experiment with making the build step use less memory. **PROBABLY REMOVE**
-
-ErrorSynapse - used to investigate previous pyr2pyr.mod file. **FIXED, REMOVE**
-
 F-ICurve - used to plot F-ICurve. **NOT UP TO DATE**
-
-Gamma-rhythmic - gamma-rhythmic from a long time ago. **OUTDATED**
-
-Group_EPSP_Tuning - excitatory tuning from when we were using Song et al. EPSP distribution. **UNECESSARY**
-
-IPSP_Tuning - was going to be used for tuning Apical inhibiton, but we decided to just use IPSCs from basal inhibition to tune instead. **UNECESSARY**
-
-Old_Folders - where I put some outdated folders like the ones above. **PROBABLY REMOVE**
 
 Resistance - looking at input resistance.
 
