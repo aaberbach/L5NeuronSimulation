@@ -157,7 +157,8 @@ class SimulationBuilder:
                 #Final build step.
                 build_env_bionet(base_dir='./',
                         network_dir='./network',
-                        dt = 0.1, tstop=self.params["time"]["stop"] * 1000.0,
+                        dt = self.params["dt"], 
+                        tstop=self.params["time"]["stop"] * 1000.0,
                         report_vars=['v'],
                         dL = self.params["dL"],#target length (um) of segments
                         spikes_threshold=-10,
