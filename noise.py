@@ -1,3 +1,6 @@
+"""Script that was used to find the proper excitatory firing rate distribution and test raster making functionality.
+"""
+
 import numpy as np
 import warnings
 import scipy.signal as ss
