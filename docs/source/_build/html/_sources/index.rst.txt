@@ -1,15 +1,16 @@
 L5NeuronSimulation Documentation
 ==============================================
 
-.. automodule:: L5NeuronSimulation.FullSimulation.build_network
-   :members:
+.. .. automodule:: L5NeuronSimulation.FullSimulation.build_network
+..    :members:
 
 Guide
 ^^^^^
 
 .. toctree::
    :maxdepth: 2
-   
+
+   FullSimulation
    license
 
 
