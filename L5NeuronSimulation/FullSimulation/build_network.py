@@ -1,5 +1,14 @@
-"""The script used to build the network for the simulation run in run_network.py
 """
+build_network.py
+================
+The script used to build the network for the simulation run in run_network.py
+"""
+import os,sys,inspect
+currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+parentdir = os.path.dirname(currentdir)
+sys.path.insert(0, parentdir) 
+sys.path.insert(0, currentdir)
+
 from bmtk.builder import NetworkBuilder
 from bmtk.utils.sim_setup import build_env_bionet
 import numpy as np
@@ -10,11 +19,6 @@ import pandas as pd
 import json   
 import scipy.stats as st
 from functools import partial
-
-import os,sys,inspect
-currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
-parentdir = os.path.dirname(currentdir)
-sys.path.insert(0,parentdir) 
 
 from raster_maker import *
 from clustering import *
@@ -599,8 +603,7 @@ class SimulationBuilder:
                 make_save_spikes(writer, False, partial(SimulationBuilder._norm_rvs, mean=mean_fr, std=std_fr), numUnits=n_cells,rateProf=z)
 
 
-#import pdb; pdb.set_trace()
-builder = SimulationBuilder("NetParams.json")
-builder.build()
-builder.save_groups()
-#import pdb; pdb.set_trace()
+if __name__ == "__main__":
+        builder = SimulationBuilder("NetParams.json")
+        builder.build()
+        builder.save_groups()

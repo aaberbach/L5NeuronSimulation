@@ -1,0 +1,559 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html4" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>L5NeuronSimulation Documentation &mdash; L5NeuronSimulation  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="License" href="license.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="#" class="icon icon-home"> L5NeuronSimulation
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="license.html#contact">Contact</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">L5NeuronSimulation</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="#" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>L5NeuronSimulation Documentation</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-L5NeuronSimulation.FullSimulation.build_network">
+<span id="l5neuronsimulation-documentation"></span><h1>L5NeuronSimulation Documentation<a class="headerlink" href="#module-L5NeuronSimulation.FullSimulation.build_network" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="build-network-py">
+<h2>build_network.py<a class="headerlink" href="#build-network-py" title="Permalink to this headline">¶</a></h2>
+<p>The script used to build the network for the simulation run in run_network.py</p>
+<dl class="class">
+<dt id="L5NeuronSimulation.FullSimulation.build_network.SimulationBuilder">
+<em class="property">class </em><code class="descclassname">L5NeuronSimulation.FullSimulation.build_network.</code><code class="descname">SimulationBuilder</code><span class="sig-paren">(</span><em>params_file</em><span class="sig-paren">)</span><a class="headerlink" href="#L5NeuronSimulation.FullSimulation.build_network.SimulationBuilder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class used to build our BMTK simulation.</p>
+<dl class="attribute">
+<dt id="L5NeuronSimulation.FullSimulation.build_network.SimulationBuilder.params">
+<code class="descname">params</code><a class="headerlink" href="#L5NeuronSimulation.FullSimulation.build_network.SimulationBuilder.params" title="Permalink to this definition">¶</a></dt>
+<dd><p>contains parameters for the network</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="L5NeuronSimulation.FullSimulation.build_network.SimulationBuilder.syn">
+<code class="descname">syn</code><a class="headerlink" href="#L5NeuronSimulation.FullSimulation.build_network.SimulationBuilder.syn" title="Permalink to this definition">¶</a></dt>
+<dd><p>contains synaptic templates</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="L5NeuronSimulation.FullSimulation.build_network.SimulationBuilder.n_dend_exc">
+<code class="descname">n_dend_exc</code><a class="headerlink" href="#L5NeuronSimulation.FullSimulation.build_network.SimulationBuilder.n_dend_exc" title="Permalink to this definition">¶</a></dt>
+<dd><p>number of excitatory input cells on the basal dendrites</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="L5NeuronSimulation.FullSimulation.build_network.SimulationBuilder.n_apic_exc">
+<code class="descname">n_apic_exc</code><a class="headerlink" href="#L5NeuronSimulation.FullSimulation.build_network.SimulationBuilder.n_apic_exc" title="Permalink to this definition">¶</a></dt>
+<dd><p>number of excitatory input cells on the apical dendrites</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="L5NeuronSimulation.FullSimulation.build_network.SimulationBuilder.n_dend_inh">
+<code class="descname">n_dend_inh</code><a class="headerlink" href="#L5NeuronSimulation.FullSimulation.build_network.SimulationBuilder.n_dend_inh" title="Permalink to this definition">¶</a></dt>
+<dd><p>number of inhibitory (SOM+) input cells on the basal dendrites
+more than 50 um from the soma.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="L5NeuronSimulation.FullSimulation.build_network.SimulationBuilder.n_apic_inh">
+<code class="descname">n_apic_inh</code><a class="headerlink" href="#L5NeuronSimulation.FullSimulation.build_network.SimulationBuilder.n_apic_inh" title="Permalink to this definition">¶</a></dt>
+<dd><p>number of inhibitory (SOM+) input cells on the apical dendrites</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="L5NeuronSimulation.FullSimulation.build_network.SimulationBuilder.n_prox_dend_inh">
+<code class="descname">n_prox_dend_inh</code><a class="headerlink" href="#L5NeuronSimulation.FullSimulation.build_network.SimulationBuilder.n_prox_dend_inh" title="Permalink to this definition">¶</a></dt>
+<dd><p>number of inhibitory (PV+) input cells on the basal dendrites
+less than 50 um from the soma</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="L5NeuronSimulation.FullSimulation.build_network.SimulationBuilder.n_soma_inh">
+<code class="descname">n_soma_inh</code><a class="headerlink" href="#L5NeuronSimulation.FullSimulation.build_network.SimulationBuilder.n_soma_inh" title="Permalink to this definition">¶</a></dt>
+<dd><p>number of inhibitory (PV+) input cells on the soma</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="L5NeuronSimulation.FullSimulation.build_network.SimulationBuilder.clust_per_group">
+<code class="descname">clust_per_group</code><a class="headerlink" href="#L5NeuronSimulation.FullSimulation.build_network.SimulationBuilder.clust_per_group" title="Permalink to this definition">¶</a></dt>
+<dd><p>number of clusters per functional group</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="L5NeuronSimulation.FullSimulation.build_network.SimulationBuilder.net">
+<code class="descname">net</code><a class="headerlink" href="#L5NeuronSimulation.FullSimulation.build_network.SimulationBuilder.net" title="Permalink to this definition">¶</a></dt>
+<dd><p>the BMTK network for the biophysical cell</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">NetworkBuilder</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="L5NeuronSimulation.FullSimulation.build_network.SimulationBuilder.exc_stim">
+<code class="descname">exc_stim</code><a class="headerlink" href="#L5NeuronSimulation.FullSimulation.build_network.SimulationBuilder.exc_stim" title="Permalink to this definition">¶</a></dt>
+<dd><p>the BMTK network for excitatory inputs</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">NetworkBuilder</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="L5NeuronSimulation.FullSimulation.build_network.SimulationBuilder.prox_inh_stim">
+<code class="descname">prox_inh_stim</code><a class="headerlink" href="#L5NeuronSimulation.FullSimulation.build_network.SimulationBuilder.prox_inh_stim" title="Permalink to this definition">¶</a></dt>
+<dd><p>the BMTK network for perisomatic inhibition</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">NetworkBuilder</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="L5NeuronSimulation.FullSimulation.build_network.SimulationBuilder.dist_inh_stim">
+<code class="descname">dist_inh_stim</code><a class="headerlink" href="#L5NeuronSimulation.FullSimulation.build_network.SimulationBuilder.dist_inh_stim" title="Permalink to this definition">¶</a></dt>
+<dd><p>the BMTK network for dendritic inhibition</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">NetworkBuilder</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="L5NeuronSimulation.FullSimulation.build_network.SimulationBuilder.dend_groups">
+<code class="descname">dend_groups</code><a class="headerlink" href="#L5NeuronSimulation.FullSimulation.build_network.SimulationBuilder.dend_groups" title="Permalink to this definition">¶</a></dt>
+<dd><p>all excitatory functional groups on the basal dendrites</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">list</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="L5NeuronSimulation.FullSimulation.build_network.SimulationBuilder.apic_groups">
+<code class="descname">apic_groups</code><a class="headerlink" href="#L5NeuronSimulation.FullSimulation.build_network.SimulationBuilder.apic_groups" title="Permalink to this definition">¶</a></dt>
+<dd><p>all excitatory functional groups on the apical dendrites</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">list</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="L5NeuronSimulation.FullSimulation.build_network.SimulationBuilder.build">
+<code class="descname">build</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#L5NeuronSimulation.FullSimulation.build_network.SimulationBuilder.build" title="Permalink to this definition">¶</a></dt>
+<dd><p>builds the network</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="L5NeuronSimulation.FullSimulation.build_network.SimulationBuilder.save_groups">
+<code class="descname">save_groups</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#L5NeuronSimulation.FullSimulation.build_network.SimulationBuilder.save_groups" title="Permalink to this definition">¶</a></dt>
+<dd><p>saves the functional groups to a csv</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="L5NeuronSimulation.FullSimulation.build_network.SimulationBuilder._build_exc">
+<code class="descname">_build_exc</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#L5NeuronSimulation.FullSimulation.build_network.SimulationBuilder._build_exc" title="Permalink to this definition">¶</a></dt>
+<dd><p>creates excitatory input nodes and edges</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="L5NeuronSimulation.FullSimulation.build_network.SimulationBuilder._build_exc_nodes">
+<code class="descname">_build_exc_nodes</code><span class="sig-paren">(</span><em>segs : pandas.DataFrame</em>, <em>base_name : str</em>, <em>n_cells : int</em>, <em>start=0 : int</em><span class="sig-paren">)</span><a class="headerlink" href="#L5NeuronSimulation.FullSimulation.build_network.SimulationBuilder._build_exc_nodes" title="Permalink to this definition">¶</a></dt>
+<dd><p>builds excitatory nodes</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="L5NeuronSimulation.FullSimulation.build_network.SimulationBuilder._build_exc_edges">
+<code class="descname">_build_exc_edges</code><span class="sig-paren">(</span><em>group_list : list</em><span class="sig-paren">)</span><a class="headerlink" href="#L5NeuronSimulation.FullSimulation.build_network.SimulationBuilder._build_exc_edges" title="Permalink to this definition">¶</a></dt>
+<dd><p>builds excitatory edges</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="L5NeuronSimulation.FullSimulation.build_network.SimulationBuilder._save_nets">
+<code class="descname">_save_nets</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#L5NeuronSimulation.FullSimulation.build_network.SimulationBuilder._save_nets" title="Permalink to this definition">¶</a></dt>
+<dd><p>builds and saves the BMTK NetworkBuilders</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="L5NeuronSimulation.FullSimulation.build_network.SimulationBuilder._build_inh">
+<code class="descname">_build_inh</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#L5NeuronSimulation.FullSimulation.build_network.SimulationBuilder._build_inh" title="Permalink to this definition">¶</a></dt>
+<dd><p>creates inhibitory input nodes and edges</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="L5NeuronSimulation.FullSimulation.build_network.SimulationBuilder._make_rasters">
+<code class="descname">_make_rasters</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#L5NeuronSimulation.FullSimulation.build_network.SimulationBuilder._make_rasters" title="Permalink to this definition">¶</a></dt>
+<dd><p>creates the inhibitory and excitatory input rasters</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="L5NeuronSimulation.FullSimulation.build_network.SimulationBuilder._gen_exc_spikes">
+<code class="descname">_gen_exc_spikes</code><span class="sig-paren">(</span><em>fname : str</em><span class="sig-paren">)</span><a class="headerlink" href="#L5NeuronSimulation.FullSimulation.build_network.SimulationBuilder._gen_exc_spikes" title="Permalink to this definition">¶</a></dt>
+<dd><p>generates and saves the excitatory spike rasters</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="L5NeuronSimulation.FullSimulation.build_network.SimulationBuilder._gen_inh_spikes">
+<code class="descname">_gen_inh_spikes</code><span class="sig-paren">(</span><em>n_cells : int</em>, <em>mean_fr : float</em>, <em>std_fr : float</em>, <em>key : str</em>, <em>fname : str</em><span class="sig-paren">)</span><a class="headerlink" href="#L5NeuronSimulation.FullSimulation.build_network.SimulationBuilder._gen_inh_spikes" title="Permalink to this definition">¶</a></dt>
+<dd><p>creates inhibitory spike rasters, using a noise trace based on averaging excitation and shifting it</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">Static Methods</code></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">--------------</code></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="L5NeuronSimulation.FullSimulation.build_network.SimulationBuilder._connector_func">
+<code class="descname">_connector_func</code><span class="sig-paren">(</span><em>sources : list</em>, <em>targets : list</em>, <em>cells : list</em><span class="sig-paren">)</span><a class="headerlink" href="#L5NeuronSimulation.FullSimulation.build_network.SimulationBuilder._connector_func" title="Permalink to this definition">¶</a></dt>
+<dd><p>sets the number of synapses from the given cells</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="L5NeuronSimulation.FullSimulation.build_network.SimulationBuilder._set_location">
+<code class="descname">_set_location</code><span class="sig-paren">(</span><em>source : dict</em>, <em>target : dict</em>, <em>cells : list</em>, <em>start_id : int</em><span class="sig-paren">)</span><a class="headerlink" href="#L5NeuronSimulation.FullSimulation.build_network.SimulationBuilder._set_location" title="Permalink to this definition">¶</a></dt>
+<dd><p>sets the location of the given edge</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="L5NeuronSimulation.FullSimulation.build_network.SimulationBuilder._norm_connect">
+<code class="descname">_norm_connect</code><span class="sig-paren">(</span><em>source : dict</em>, <em>target : dict</em>, <em>m : float</em>, <em>s : float</em>, <em>low : int</em>, <em>high : int</em><span class="sig-paren">)</span><a class="headerlink" href="#L5NeuronSimulation.FullSimulation.build_network.SimulationBuilder._norm_connect" title="Permalink to this definition">¶</a></dt>
+<dd><p>used to normally distribute connection counts</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="L5NeuronSimulation.FullSimulation.build_network.SimulationBuilder._gen_group_spikes">
+<code class="descname">_gen_group_spikes</code><span class="sig-paren">(</span><em>writer : SonataWriter</em>, <em>group : FunctionalGroup</em>, <em>seconds : float</em>, <em>start_time : float</em>, <em>dist : func</em><span class="sig-paren">)</span><a class="headerlink" href="#L5NeuronSimulation.FullSimulation.build_network.SimulationBuilder._gen_group_spikes" title="Permalink to this definition">¶</a></dt>
+<dd><p>creates and saves a functional group’s spike raster</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="L5NeuronSimulation.FullSimulation.build_network.SimulationBuilder._norm_rvs">
+<code class="descname">_norm_rvs</code><span class="sig-paren">(</span><em>mean : float</em>, <em>std : float</em><span class="sig-paren">)</span><a class="headerlink" href="#L5NeuronSimulation.FullSimulation.build_network.SimulationBuilder._norm_rvs" title="Permalink to this definition">¶</a></dt>
+<dd><p>generates a random float from a normal distribution with a near zero minimum</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">build</code><span class="sig-paren">(</span><span class="sig-paren">)</span></dt>
+<dd><p>Builds the nodes and edges for the network.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">save_groups</code><span class="sig-paren">(</span><span class="sig-paren">)</span></dt>
+<dd><p>saves the apic and dend groups into a csv.
+one row for each node containgin the id of the functional group it is in.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="guide">
+<h2>Guide<a class="headerlink" href="#guide" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="license.html#contact">Contact</a></li>
+</ul>
+</div>
+</div>
+</div>
+<div class="section" id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></li>
+<li><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></li>
+<li><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></li>
+</ul>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="license.html" class="btn btn-neutral float-right" title="License" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Adin Aberbach, Benjamin Latimer.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
