@@ -180,7 +180,7 @@ epub_exclude_files = ['search.html']
 
 import mock
 
-MOCK_MODULES = ['bmtk.simulator', 'bmtk.builder', 'bmtk.simulator.bionet', 'bmtk.simulator.bionet.pyfunction_cache', 'bionet']
+MOCK_MODULES = ['bmtk', 'bmtk.simulator', 'bmtk.builder', 'bmtk.simulator.bionet', 'bmtk.simulator.bionet.pyfunction_cache', 'bionet']
 #MOCK_MODULES = ['pandas.util', 'scipy.linalg', 'numpy.lib.recfunctions', 'numpy.lib', 'h5py', 'scipy.stats', 'scipy.signal', 'scipy.fft', 'pandas', 'numpy', 'scipy', 'matplotlib', 'matplotlib.pyplot', 'bmtk.simulator', 'bmtk.builder', 'bmtk.simulator.bionet', 'bmtk.simulator.bionet.pyfunction_cache', 'bionet']
 for mod_name in MOCK_MODULES:
     sys.modules[mod_name] = mock.Mock()
