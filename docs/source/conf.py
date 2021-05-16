@@ -178,7 +178,7 @@ epub_title = project
 # A list of files that should not be packed into the epub file.
 epub_exclude_files = ['search.html']
 
-# import mock
+import mock
 
 MOCK_MODULES = ['neuron', 'neuron.h']
 #MOCK_MODULES = ['bmtk', 'bmtk.simulator', 'bmtk.builder', 'bmtk.simulator.bionet', 'bmtk.simulator.bionet.pyfunction_cache', 'bionet']
