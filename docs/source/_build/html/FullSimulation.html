@@ -90,6 +90,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#connections-csv">Connections.csv</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#functionalgroups-csv">FunctionalGroups.csv</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#netparams-json">NetParams.json</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#segments-csv">Segments.csv</a></li>
 </ul>
 </li>
 </ul>
@@ -170,7 +171,8 @@
 <h2>Files<a class="headerlink" href="#files" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="connections-csv">
 <h3>Connections.csv<a class="headerlink" href="#connections-csv" title="Permalink to this headline">¶</a></h3>
-<p>Contains information for each synapse in the simulation. Created during the run step. Columns:</p>
+<p>Contains information for each synapse in the simulation. Created during the run step.</p>
+<p>Columns:</p>
 <ul class="simple">
 <li>Node ID: the integer id of the presynaptic node within its population (exc, prox_inh, dist_inh)</li>
 <li>Distance: float representing the distance (um) from the synapse to the soma</li>
@@ -196,26 +198,49 @@
 <li>“apic”: apical dendrites</li>
 </ul>
 </li>
-<li>“syn_density”: number of synapses per um
-* “exc”: excitatory synapses,
-* “inh”: inhibitory synapses</li>
+<li>“syn_density”: number of synapses per um<ul>
+<li>“exc”: excitatory synapses,</li>
+<li>“inh”: inhibitory synapses</li>
+</ul>
+</li>
 <li>“n_soma_syns”: number of (PV+) synapses on the soma,</li>
-<li>“divergence”: distributions of connections per cell pairing
-* “exc”: uniform with {“min”, “max”} counts,
-* “peri_inh”: normal with {“m”: mean, “s”: standard deviation, “min”:floor, “max”:cap},
-* “basal_inh”: normal with {“m”: mean, “s”: standard deviation, “min”:floor, “max”:cap},
-* “apic_inh”: normal with {“m”: mean, “s”: standard deviation, “min”:floor, “max”:cap},</li>
-<li>“groups”: properties of functional groups
-* “cells_per_group”: number of cells per functional group,
-* “cluster_radius”: radius of the sphere that clusters are constrained to,
-* “group_radius”: radius of the sphere that groups are constrained to</li>
-<li>“inh_frs”: inhibitory firing rates
-* “proximal”: PV+, nomral with {“m”:mean, “s”:standard deviation},
-* “distal”: SOM+, normal with {“m”:mean, “s”:standard deviation}</li>
+<li>“divergence”: distributions of connections per cell pairing<ul>
+<li>“exc”: uniform with {“min”, “max”} counts,</li>
+<li>“peri_inh”: normal with {“m”: mean, “s”: standard deviation, “min”:floor, “max”:cap},</li>
+<li>“basal_inh”: normal with {“m”: mean, “s”: standard deviation, “min”:floor, “max”:cap},</li>
+<li>“apic_inh”: normal with {“m”: mean, “s”: standard deviation, “min”:floor, “max”:cap},</li>
+</ul>
+</li>
+<li>“groups”: properties of functional groups<ul>
+<li>“cells_per_group”: number of cells per functional group,</li>
+<li>“cluster_radius”: radius of the sphere that clusters are constrained to,</li>
+<li>“group_radius”: radius of the sphere that groups are constrained to</li>
+</ul>
+</li>
+<li>“inh_frs”: inhibitory firing rates<ul>
+<li>“proximal”: PV+, normal with {“m”:mean, “s”:standard deviation},</li>
+<li>“distal”: SOM+, normal with {“m”:mean, “s”:standard deviation}</li>
+</ul>
+</li>
 <li>“time”: {“start”:when input should start (ms),”stop”:simulation run time (ms)},</li>
 <li>“dL”: target length of each segment,</li>
 <li>“dt”: time (ms) between each simulation step,</li>
 <li>“inh_shift”: how many ms the average excitation trace is shifted to make the inhibition noise trace</li>
+</ul>
+</div>
+<div class="section" id="segments-csv">
+<h3>Segments.csv<a class="headerlink" href="#segments-csv" title="Permalink to this headline">¶</a></h3>
+<p>Contains information about every segment in the morphology. Each segment is approximately 1 um in length.</p>
+<p>Columns:</p>
+<ul class="simple">
+<li>BMTK ID: the ID that bmtk associates with the segments’s section</li>
+<li>X: standardized (0 to 1) distance along the segment’s section</li>
+<li>Type: whether the segment is soma, apic, dend (basal), or axon</li>
+<li>Sec ID: the ID of the segments’s section within the morphology</li>
+<li>Distance: length (um) of closest path to soma</li>
+<li>Coord X: x coordinate (um) of the segment</li>
+<li>Coord Y: y coordinate (um) of the segment</li>
+<li>Coord Z: z coordinate (um) of the segment</li>
 </ul>
 </div>
 </div>

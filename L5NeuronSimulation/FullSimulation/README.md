@@ -6,7 +6,7 @@ This is the folder where the core simulation is run.
 
 batch_comet_build.sh/batch_comet_run.sh - scripts used to build and run the simulation remotely.
 
-build_network.py - Contains the class SimulationBuilder which performs the build step of the simulation. This uses BMTK to create files that are then loaded infor the simulation step.
+build_network.py - Contains the class SimulationBuilder which performs the build step of the simulation. This uses BMTK to create files that are then loaded in for the simulation step.
 
 Connections.csv - Contains information for each synapse in the simulation. Created during the run step. Columns:
 - Node ID: the integer id of the presynaptic node within its population (exc, prox_inh, dist_inh)

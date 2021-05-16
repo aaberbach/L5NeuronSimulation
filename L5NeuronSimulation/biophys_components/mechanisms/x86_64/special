@@ -10,4 +10,4 @@ if test "" = "yes" ; then
 else
 	NRNIV="${NRNBIN}nrniv"
 fi
-"${NRNIV}" -dll "/home/mizzou/Internship/L5Neuron/GoodL5NeuronSimulation/biophys_components/mechanisms/x86_64/.libs/libnrnmech.so" "$@"
+"${NRNIV}" -dll "/home/mizzou/Internship/L5Neuron/GoodL5NeuronSimulation/L5NeuronSimulation/biophys_components/mechanisms/x86_64/.libs/libnrnmech.so" "$@"

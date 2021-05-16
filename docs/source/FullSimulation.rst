@@ -3,12 +3,20 @@ FullSimulation
 
 This is the folder where the core simulation is built and run.
 
+.. toctree::
+  :maxdepth: 1
+
+  build_network
+
+
 Files
 -----
 
 Connections.csv
 ^^^^^^^^^^^^^^^
-Contains information for each synapse in the simulation. Created during the run step. Columns:
+Contains information for each synapse in the simulation. Created during the run step. 
+
+Columns:
 
 * Node ID: the integer id of the presynaptic node within its population (exc, prox_inh, dist_inh)
 * Distance: float representing the distance (um) from the synapse to the soma
@@ -57,10 +65,37 @@ Structure:
   
 * "inh_frs": inhibitory firing rates
   
-  * "proximal": PV+, nomral with \{"m":mean, "s":standard deviation\},
+  * "proximal": PV+, normal with \{"m":mean, "s":standard deviation\},
   * "distal": SOM+, normal with \{"m":mean, "s":standard deviation\}
   
 * "time": \{"start":when input should start (ms),"stop":simulation run time (ms)\},
 * "dL": target length of each segment,
 * "dt": time (ms) between each simulation step,
 * "inh_shift": how many ms the average excitation trace is shifted to make the inhibition noise trace
+
+
+Segments.csv
+^^^^^^^^^^^^
+Contains information about every segment in the morphology. Each segment is approximately 1 um in length.
+
+Columns:
+
+* BMTK ID: the ID that bmtk associates with the segments's section
+* X: standardized (0 to 1) distance along the segment's section
+* Type: whether the segment is soma, apic, dend (basal), or axon
+* Sec ID: the ID of the segments's section within the morphology
+* Distance: length (um) of closest path to soma
+* Coord X: x coordinate (um) of the segment
+* Coord Y: y coordinate (um) of the segment
+* Coord Z: z coordinate (um) of the segment
+
+
+:doc:`build_network.py <build_network>`
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Contains the class SimulationBuilder which performs the build step of the simulation. This uses BMTK to create files that are then loaded in for the simulation step.
+
+run_network.py
+^^^^^^^^^^^^^^
+
+.. automodule:: L5NeuronSimulation.FullSimulation.run_network
+   :members:

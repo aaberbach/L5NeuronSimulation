@@ -1,9 +1,6 @@
 L5NeuronSimulation Documentation
 ==============================================
 
-.. .. automodule:: L5NeuronSimulation.FullSimulation.build_network
-..    :members:
-
 Guide
 ^^^^^
 

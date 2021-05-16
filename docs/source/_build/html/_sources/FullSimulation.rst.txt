@@ -8,7 +8,9 @@ Files
 
 Connections.csv
 ^^^^^^^^^^^^^^^
-Contains information for each synapse in the simulation. Created during the run step. Columns:
+Contains information for each synapse in the simulation. Created during the run step. 
+
+Columns:
 
 * Node ID: the integer id of the presynaptic node within its population (exc, prox_inh, dist_inh)
 * Distance: float representing the distance (um) from the synapse to the soma
@@ -37,83 +39,46 @@ Structure:
   * "apic": apical dendrites
   
 * "syn_density": number of synapses per um
+  
   * "exc": excitatory synapses,
   * "inh": inhibitory synapses
+  
 * "n_soma_syns": number of (PV+) synapses on the soma,
 * "divergence": distributions of connections per cell pairing
+  
   * "exc": uniform with \{"min", "max"\} counts,
   * "peri_inh": normal with \{"m": mean, "s": standard deviation, "min":floor, "max":cap\},
   * "basal_inh": normal with \{"m": mean, "s": standard deviation, "min":floor, "max":cap\},
   * "apic_inh": normal with \{"m": mean, "s": standard deviation, "min":floor, "max":cap\},
+
 * "groups": properties of functional groups
+  
   * "cells_per_group": number of cells per functional group,
   * "cluster_radius": radius of the sphere that clusters are constrained to,
   * "group_radius": radius of the sphere that groups are constrained to
+  
 * "inh_frs": inhibitory firing rates
-  * "proximal": PV+, nomral with \{"m":mean, "s":standard deviation\},
+  
+  * "proximal": PV+, normal with \{"m":mean, "s":standard deviation\},
   * "distal": SOM+, normal with \{"m":mean, "s":standard deviation\}
+  
 * "time": \{"start":when input should start (ms),"stop":simulation run time (ms)\},
 * "dL": target length of each segment,
 * "dt": time (ms) between each simulation step,
 * "inh_shift": how many ms the average excitation trace is shifted to make the inhibition noise trace
 
-.. \{
-..     ::
-..     "lengths": total lengths of different types of segments (um)
-..     \{
-..         ::
-..         "basal_dist": basal dendrites more than 50 um from the soma,
-        
-..         "basal_prox": basal dendrites less than 50 um from the soma,
-        
-..         "apic": apical dendrites
-..     \},
 
-..     "syn_density": number of synapses per um
-..     \{
-..         ::
-..         "exc": excitatory synapses,
-        
-..         "inh": inhibitory synapses
-..     \},
+Segments.csv
+^^^^^^^^^^^^
+Contains information about every segment in the morphology. Each segment is approximately 1 um in length.
 
-..     "n_soma_syns": number of (PV+) synapses on the soma,
+Columns:
 
-..     "divergence": distributions of connections per cell pairing
-..     \{
-..         ::
-..         "exc": uniform with \{"min", "max"\} counts,
-        
-..         "peri_inh": normal with \{"m": mean, "s": standard deviation, "min":floor, "max":cap\},
-        
-..         "basal_inh": normal with \{"m": mean, "s": standard deviation, "min":floor, "max":cap\},
-        
-..         "apic_inh": normal with \{"m": mean, "s": standard deviation, "min":floor, "max":cap\},
-..     \},
-
-..     "groups": properties of functional groups
-..     \{
-..         ::
-..         "cells_per_group": number of cells per functional group,
-        
-..         "cluster_radius": radius of the sphere that clusters are constrained to,
-        
-..         "group_radius": radius of the sphere that groups are constrained to
-..     \},
-
-..     "inh_frs": inhibitory firing rates
-..     \{
-..         ::
-..         "proximal": PV+, nomral with \{"m":mean, "s":standard deviation\},
-        
-..         "distal": SOM+, normal with \{"m":mean, "s":standard deviation\}
-..     \},
-
-..     "time": \{"start":when input should start (ms),"stop":simulation run time (ms)\},
-    
-..     "dL": target length of each segment,
-    
-..     "dt": time (ms) between each simulation step,
-
-..     "inh_shift": how many ms the average excitation trace is shifted to make the inhibition noise trace
-.. \}
+* BMTK ID: the ID that bmtk associates with the segments's section
+* X: standardized (0 to 1) distance along the segment's section
+* Type: whether the segment is soma, apic, dend (basal), or axon
+* Sec ID: the ID of the segments's section within the morphology
+* Distance: length (um) of closest path to soma
+* Coord X: x coordinate (um) of the segment
+* Coord Y: y coordinate (um) of the segment
+* Coord Z: z coordinate (um) of the segment
