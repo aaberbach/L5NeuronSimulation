@@ -89,6 +89,14 @@ Columns:
 * Coord Y: y coordinate (um) of the segment
 * Coord Z: z coordinate (um) of the segment
 
+batch_expanse_build.sh/batch_expanse_run.sh
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Batch scripts used to build and run the simulation on Expanse.
+
+synapses.py
+^^^^^^^^^^^
+Contains functionality called in the run step of the simulation. Used to set the parameters for different synapses, including things like weight and release probability.
+
 
 :doc:`build_network.py <build_network>`
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

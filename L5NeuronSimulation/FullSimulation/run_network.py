@@ -17,11 +17,6 @@ import synapses
 import pandas as pd
 import run
 
-synapses.load()
-syn = synapses.syn_params_dicts()
-
-np.random.seed(42)
-
 def save_connections(graph, sim):
     """Saves Connections.csv based on the given network.
 
@@ -73,4 +68,9 @@ def save_connections(graph, sim):
 
 
 if __name__ == "__main__":
+    synapses.load()
+    syn = synapses.syn_params_dicts()
+
+    np.random.seed(42)
+
     run.run_network([save_connections])

@@ -1,6 +1,4 @@
 """
-build_network.py
-================
 The script used to build the network for the simulation run in run_network.py
 """
 import os,sys,inspect
@@ -23,7 +21,7 @@ from functools import partial
 from raster_maker import *
 from clustering import *
 
-np.random.seed(2129)
+#np.random.seed(2129)
 
 class SimulationBuilder:
         """Class used to build our BMTK simulation.
@@ -604,6 +602,7 @@ class SimulationBuilder:
 
 
 if __name__ == "__main__":
+        np.random.seed(2129)
         builder = SimulationBuilder("NetParams.json")
         builder.build()
         builder.save_groups()
