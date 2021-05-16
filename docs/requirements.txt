@@ -1,9 +1,10 @@
 numpy==1.18.5
 h5py==3.1.0
 matplotlib==3.0.2
+NEURON==7.8.1
 pandas==1.1.5
 scipy==1.5.4      
 seaborn==0.9.0
 scikit-learn==0.23.2
 statsmodels==0.12.2
-#-e git+https://github.com/AllenInstitute/bmtk#egg=bmtk
+-e git+https://github.com/AllenInstitute/bmtk#egg=bmtk
