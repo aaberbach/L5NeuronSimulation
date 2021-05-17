@@ -19,8 +19,8 @@ build_env_bionet(base_dir='./',      # Where to save the scripts and config file
                  report_vars=['v'],
                  #clamp_reports=["se"], # Tells simulator we want to record membrane potential and calcium traces
                  current_clamp={           # Creates a step current from 500.ms to 1500.0 ms  
-                     #'amp': 0.793,
-                     'amp': 0.346,
+                     'amp': 0.793,
+                     #'amp': 0.346,
                      'delay': 700,
                      'duration': 2000,
                      'gids':"all"

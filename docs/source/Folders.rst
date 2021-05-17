@@ -34,10 +34,44 @@ EPSP_Tuning
 .. warning::
     THIS NEEDS WORK
 
+Group_EPSC_Tuning
+^^^^^^^^^^^^^^^^^
+Where EPSC tuning is performed (on both basal and apical dendrites).
+
+.. warning::
+    THIS NEEDS WORK
+
 HayFiringProperties
 ^^^^^^^^^^^^^^^^^^^
 
 Confirming that our cell model matches the experimental firing properties that Hay et al. 2011 tuned for.
 
-.. image:: ../../L5NeuronSimulation/HayFiringProperties/HayFigure.png
+.. image:: images/HayFigure.png
   :alt: Hay Figure
+
+
+IPSC_Tuning
+^^^^^^^^^^^
+Where IPSC tuning is performed (perisomatic, basal, and apical).
+
+.. warning::
+    THIS NEEDS WORK
+
+MorphAnalysis
+^^^^^^^^^^^^^
+Folder for exploring the morphology of the cell.
+
+Plot_Cell
+^^^^^^^^^
+Folder for plotting the cell and synapse locations on the cell.
+
+ShortPlasticity
+^^^^^^^^^^^^^^^
+Used to build and check short term plasticity for both excitation and inhibition.
+
+StepCurrent
+^^^^^^^^^^^
+Used to ensure that a suprathreshold step current (0.793 mA) induces the proper behavior (as determined by Hay et al. 2011).
+
+.. image:: ../../L5NeuronSimulation/StepCurrent/StepCurrent.svg
+  :alt: Step Current Plot
