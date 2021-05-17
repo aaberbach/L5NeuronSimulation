@@ -1,8 +1,13 @@
-"""Clustering Tools
-
+"""
 This script contains classes and functions for implementing synaptic clustering
 in the build step of the simulation.
 """
+
+import os,sys,inspect
+currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+parentdir = os.path.dirname(currentdir)
+#sys.path.insert(0, parentdir) 
+sys.path.insert(0, currentdir)
 
 import numpy as np
 import pandas as pd

@@ -5,6 +5,7 @@ This is the folder where the core simulation is built and run.
 
 .. toctree::
   :maxdepth: 1
+  :hidden:
 
   build_network
 

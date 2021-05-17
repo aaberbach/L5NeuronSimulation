@@ -1,5 +1,8 @@
+"""
+Contains the functions and class (SonataWriter) necessary for generating and saving the input spike rasters.
+"""
+
 import numpy as np
-import warnings
 import scipy.signal as ss
 import scipy
 import scipy.stats as st
@@ -13,7 +16,7 @@ import statsmodels.api as sm
 
 
 class SonataWriter:
-    """Class used to dynamically write spike rasters to an h5 file.
+    """Class used to dynamically writing spike rasters to an h5 file.
 
     Attributes
     ----------

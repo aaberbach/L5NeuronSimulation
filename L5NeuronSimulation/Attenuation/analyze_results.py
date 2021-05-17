@@ -8,7 +8,8 @@ def attenuation_plot(file, parts = ["dend", "apic"]):
     ids = np.where((types == "dend") | (types=="apic"))[0]
     plt.scatter(df.iloc[ids]["distance"], df.iloc[ids]["attenuation"])
     plt.xlabel("Distance from the soma (um)")
-    plt.ylabel("V_dendrite/V_soma")
+    plt.ylabel("delta_V_soma / delta_V_dendrite")
+    plt.title("Attenuation")
     plt.show()
 
 attenuation_plot("results.csv")

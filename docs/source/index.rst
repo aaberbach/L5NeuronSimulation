@@ -1,13 +1,15 @@
 L5NeuronSimulation Documentation
 ==============================================
 
-Guide
-^^^^^
+Table of Contents
+^^^^^^^^^^^^^^^^^
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
 
+   Folders
    FullSimulation
+   Core Functionality
    license
 
 

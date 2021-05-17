@@ -1,5 +1,4 @@
-"""My Plotting Tool
-
+"""
 Tool used for plotting various things throughout the project.
 Helpful for navigating the BMTK h5 structuring.
 """

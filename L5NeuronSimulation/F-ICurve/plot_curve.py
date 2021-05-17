@@ -21,8 +21,9 @@ percentCurr = (currents / 1.2) * 100
 ids = np.where(percentCurr >= 25)[0]
 
 plt.plot(percentCurr[ids], frs[ids], color="black", linewidth=2)
-plt.xlabel("Percent from reference current")
+plt.xlabel("Percent from reference current (1.2 mA)")
 plt.ylabel("Spike frequency (Hz)")
+plt.title("F-I Curve")
 plt.ylim([0, 35])
 plt.xlim([0, 230])
 plt.show()

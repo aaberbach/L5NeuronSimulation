@@ -1,5 +1,10 @@
 """Contains the general function run_network used to run a bmtk simulation.
 """
+import os,sys,inspect
+currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+parentdir = os.path.dirname(currentdir)
+#sys.path.insert(0, parentdir) 
+sys.path.insert(0, currentdir)
 
 from bmtk.simulator import bionet
 import numpy as np
@@ -12,7 +17,7 @@ def run_network(callbacks):
     Parameters
     ----------
     callbacks : list
-        list of functions to be called before sim.run()
+        list of functions to be called before sim.run().
         each function will be called with (graph, sim)
     """    
     np.random.seed(42)
