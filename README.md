@@ -33,8 +33,6 @@ MorphAnalysis - folder for exploring the morphology of the cell.
 
 Plot_Cell - folder for plotting the cell and synapse locations on the cell.
 
-ReleaseProbability - used to build and check the release probability. **COULD REMOVE**
-
 ShortPlasticity - used to build and check short term plasticity for both excitation and inhibition.
 
 StepCurrent - used to ensure that a suprathreshold step current induces the proper behavior (as determined by Hay et al. 2011).
