@@ -17,14 +17,38 @@ import synapses
 import pandas as pd
 import run
 
+def reduce_reports(graph, sim, percent = 0.1):
+    """Reduces the number of segments whose variables are saved. 
+
+    Parameters
+    ----------
+    graph : BioNetwork
+        the BMTK network
+    sim : BioSimulator
+        the BMTK simulation that contains the MembraneReport
+    percent : float, optional
+        proportion of segments to save, by default 0.1
+    """    
+    recorder = None
+
+    #Finds the correct recorder.
+    for mod in sim._sim_mods:
+        if type(mod) == bionet.modules.record_cellvars.MembraneReport:
+            recorder = mod
+    
+    if recorder == None:
+        raise Exception("For reduce_reports to be called, there must be a MembraneReport in the simulation.")
+
+    raise Exception("This has not been implemented yet!")
+
 def save_connections(graph, sim):
     """Saves Connections.csv based on the given network.
 
     Parameters
     ----------
-    graph : [type]
+    graph : BioNetwork
         the network that the connections are retrieved from
-    sim : [type]
+    sim : BioSimulator
         the simulation about to be run (not used in this function)
     """    
     cells = graph.get_local_cells()
@@ -73,4 +97,4 @@ if __name__ == "__main__":
 
     np.random.seed(42)
 
-    run.run_network([save_connections])
+    run.run_network([save_connections], v_report_all = False)#make v_report_all True to save all segments
