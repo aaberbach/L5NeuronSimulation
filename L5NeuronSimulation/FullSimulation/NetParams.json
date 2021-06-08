@@ -31,8 +31,8 @@
 
     "inh_frs":
     {
-        "proximal": {"m":16.9, "s":14.3},
-        "distal": {"m":3.9, "s":4.9}
+        "proximal": {"m":16.9, "s":14.3, "rhythmicity":{"f":8, "mod":0.1}},
+        "distal": {"m":3.9, "s":4.9, "rhythmicity":{"f":"None", "mod":"None"}}
     },
 
     "time": {"start":0,"stop":3600},
