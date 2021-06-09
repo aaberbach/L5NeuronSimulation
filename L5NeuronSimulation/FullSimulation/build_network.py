@@ -485,12 +485,19 @@ class SimulationBuilder:
 
                 #Makes perisomatic inhibitory raster.
                 self._gen_inh_spikes(self.n_soma_inh + self.n_prox_dend_inh, 
-                        inh_frs["proximal"]["m"], inh_frs["proximal"]["s"], 
-                        "prox_inh_stim", 'prox_inh_stim_spikes.h5')
+                                     inh_frs["proximal"]["m"], 
+                                     inh_frs["proximal"]["s"], 
+                                     inh_frs["proximal"]["rhythmicity"],
+                                     "prox_inh_stim", 
+                                     'prox_inh_stim_spikes.h5')
+                
                 #Makes dendritic inhibitory raster.
                 self._gen_inh_spikes(self.n_apic_inh + self.n_dend_inh, 
-                        inh_frs["distal"]["m"], inh_frs["distal"]["s"], 
-                        "dist_inh_stim", 'dist_inh_stim_spikes.h5')
+                                     inh_frs["distal"]["m"], 
+                                     inh_frs["distal"]["s"],
+                                     inh_frs["distal"]["rhythmicity"],
+                                     "dist_inh_stim", 
+                                     'dist_inh_stim_spikes.h5')
 
 
         #Generates the spike raster for a given group.
@@ -569,7 +576,7 @@ class SimulationBuilder:
         #         make_save_spikes(writer, False, partial(positive_normal, mean=mean_fr, std=std_fr), numUnits=n_cells,rateProf=z[0,:],start_time=buffer*1000)
 
         #Creates a spike raster with each cell having the same noise coming from the a shifted average of excitation.
-        def _gen_inh_spikes(self, n_cells, mean_fr, std_fr, key, fname):
+        def _gen_inh_spikes(self, n_cells, mean_fr, std_fr, rhythmic_dict, key, fname):
                 """Generates a spike raster with each train having the noise trace from
                 averaging excitation. Distributes firing rates normally.
 
@@ -581,6 +588,8 @@ class SimulationBuilder:
                     mean firing rate
                 std_fr : float
                     standard deviation of the firing rate
+                rhythmic_dict : dict
+                    dictionary with keys f - frequency, mod - depth of modulation
                 key : str
                     name of the second group in the h5 file
                 fname : str
@@ -589,17 +598,21 @@ class SimulationBuilder:
                 # node_ids = []
                 # timestamps = []
 
-                f = h5py.File("exc_stim_spikes.h5", "r")
-                ts = f['spikes']["exc_stim"]['timestamps']
-                nid = f['spikes']["exc_stim"]['node_ids']
+                if rhythmic_dict['f'] is None:
+                    f = h5py.File("exc_stim_spikes.h5", "r")
+                    ts = f['spikes']["exc_stim"]['timestamps']
+                    nid = f['spikes']["exc_stim"]['node_ids']
 
-                #Creates a noise trace based on the excitatory spike raster.
-                z = shift_exc_noise(ts, nid, self.params["time"]["stop"], time_shift=self.params["inh_shift"])
-                
-                writer = SonataWriter(fname, ["spikes", key], ["timestamps", "node_ids"], [np.float, np.int])
+                    #Creates a noise trace based on the excitatory spike raster.
+                    z = shift_exc_noise(ts, nid, self.params["time"]["stop"], time_shift=self.params["inh_shift"])
+                    z = np.tile(z,(n_cells,1))
+                    
+                    writer = SonataWriter(fname, ["spikes", key], ["timestamps", "node_ids"], [np.float, np.int])
 
-                make_save_spikes(writer, False, partial(SimulationBuilder._norm_rvs, mean=mean_fr, std=std_fr), numUnits=n_cells,rateProf=z)
+                    make_save_spikes(writer, False, partial(SimulationBuilder._norm_rvs, mean=mean_fr, std=std_fr), numUnits=n_cells,rateProf=z)
 
+                else:
+                    x=0
 
 if __name__ == "__main__":
         np.random.seed(2129)
