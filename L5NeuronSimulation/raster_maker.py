@@ -169,9 +169,8 @@ def make_save_spikes(writer, exp, dist, numUnits=100,rateProf=None,start_id=0,st
         how the spikes are saved
     exp : bool
         whether the value from dist should be fed to np.exp()
-    dist : func
-        function that generate a random number that is used as
-        the mean firing rate for a node.
+    dist : np.array()
+        array of firing rates of shape (numUnits,)
     numUnits : int, optional
         number of nodes to generate spikes for, by default 100
     rateProf : np.array(), optional
@@ -182,17 +181,20 @@ def make_save_spikes(writer, exp, dist, numUnits=100,rateProf=None,start_id=0,st
         at what time the spikes should start being generated, by default 0
     """    
     
-
     for i in np.arange(0,numUnits):
-        r = rateProf[i,:]
+       
+        try: 
+            r = rateProf[i,:]
+        except:
+            import pdb; pdb.set_trace()
         r[r<0] = 0#Can't have negative firing rates.
         rate_temp=[];simSpks_temp=[]
 
         #Multiplies the noise trace by the randomly generated firing rate.
         if exp:
-            rate_temp = r*np.exp(dist())
+            rate_temp = r*np.exp(dist[i])
         else:
-            rate_temp = r*dist()
+            rate_temp = r*dist[i]
 
         numbPoints = scipy.stats.poisson(rate_temp/1000).rvs()#Poisson number of points
 

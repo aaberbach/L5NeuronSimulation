@@ -166,7 +166,7 @@ class SimulationBuilder:
                         spikes_threshold=-10,
                         spikes_inputs=[('exc_stim', 'exc_stim_spikes.h5'), ('prox_inh_stim', 'prox_inh_stim_spikes.h5'), ('dist_inh_stim', 'dist_inh_stim_spikes.h5')],
                         components_dir='../biophys_components',
-                        compile_mechanisms=True)
+                        compile_mechanisms=False)
 
         def save_groups(self):
                 """saves the apic and dend groups into a csv.
@@ -519,8 +519,8 @@ class SimulationBuilder:
                     function for random distribution used for an individual cell's firing rate
                 """                
                 z = make_noise(num_samples=(int(seconds*1000))-1,num_traces=1)#generates the noise trace common to each cell in the functional group.
-                make_save_spikes(writer, True, dist, numUnits=group.n_cells,
-                        rateProf=z[0,:],start_id=group.start_id,
+                make_save_spikes(writer, True, dist(size=group.n_cells), numUnits=group.n_cells,
+                        rateProf=np.tile(z[0,:],(group.n_cells,1)),start_id=group.start_id,
                         start_time=start_time)
 
         #Creates the excitatory input raster from the functional groups.
@@ -597,8 +597,10 @@ class SimulationBuilder:
                 """                
                 # node_ids = []
                 # timestamps = []
-
-                if rhythmic_dict['f'] is None:
+                a, b = (0 - mean_fr) / std_fr, (100 - mean_fr) / std_fr
+                d = partial(st.truncnorm.rvs, a=a, b=b, loc=mean_fr, scale=std_fr)
+                
+                if rhythmic_dict['f'] == "None":
                     f = h5py.File("exc_stim_spikes.h5", "r")
                     ts = f['spikes']["exc_stim"]['timestamps']
                     nid = f['spikes']["exc_stim"]['node_ids']
@@ -608,11 +610,24 @@ class SimulationBuilder:
                     z = np.tile(z,(n_cells,1))
                     
                     writer = SonataWriter(fname, ["spikes", key], ["timestamps", "node_ids"], [np.float, np.int])
-
-                    make_save_spikes(writer, False, partial(SimulationBuilder._norm_rvs, mean=mean_fr, std=std_fr), numUnits=n_cells,rateProf=z)
+                    make_save_spikes(writer, False, d(size=n_cells), numUnits=n_cells,rateProf=z)
 
                 else:
-                    x=0
+                    # make an array of modulated sin waves
+                    # make_save_spikes should be written so that the firing rates are generated
+                    #    outside instead of inside the function.
+                    frs = d(size=n_cells)
+                    
+                    t = np.arange(0,self.params["time"]["stop"],0.001)
+                    z = np.zeros((n_cells,t.shape[0]))
+                    P = 0
+                    for i in np.arange(0,n_cells):
+                        offset = frs[i]
+                        A = offset/((1/rhythmic_dict['mod'])-1)
+                        z[i,:] = A*np.sin((2 * np.pi * rhythmic_dict['f'] * t)+P) + offset
+
+                    writer = SonataWriter(fname, ["spikes", key], ["timestamps", "node_ids"], [np.float, np.int])
+                    make_save_spikes(writer, False, np.ones((n_cells,1)), numUnits=n_cells,rateProf=z)
 
 if __name__ == "__main__":
         np.random.seed(2129)
