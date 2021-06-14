@@ -1,0 +1,1 @@
+mpirun -np 2 nrniv -mpi run_network.py

@@ -17,6 +17,25 @@ import synapses
 import pandas as pd
 import run
 
+def splitcell(graph, sim):
+    pc = h.ParallelContext()  # object to access MPI methods
+    MPI_size = int(pc.nhost())
+    MPI_rank = int(pc.id())
+
+    h.load_file("netparmpi.hoc")
+    pnm = h.ParallelNetManager(1)
+
+    cells = graph.get_local_cells()
+    cell = cells[list(cells.keys())[0]]
+
+    if MPI_rank == 0:
+        pnm.splitcell(0, 1, sec=cell.hobj.apic[50])
+        # cells = graph.get_local_cells()
+        # cell = cells[list(cells.keys())[0]]
+        # import pdb; pdb.set_trace()
+    else:
+        pnm.splitcell(1, 0, sec=cell.hobj.apic[50])
+
 def reduce_reports(graph, sim, percent = 0.1):
     """Reduces the number of segments whose variables are saved. 
 
