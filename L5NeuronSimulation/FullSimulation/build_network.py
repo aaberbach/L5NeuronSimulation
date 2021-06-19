@@ -388,8 +388,8 @@ class SimulationBuilder:
                                 connection_params={"m":div_params["m"], "s":div_params["s"], "low":div_params["min"], "high":div_params["max"]},
                                 syn_weight=1,
                                 delay=0.1,
-                                dynamics_params='INT2PN.json',
-                                model_template=self.syn['INT2PN.json']['level_of_detail'],
+                                dynamics_params='PV2PN.json',
+                                model_template=self.syn['PV2PN.json']['level_of_detail'],
                                 distance_range=[-2000, 2000.0],
                                 target_sections=['somatic'])
 
@@ -400,8 +400,8 @@ class SimulationBuilder:
                                 connection_params={"m":div_params["m"], "s":div_params["s"], "low":div_params["min"], "high":div_params["max"]},
                                 syn_weight=1,
                                 delay=0.1,
-                                dynamics_params='INT2PN.json',
-                                model_template=self.syn['INT2PN.json']['level_of_detail'],
+                                dynamics_params='PV2PN.json',
+                                model_template=self.syn['PV2PN.json']['level_of_detail'],
                                 distance_range=[0, 50.0],
                                 target_sections=['dend'])
                 #######################################################################################
@@ -428,8 +428,8 @@ class SimulationBuilder:
                                 connection_params={"m":div_params["m"], "s":div_params["s"], "low":div_params["min"], "high":div_params["max"]},
                                 syn_weight=1,
                                 delay=0.1,
-                                dynamics_params='INT2PN.json',
-                                model_template=self.syn['INT2PN.json']['level_of_detail'],
+                                dynamics_params='SOM2PN.json',
+                                model_template=self.syn['SOM2PN.json']['level_of_detail'],
                                 distance_range=[50, 2000.0],
                                 target_sections=['dend'])
                 
@@ -442,8 +442,8 @@ class SimulationBuilder:
                                 connection_params={"m":div_params["m"], "s":div_params["s"], "low":div_params["min"], "high":div_params["max"]},
                                 syn_weight=1,
                                 delay=0.1,
-                                dynamics_params='INT2PN.json',
-                                model_template=self.syn['INT2PN.json']['level_of_detail'],
+                                dynamics_params='SOM2PN.json',
+                                model_template=self.syn['SOM2PN.json']['level_of_detail'],
                                 distance_range=[50, 2000.0],
                                 target_sections=['apic'])
 
