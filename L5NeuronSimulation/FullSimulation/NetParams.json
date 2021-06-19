@@ -35,7 +35,7 @@
         "distal": {"m":3.9, "s":4.9, "rhythmicity":{"f":"None", "mod":"None"}}
     },
 
-    "time": {"start":0,"stop":360},
+    "time": {"start":0,"stop":5},
     "dL": 5,
     "dt": 0.1,
 

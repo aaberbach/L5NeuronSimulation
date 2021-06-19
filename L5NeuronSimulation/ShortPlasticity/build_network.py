@@ -44,8 +44,8 @@ net.add_edges(source=inh_stim.nodes(), target=net.nodes(),
                 connection_rule=1,
                 syn_weight=1,
                 delay=0.1,
-                dynamics_params='INT2PN.json',
-                model_template=syn['INT2PN.json']['level_of_detail'],
+                dynamics_params='PV2PN.json',
+                model_template=syn['PV2PN.json']['level_of_detail'],
                 # distance_range=[-2000, 2000.0],
                 # target_sections=['somatic'])
                 distance_range=[100, 2000.0],
@@ -85,7 +85,7 @@ exc_stim.save_nodes(output_dir='network')
 inh_stim.build()
 inh_stim.save_nodes(output_dir='network')
 
-spacing = 15#10
+spacing = 50#10
 num_AP = 10#13
 node_ids = np.full(num_AP, 0)
 timestamps = np.linspace(0 + 500, (num_AP-1)*spacing + 500, num_AP)
