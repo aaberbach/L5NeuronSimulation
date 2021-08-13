@@ -29,6 +29,8 @@
         "group_radius": 100
     },
 
+    "file_current_clamp": {"input_file":"None"},
+
     "inh_frs":
     {
         "proximal": {"m":16.9, "s":14.3, "rhythmicity":{"f":"None", "mod":"None"}},

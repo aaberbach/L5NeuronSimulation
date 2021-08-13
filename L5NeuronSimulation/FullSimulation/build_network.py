@@ -138,6 +138,10 @@ class SimulationBuilder:
                 self.n_soma_inh = int(self.params["n_soma_syns"] / self.params["divergence"]["peri_inh"]["m"])
 
                 self.clust_per_group = int((self.params["groups"]["cells_per_group"] * avg_exc_div) // (self.params["syn_density"]["exc"] * 10))
+                if self.params["file_current_clamp"]["input_file"]=="None": 
+                    self.file_current_clamp = None
+                else:
+                    self.file_current_clamp = self.params["file_current_clamp"]
 
         def build(self):
                 """Builds the nodes and edges for the network.
@@ -164,6 +168,7 @@ class SimulationBuilder:
                         report_vars=['v'],
                         dL = self.params["dL"],#target length (um) of segments
                         spikes_threshold=-10,
+                        file_current_clamp=self.file_current_clamp,
                         spikes_inputs=[('exc_stim', 'exc_stim_spikes.h5'), ('prox_inh_stim', 'prox_inh_stim_spikes.h5'), ('dist_inh_stim', 'dist_inh_stim_spikes.h5')],
                         components_dir='../biophys_components',
                         compile_mechanisms=False)
