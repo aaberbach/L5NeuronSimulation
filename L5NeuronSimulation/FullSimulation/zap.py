@@ -22,8 +22,8 @@ g_t = g_t + 0.09
 g_t = np.concatenate((np.zeros((10000,)),g_t))
 
 # current injection
-#g_t = -0.2*np.ones((int(5000/dt),))
-#g_t = np.concatenate((np.zeros((10000,)),g_t,np.zeros((50000,))))
+g_t = -1*np.ones((int(1000/dt),))
+g_t = np.concatenate((np.zeros((10000,)),g_t,np.zeros((10000,))))
 
 
 d_t = [dt for i in range(g_t.shape[0])]
