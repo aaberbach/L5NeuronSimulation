@@ -21,7 +21,10 @@ from functools import partial
 from raster_maker import *
 from clustering import *
 
-#np.random.seed(2129)
+try:
+    np.random.seed(int(sys.argv[1]))
+except:
+    np.random.seed(123)
 
 class SimulationBuilder:
         """Class used to build our BMTK simulation.
@@ -195,7 +198,6 @@ class SimulationBuilder:
                 """Builds the excitatory input cells and their synapses.
                 """          
 
-                np.random.seed(1000)      
                 # External excitatory inputs
                 self.exc_stim = NetworkBuilder('exc_stim')
 
@@ -368,7 +370,6 @@ class SimulationBuilder:
                 """Creates inhibitory input nodes and their connections onto the biophysical cell
                 """     
 
-                np.random.seed(1000)           
                 #####################Perisomatic Inhibition##############################
                 self.prox_inh_stim = NetworkBuilder('prox_inh_stim')
 
@@ -483,7 +484,6 @@ class SimulationBuilder:
         def _make_rasters(self):
                 """Generates excitatory and inhibitory input rasters
                 """    
-                np.random.seed(1000)            
                 self._gen_exc_spikes('exc_stim_spikes.h5')
 
                 inh_frs = self.params["inh_frs"]
@@ -635,7 +635,6 @@ class SimulationBuilder:
                     make_save_spikes(writer, False, np.ones((n_cells,1)), numUnits=n_cells,rateProf=z)
 
 if __name__ == "__main__":
-        np.random.seed(2129)
         builder = SimulationBuilder("NetParams.json")
         builder.build()
         builder.save_groups()

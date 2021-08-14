@@ -17,6 +17,11 @@ import synapses
 import pandas as pd
 import run
 
+try:
+    np.random.seed(int(sys.argv[1]))
+except:
+    np.random.seed(123)
+
 def splitcell(graph, sim):
     pc = h.ParallelContext()  # object to access MPI methods
     MPI_size = int(pc.nhost())
@@ -114,6 +119,5 @@ if __name__ == "__main__":
     synapses.load()
     syn = synapses.syn_params_dicts()
 
-    np.random.seed(42)
 
     run.run_network([save_connections], v_report_all = False)#make v_report_all True to save all segments
