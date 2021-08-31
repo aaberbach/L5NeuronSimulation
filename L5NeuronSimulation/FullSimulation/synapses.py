@@ -357,9 +357,13 @@ def Pyr2Pyr(syn_params, sec_x, sec_id):
         #############
 
         #distance based conductance scaling functions.
-        dend = lambda x: 0.9475625702815389 * ( 1.001318965242205 ** x )
-        close_apic = lambda x: 0.8522367331040966 * ( 1.0020433032052223 ** x )
-        far_apic = lambda x: 0.09043087364217033 * ( 1.004632615014859 ** x )
+        #dend = lambda x: 0.9475625702815389 * ( 1.001318965242205 ** x )
+        #close_apic = lambda x: 0.8522367331040966 * ( 1.0020433032052223 ** x )
+        #far_apic = lambda x: 0.09043087364217033 * ( 1.004632615014859 ** x )
+        
+        dend = lambda x: ( 1.001 ** x )
+        close_apic = lambda x: ( 1.002 ** x )
+        far_apic = lambda x: ( 1.002 ** x )
 
         if sec_type == "dend":
             lsyn.initW = base * dend(dist)
