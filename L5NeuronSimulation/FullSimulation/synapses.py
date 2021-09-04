@@ -11,7 +11,7 @@ import numpy as np
 np.random.seed(42)
 generators = []
 
-pyrWeight_m = 0.26252#0.229#0.24575#0.95
+pyrWeight_m = 0.3#0.229#0.24575#0.95
 pyrWeight_s = 0.345#1.3
 
 def lognormal(m, s):
@@ -185,7 +185,7 @@ def Int2Pyr(syn_params, sec_x, sec_id):
     #Assigns release probabilty and conductance based on location of the synapse.
     if sec_type == "soma":
         lsyn.P_0 = max(np.random.normal(0.877, 0.052), 0)
-        lsyn.initW = 54.75#62.31
+        lsyn.initW = 44.75#62.31
     if sec_type == "dend":
         if dist <= 50:
             lsyn.P_0 = max(np.random.normal(0.877, 0.052), 0)
