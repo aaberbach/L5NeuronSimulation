@@ -2,6 +2,8 @@
 
 Analyzing the firing properties of a single, detailed L5b PC neuron.
 
+DOCUMENTATION: https://l5neuronsimulation.readthedocs.io/en/latest/
+
 ## Folder Structure
 
 ### Temporary
