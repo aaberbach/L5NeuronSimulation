@@ -184,17 +184,17 @@ def Int2Pyr(syn_params, sec_x, sec_id):
 
     #Assigns release probabilty and conductance based on location of the synapse.
     if sec_type == "soma":
-        lsyn.P_0 = max(np.random.normal(0.877, 0.052), 0)
+        lsyn.P_0 = np.clip(np.random.normal(0.877, 0.052), 0, 1)
         lsyn.initW = 44.75#62.31
     if sec_type == "dend":
         if dist <= 50:
-            lsyn.P_0 = max(np.random.normal(0.877, 0.052), 0)
+            lsyn.P_0 = np.clip(np.random.normal(0.877, 0.052), 0, 1)
             lsyn.initW = 54.75#62.31
         else:
-            lsyn.P_0 = max(np.random.normal(0.72, 0.1), 0)
+            lsyn.P_0 = np.clip(np.random.normal(0.72, 0.1), 0, 1)
             lsyn.initW = 42.6#66.6
     if sec_type == "apic":
-        lsyn.P_0 = max(np.random.normal(0.3, 0.08), 0)
+        lsyn.P_0 = np.clip(np.random.normal(0.3, 0.08), 0, 1)
         lsyn.initW = 118.7#168.7
 
     #Short Term Plasticity
@@ -314,7 +314,7 @@ def Pyr2Pyr(syn_params, sec_x, sec_id):
     #A list of random generators is kept so that they are not automatically garbaged.
     generators.append(r)
 
-    lsyn.P_0 = np.max(np.random.normal(0.53, 0.22), 0)#Release probability
+    lsyn.P_0 = np.clip(np.random.normal(0.53, 0.22), 0, 1)#Release probability
 
     if syn_params.get('AlphaTmax_ampa'):
         lsyn.AlphaTmax_ampa = float(syn_params['AlphaTmax_ampa']) # par.x(21)
@@ -348,7 +348,7 @@ def Pyr2Pyr(syn_params, sec_x, sec_id):
         if pyrWeight_s == 0:
             base = float(pyrWeight_m)
         else:
-            base = float(min(lognormal(pyrWeight_m, pyrWeight_s), 15))
+            base = float(np.clip(lognormal(pyrWeight_m, pyrWeight_s), 0, 5))
 
         ####OLD
         # dend = lambda x: 0.9278403931213186 * ( 1.0022024845737223 ** x )
@@ -373,7 +373,7 @@ def Pyr2Pyr(syn_params, sec_x, sec_id):
             else:
                 lsyn.initW = base * far_apic(dist)
 
-        lsyn.initW = min(float(lsyn.initW), 50)
+        lsyn.initW = np.clip(float(lsyn.initW), 0, 5)
 
 
     if syn_params.get('Wmax'):
