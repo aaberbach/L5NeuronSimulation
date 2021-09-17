@@ -17,7 +17,7 @@ build_env_bionet(base_dir='./',      # Where to save the scripts and config file
                  network_dir='./network',    # Location of directory containing network files
                  tstop=3000.0, dt=0.1,     # Run a simulation for 2000 ms at 0.1 ms intervals
                  report_vars=['v'],
-                 dL = 1,
+                 dL = 5,
                  #clamp_reports=["se"], # Tells simulator we want to record membrane potential and calcium traces
                  spikes_threshold=-10,
                  compile_mechanisms=True   # Will try to compile NEURON mechanisms

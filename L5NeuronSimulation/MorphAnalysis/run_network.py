@@ -15,8 +15,8 @@ graph = bionet.BioNetwork.from_config(conf)
 sim = bionet.BioSimulator.from_config(conf, network=graph)
 
 from analyze_area import analyze_area, make_seg_df
-#make_seg_df(list(graph.get_local_cells().values())[0])
-analyze_area(list(graph.get_local_cells().values())[0]._morph.seg_prop)
+make_seg_df(list(graph.get_local_cells().values())[0])
+#analyze_area(list(graph.get_local_cells().values())[0]._morph.seg_prop)
 
 #sim.run()
 pc.barrier()
