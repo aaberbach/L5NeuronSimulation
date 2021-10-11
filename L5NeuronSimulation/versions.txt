@@ -1,0 +1,6 @@
+This is a set of working versions but is not the only working set of versions.
+
+scipy = 1.5.4
+statsmodels = 0.12.2
+numpy = 1.18.5
+
