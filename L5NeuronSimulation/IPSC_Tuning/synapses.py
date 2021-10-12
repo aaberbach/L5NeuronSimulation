@@ -184,14 +184,14 @@ def Int2Pyr(syn_params, sec_x, sec_id):
     #lsyn.P_0 = np_gen.uniform(0.16,0.9)#np.random.uniform(0.16, 0.9)
 
     if sec_type == "soma":
-        lsyn.P_0 = max(np.random.normal(0.877, 0.052), 0)
+        lsyn.P_0 = np.clip(np.random.normal(0.877, 0.052), 0, 1)
     if sec_type == "dend":
         if dist <= 50:
-            lsyn.P_0 = max(np.random.normal(0.877, 0.052), 0)
+            lsyn.P_0 = np.clip(np.random.normal(0.877, 0.052), 0, 1)
         else:
-            lsyn.P_0 = max(np.random.normal(0.72, 0.1), 0)
+            lsyn.P_0 = np.clip(np.random.normal(0.72, 0.1), 0, 1)
     if sec_type == "apic":
-        lsyn.P_0 = max(np.random.normal(0.3, 0.08), 0)
+        lsyn.P_0 = np.clip(np.random.normal(0.3, 0.08), 0, 1)
 
     if syn_params.get('AlphaTmax_ampa'):
         lsyn.AlphaTmax_ampa = float(syn_params['AlphaTmax_ampa']) # par.x(21)
