@@ -257,7 +257,7 @@ def Pyr2Pyr(syn_params, sec_x, sec_id):
 
     generators.append(r)
 
-    lsyn.P_0 = np.max(np.random.normal(0.53, 0.22), 0)#Release probability
+    lsyn.P_0 = np.clip(np.random.normal(0.53, 0.22), 0, 1)#Release probability
 
     if syn_params.get('AlphaTmax_ampa'):
         lsyn.AlphaTmax_ampa = float(syn_params['AlphaTmax_ampa']) # par.x(21)
@@ -298,7 +298,7 @@ def Pyr2Pyr(syn_params, sec_x, sec_id):
         if pyrWeight_s == 0:
             base = float(pyrWeight_m)
         else:
-            base = float(min(lognormal(pyrWeight_m, pyrWeight_s), 15))
+            base = float(np.clip(lognormal(pyrWeight_m, pyrWeight_s), 0, 5))
             #base = float(max(0.001, min(np.random.normal(pyrWeight_m, pyrWeight_s), 15)))
             #base = np.random.lognormal(pyrWeight_m, np.sqrt(pyrWeight_s), 1)
 
@@ -308,9 +308,13 @@ def Pyr2Pyr(syn_params, sec_x, sec_id):
         # far_apic = lambda x: 0.16857988107990907 * ( 1.0039628707324273 ** x )
         #############
 
-        dend = lambda x: 0.9475625702815389 * ( 1.001318965242205 ** x )
-        close_apic = lambda x: 0.8522367331040966 * ( 1.0020433032052223 ** x )
-        far_apic = lambda x: 0.09043087364217033 * ( 1.004632615014859 ** x )
+        # dend = lambda x: 0.9475625702815389 * ( 1.001318965242205 ** x )
+        # close_apic = lambda x: 0.8522367331040966 * ( 1.0020433032052223 ** x )
+        # far_apic = lambda x: 0.09043087364217033 * ( 1.004632615014859 ** x )
+
+        dend = lambda x: ( 1.001 ** x )
+        close_apic = lambda x: ( 1.002 ** x )
+        far_apic = lambda x: ( 1.002 ** x )
 
 
         if sec_type == "dend":
@@ -329,7 +333,7 @@ def Pyr2Pyr(syn_params, sec_x, sec_id):
                 #     lsyn.initW = base * (0.62153507 * (1.00248601 ** dist))
 
         #lsyn.initW = min(float(lsyn.initW), 1000)
-        lsyn.initW = min(float(lsyn.initW), 50)
+        lsyn.initW = np.clip(float(lsyn.initW), 0, 5)
         #lsyn.initW = np.random.uniform(0.02, 2)
 
         #lsyn.initW = pyrWeight_m
