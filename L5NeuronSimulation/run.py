@@ -21,6 +21,8 @@ def run_network(callbacks, v_report_all=False):
         each function will be called with (graph, sim)
     v_report_all : bool
         whether the v_report should be set to record every section
+    return: list
+        list of returns of the given callbacks
     """    
     np.random.seed(42)
 
@@ -35,9 +37,12 @@ def run_network(callbacks, v_report_all=False):
     graph = bionet.BioNetwork.from_config(conf)
     sim = bionet.BioSimulator.from_config(conf, network=graph)
 
+    callback_returns = []
 
     for c in callbacks:
-        c(graph, sim)
+        callback_returns.append(c(graph, sim))
 
     sim.run()
     bionet.nrn.quit_execution()
+
+    return callback_returns
