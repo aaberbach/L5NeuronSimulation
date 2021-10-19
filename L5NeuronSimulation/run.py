@@ -11,7 +11,7 @@ import numpy as np
 from neuron import h
 import pandas as pd
 
-def run_network(callbacks, v_report_all=False):
+def run_network(callbacks, v_report_all=False, quit_execution=True):
     """Runs the standard bmtk simulation and call the given callbacks right before running the simulation.
 
     Parameters
@@ -21,6 +21,8 @@ def run_network(callbacks, v_report_all=False):
         each function will be called with (graph, sim)
     v_report_all : bool
         whether the v_report should be set to record every section
+    quit_execution : bool
+        whether to call bionet.nrn.quit_execution()
     return: list
         list of returns of the given callbacks
     """    
@@ -43,6 +45,8 @@ def run_network(callbacks, v_report_all=False):
         callback_returns.append(c(graph, sim))
 
     sim.run()
-    bionet.nrn.quit_execution()
+
+    if (quit_execution):
+        bionet.nrn.quit_execution()
 
     return callback_returns
