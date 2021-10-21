@@ -22,7 +22,7 @@ from raster_maker import *
 from clustering import *
 
 try:
-    np.random.seed(int(sys.argv[1]))
+    np.random.seed(int(sys.argv[-1]))
 except:
     np.random.seed(123)
 
@@ -636,6 +636,14 @@ class SimulationBuilder:
                     make_save_spikes(writer, False, np.ones((n_cells,1)), numUnits=n_cells,rateProf=z)
 
 if __name__ == "__main__":
-        builder = SimulationBuilder("NetParams.json")
+        try:
+                net_params = sys.argv[1]
+        except:
+                net_params = "NetParams.json"
+
+        if ".json" not in net_params:
+                net_params = "NetParams.json"
+
+        builder = SimulationBuilder(net_params)
         builder.build()
         builder.save_groups()
