@@ -1,4 +1,11 @@
 {
+    "cell":
+    {
+        "dynamic_params": null,
+        "model_template": "hoc:L5PCtemplate",
+        "morphology": null
+    },
+
     "lengths":
     {
         "basal_dist": 4649,

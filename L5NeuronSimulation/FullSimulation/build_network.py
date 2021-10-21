@@ -154,8 +154,9 @@ class SimulationBuilder:
                 self.net.add_nodes(N=1, pop_name='Pyrc',
                         potental='exc',
                         model_type='biophysical',
-                        model_template='hoc:L5PCtemplate',
-                        morphology = None)
+                        dynamics_params= self.params["cell"]["dynamic_params"],
+                        model_template= self.params["cell"]["model_template"],
+                        morphology = self.params["cell"]["morphology"])
 
                 self._build_exc()
                 self._build_inh()
@@ -174,7 +175,7 @@ class SimulationBuilder:
                         file_current_clamp=self.file_current_clamp,
                         spikes_inputs=[('exc_stim', 'exc_stim_spikes.h5'), ('prox_inh_stim', 'prox_inh_stim_spikes.h5'), ('dist_inh_stim', 'dist_inh_stim_spikes.h5')],
                         components_dir='../biophys_components',
-                        compile_mechanisms=False)
+                        compile_mechanisms=True)
 
         def save_groups(self):
                 """saves the apic and dend groups into a csv.
