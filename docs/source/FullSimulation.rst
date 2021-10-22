@@ -39,6 +39,14 @@ Contains parameters for the simulation that SimulationBuilder uses.
 
 Structure:
 
+* "cells": bmtk parameters for building the cell
+
+  * "dynamic_params": a JSON file of conductances
+  * "model_template": the hoc file used to build the cell
+  * "morphology": the file containging the cell morphol0gy
+  * "model_processing": a function BMTK will use to modify the cell
+  * "segments_file": csv file containing all of the cell's segments
+
 * "lengths": total lengths of different types of segments (um)
   
   * "basal_dist": basal dendrites more than 50 um from the soma,
