@@ -22,6 +22,8 @@ frs_temp.csv
 show_results.py
 Connections.csv
 FunctionalGroups.csv
+x86_64/
+Inputs.csv
 
 
 # Distribution / packaging
