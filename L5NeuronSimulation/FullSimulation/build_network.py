@@ -203,7 +203,7 @@ class SimulationBuilder:
                 self.exc_stim = NetworkBuilder('exc_stim')
 
                 #DataFrame of all segments on the cell.
-                segs = pd.read_csv("Segments.csv")
+                segs = pd.read_csv(self.params["cell"]["segments_file"])
 
                 dends = segs[(segs["Type"] == "dend") & (segs["Distance"] >= 50)]
                 apics = segs[(segs["Type"] == "apic")]

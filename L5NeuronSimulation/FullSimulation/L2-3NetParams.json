@@ -1,18 +1,18 @@
 {
     "cell":
     {
-        "dynamic_params": null,
-        "model_template": "hoc:L5PCtemplate",
-        "morphology": null,
-        "model_processing": null,
-        "segments_file": "Segments.csv"
+        "dynamic_params": "L2-3_fit.json",
+        "model_template": "Biophys1.hoc",
+        "morphology": "L2-3.swc",
+        "model_processing": "aibs_allactive",
+        "segments_file": "L2-3Segments.csv"
     },
-
+    
     "lengths":
     {
-        "basal_dist": 4649,
-        "basal_prox": 483,
-        "apic": 7440
+        "basal_dist": 825,
+        "basal_prox": 421,
+        "apic": 914
     },
 
     "syn_density":
