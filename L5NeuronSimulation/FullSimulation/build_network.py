@@ -156,6 +156,7 @@ class SimulationBuilder:
                         model_type='biophysical',
                         dynamics_params= self.params["cell"]["dynamic_params"],
                         model_template= self.params["cell"]["model_template"],
+                        model_processing = self.params["cell"]["model_processing"],
                         morphology = self.params["cell"]["morphology"])
 
                 self._build_exc()

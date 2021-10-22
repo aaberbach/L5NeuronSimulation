@@ -2,7 +2,7 @@
     "cell":
     {
         "dynamic_params": "L2-3_fit.json",
-        "model_template": "Biophys1.hoc",
+        "model_template": "ctdb:Biophys1.hoc",
         "morphology": "L2-3.swc",
         "model_processing": "aibs_allactive",
         "segments_file": "L2-3Segments.csv"
