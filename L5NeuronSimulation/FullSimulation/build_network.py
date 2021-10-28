@@ -33,6 +33,8 @@ class SimulationBuilder:
         ----------
         params : dict
                 contains parameters for the network
+        seed : int
+                base random seed for the simulation
         syn : dict
                 contains synaptic templates
 
@@ -112,7 +114,7 @@ class SimulationBuilder:
                 generates a random float from a normal distribution with a near zero minimum
         """
 
-        def __init__(self, params_file):
+        def __init__(self, params_file, seed=123):
                 """Initializes the simulation builder, 
                 setting up attributes but not actually building the BMTK network.
 
@@ -120,10 +122,14 @@ class SimulationBuilder:
                 ----------
                 params_file : str
                     path to the JSON file with network parameters
+                seed : int
+                    base random seed for the simulation
                 """     
                 #Loads the JSON file with information about the network.           
                 with open(params_file) as f:
                         self.params = json.load(f)
+
+                self.seed = seed
 
                 #Loads synapse templates.
                 synapses.load()
@@ -149,6 +155,8 @@ class SimulationBuilder:
         def build(self):
                 """Builds the nodes and edges for the network.
                 """                
+                np.random.seed(self.seed)
+
                 self.net = NetworkBuilder("biophysical")
 
                 self.net.add_nodes(N=1, pop_name='Pyrc',
@@ -209,11 +217,16 @@ class SimulationBuilder:
                 dends = segs[(segs["Type"] == "dend") & (segs["Distance"] >= 50)]
                 apics = segs[(segs["Type"] == "apic")]
 
+                np.random.seed(self.seed + 1)
                 apic_start, self.dend_groups = self._build_exc_nodes(dends, "dend", self.n_dend_exc)
-        
+                
+                np.random.seed(self.seed + 2)
                 _, self.apic_groups = self._build_exc_nodes(apics, "apic", self.n_apic_exc, start=apic_start)
 
+                np.random.seed(self.seed + 3)
                 self._build_exc_edges(self.dend_groups)
+
+                np.random.seed(self.seed + 4)
                 self._build_exc_edges(self.apic_groups)
 
         #Sets the number of synapses for each input cell.
@@ -390,6 +403,7 @@ class SimulationBuilder:
                 div_params = self.params["divergence"]["peri_inh"]
 
                 #On soma.
+                np.random.seed(self.seed + 5)
                 self.net.add_edges(source=self.prox_inh_stim.nodes(pop_name='on_soma'),
                                 target=self.net.nodes(),
                                 connection_rule=SimulationBuilder._norm_connect,
@@ -402,6 +416,7 @@ class SimulationBuilder:
                                 target_sections=['somatic'])
 
                 #On dendrites within 50 um
+                np.random.seed(self.seed + 6)
                 self.net.add_edges(source=self.prox_inh_stim.nodes(pop_name='on_dend'), 
                                 target=self.net.nodes(),
                                 connection_rule=SimulationBuilder._norm_connect,
@@ -430,6 +445,7 @@ class SimulationBuilder:
                 div_params = self.params["divergence"]["basal_inh"]
 
                 #Basal edges.
+                np.random.seed(self.seed + 7)
                 self.net.add_edges(source=self.dist_inh_stim.nodes(pop_name="dend"),
                                 target=self.net.nodes(),
                                 connection_rule=SimulationBuilder._norm_connect,
@@ -444,6 +460,7 @@ class SimulationBuilder:
                 div_params = self.params["divergence"]["apic_inh"]
 
                 #Apic edges.
+                np.random.seed(self.seed + 8)
                 self.net.add_edges(source=self.dist_inh_stim.nodes(pop_name="apic"), 
                                 target=self.net.nodes(),
                                 connection_rule=SimulationBuilder._norm_connect,
@@ -486,11 +503,13 @@ class SimulationBuilder:
         def _make_rasters(self):
                 """Generates excitatory and inhibitory input rasters
                 """    
+                np.random.seed(self.seed + 9)
                 self._gen_exc_spikes('exc_stim_spikes.h5')
 
                 inh_frs = self.params["inh_frs"]
 
                 #Makes perisomatic inhibitory raster.
+                np.random.seed(self.seed + 10)
                 self._gen_inh_spikes(self.n_soma_inh + self.n_prox_dend_inh, 
                                      inh_frs["proximal"]["m"], 
                                      inh_frs["proximal"]["s"], 
@@ -499,6 +518,7 @@ class SimulationBuilder:
                                      'prox_inh_stim_spikes.h5')
                 
                 #Makes dendritic inhibitory raster.
+                np.random.seed(self.seed + 11)
                 self._gen_inh_spikes(self.n_apic_inh + self.n_dend_inh, 
                                      inh_frs["distal"]["m"], 
                                      inh_frs["distal"]["s"],
