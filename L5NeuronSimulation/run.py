@@ -11,7 +11,7 @@ import numpy as np
 from neuron import h
 import pandas as pd
 
-def run_network(callbacks, v_report_all=False, quit_execution=True):
+def run_network(callbacks, v_report_all=False, quit_execution=True, random_seed = 42):
     """Runs the standard bmtk simulation and call the given callbacks right before running the simulation.
 
     Parameters
@@ -26,7 +26,7 @@ def run_network(callbacks, v_report_all=False, quit_execution=True):
     return: list
         list of returns of the given callbacks
     """    
-    np.random.seed(42)
+    np.random.seed(random_seed)
 
     config_file = 'simulation_config.json'
     conf = bionet.Config.from_json(config_file, validate=True)
