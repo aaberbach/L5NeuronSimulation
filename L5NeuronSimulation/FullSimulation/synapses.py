@@ -363,7 +363,8 @@ def Pyr2Pyr(syn_params, sec_x, sec_id):
         
         dend = lambda x: ( 1.001 ** x )
         close_apic = lambda x: ( 1.002 ** x )
-        far_apic = lambda x: ( 1.002 ** x )
+        #far_apic = lambda x: ( 1.002 ** x )
+        far_apic = lambda x: 1
 
         if sec_type == "dend":
             lsyn.initW = base * dend(dist)
@@ -371,6 +372,7 @@ def Pyr2Pyr(syn_params, sec_x, sec_id):
             if dist < 750:
                 lsyn.initW = base * close_apic(dist)
             else:
+                base = float(np.clip(lognormal(0.18, 0.22), 0, 5))
                 lsyn.initW = base * far_apic(dist)
 
         lsyn.initW = np.clip(float(lsyn.initW), 0, 5)
