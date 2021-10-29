@@ -2,6 +2,7 @@
 The script used to build the network for the simulation run in run_network.py
 """
 import os,sys,inspect
+import shutil
 currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 parentdir = os.path.dirname(currentdir)
 sys.path.insert(0, parentdir) 
@@ -25,6 +26,33 @@ try:
     np.random.seed(int(sys.argv[-1]))
 except:
     np.random.seed(123)
+
+def delete_file(filename):
+        try:
+                os.remove(filename)
+                print(filename + " sucessfully deleted.")
+        except:
+                print(filename + " not found for deletion.")
+
+def delete_folder(dir_name):
+        try:
+                shutil.rmtree(dir_name)
+                print(dir_name + " sucessfully deleted.")
+        except:
+                print(dir_name + " not found for deletion.")
+
+
+def clean_folder():
+        delete_file("./node_sets.json")
+        delete_file("./run_bionet.py")
+        delete_file("./simulation_config.json")
+        delete_file("./prox_inh_stim_spikes.h5")
+        delete_file("./exc_stim_spikes.h5")
+        delete_file("./dist_inh_stim_spikes.h5")
+        delete_file("./circuit_config.json")
+        delete_folder("./network")
+        delete_folder("./output")
+        delete_folder("./__pycache__")
 
 class SimulationBuilder:
         """Class used to build our BMTK simulation.
@@ -664,6 +692,8 @@ if __name__ == "__main__":
 
         if ".json" not in net_params:
                 net_params = "NetParams.json"
+
+        clean_folder()
 
         builder = SimulationBuilder(net_params)
         builder.build()
