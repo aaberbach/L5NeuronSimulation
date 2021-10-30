@@ -345,10 +345,10 @@ def Pyr2Pyr(syn_params, sec_x, sec_id):
         sec_type = fullsecname.split(".")[1][:4]
         sec_id = int(fullsecname.split("[")[-1].split("]")[0])
 
-        if pyrWeight_s == 0:
-            base = float(pyrWeight_m)
-        else:
-            base = float(np.clip(lognormal(pyrWeight_m, pyrWeight_s), 0, 5))
+        # if pyrWeight_s == 0:
+        #     base = float(pyrWeight_m)
+        # else:
+        #     base = float(np.clip(lognormal(pyrWeight_m, pyrWeight_s), 0, 5))
 
         ####OLD
         # dend = lambda x: 0.9278403931213186 * ( 1.0022024845737223 ** x )
@@ -367,12 +367,14 @@ def Pyr2Pyr(syn_params, sec_x, sec_id):
         far_apic = lambda x: 1
 
         if sec_type == "dend":
+            base = float(np.clip(lognormal(pyrWeight_m, pyrWeight_s), 0, 5))
             lsyn.initW = base * dend(dist)
         elif sec_type == "apic":
             if dist < 750:
+                base = float(np.clip(lognormal(pyrWeight_m, pyrWeight_s), 0, 5))
                 lsyn.initW = base * close_apic(dist)
             else:
-                base = float(np.clip(lognormal(0.18, 0.22), 0, 5))
+                base = float(np.clip(lognormal(0.17, 0.2), 0, 5))
                 lsyn.initW = base * far_apic(dist)
 
         lsyn.initW = np.clip(float(lsyn.initW), 0, 5)
