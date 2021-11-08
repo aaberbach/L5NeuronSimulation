@@ -170,7 +170,7 @@ if __name__ == "__main__":
     callbacks = []
     
     save_cons = True
-    vclamp_all = True
+    vclamp_all = False
 
     if (save_connections):
         callbacks.append(save_connections)
