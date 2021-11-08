@@ -11,16 +11,64 @@ sys.path.insert(0, parentdir)
 sys.path.insert(0, currentdir)
 
 from bmtk.simulator import bionet
+from bmtk.simulator.bionet import modules as mods
+from bmtk.simulator.bionet.seclamp import SEClamp
 import numpy as np
 from neuron import h
 import synapses 
 import pandas as pd
 import run
+from functools import partial
 
 try:
     np.random.seed(int(sys.argv[1]))
 except:
     np.random.seed(123)
+
+def vclamp_seg(seg, durs, amps, rs=None):
+    clamp = SEClamp(amps, durs, rs=rs)
+
+    clamp._stim = h.SEClamp(seg) 
+    clamp._stim.dur1 = durs[0]
+    clamp._stim.dur2 = durs[1]
+    clamp._stim.dur3 = durs[2]
+
+    clamp._stim.amp1 = amps[0]
+    clamp._stim.amp2 = amps[1]
+    clamp._stim.amp3 = amps[2]
+
+    if rs != None:
+        clamp._stim.rs = rs
+
+    return clamp
+
+def vclamp_all_segs(graph, sim, durs, amps, rs=None):
+    cells = graph.get_local_cells()
+    cell = cells[list(cells.keys())[0]]
+    hobj = cell.hobj
+
+    vclamps = []
+
+    for sec in hobj.all:
+        for seg in sec:
+            vclamps.append(vclamp_seg(seg, durs, amps, rs))
+
+    return vclamps
+
+def record_all_vclamps(graph, sim, durs, amps, rs=None):
+    vclamps = vclamp_all_segs(graph, sim, durs, amps, rs)
+
+    clamp_params = {}
+    clamp_params["input_type"] = "voltage_clamp"
+    clamp_params["module"] = "SEClamp"
+    clamp_params["node_set"] = "all"
+
+    mod = mods.ClampReport(file_name = currentdir + "/output/se_clamp_report.h5", tmp_dir = currentdir + "/output/", variable_name = "se", **clamp_params)
+    sim.add_mod(mod)
+
+    for clamp in vclamps:
+        sim._seclamps.append(clamp)
+
 
 def splitcell(graph, sim):
     pc = h.ParallelContext()  # object to access MPI methods
@@ -119,5 +167,16 @@ if __name__ == "__main__":
     synapses.load()
     syn = synapses.syn_params_dicts()
 
+    callbacks = []
+    
+    save_cons = True
+    vclamp_all = True
 
-    run.run_network([save_connections], v_report_all = False)#make v_report_all True to save all segments
+    if (save_connections):
+        callbacks.append(save_connections)
+
+    if (vclamp_all):
+        save_epscs = partial(record_all_vclamps, durs = [1000000, 0, 0], amps = [0, 0, 0], rs=None)
+        callbacks.append(save_epscs)
+
+    callback_returns = run.run_network(callbacks, v_report_all = False)#make v_report_all True to save all segments
