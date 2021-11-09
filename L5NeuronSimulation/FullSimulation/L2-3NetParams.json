@@ -1,6 +1,7 @@
 {
     "cell":
     {
+        "prefix": "L2-3",
         "dynamic_params": "L2-3_fit.json",
         "model_template": "ctdb:Biophys1.hoc",
         "morphology": "L2-3.swc",

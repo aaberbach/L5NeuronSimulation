@@ -106,6 +106,9 @@ class SimulationBuilder:
         save_groups()
                 saves the functional groups to a csv
 
+        _set_prefixed_directory(base_dir_name : str)
+                sets up the correct biophy_components structure based on the cell prefix in params for the given directory base
+
         _build_exc()
                 creates excitatory input nodes and edges
         _build_exc_nodes(segs : pandas.DataFrame, base_name : str, n_cells : int, start=0 : int)
@@ -128,6 +131,8 @@ class SimulationBuilder:
 
         Static Methods
         --------------
+        _get_directory_prefix(directory : str)
+                reads the prefix.txt fil in directory and returns the contents
         _connector_func(sources : list, targets : list, cells : list)
                 sets the number of synapses from the given cells
         _set_location(source : dict, target : dict, cells : list, start_id : int)
@@ -185,6 +190,9 @@ class SimulationBuilder:
                 """                
                 np.random.seed(self.seed)
 
+                self._set_prefixed_directory("mechanisms")
+                self._set_prefixed_directory("templates")
+
                 self.net = NetworkBuilder("biophysical")
 
                 self.net.add_nodes(N=1, pop_name='Pyrc',
@@ -231,6 +239,50 @@ class SimulationBuilder:
                 df["Node ID"] = node_ids
                 df["Functional Group"] = func_groups
                 df.to_csv("FunctionalGroups.csv", index=False)  
+
+        def _set_prefixed_directory(self, base_dir_name):
+                """Fixes the biophy_components directory. There should be only one directory
+                named <base_dir_name> and it should be the one with the prefix.txt file in it
+                that has the same prefix as params.
+
+                Parameters
+                ----------
+                base_dir_name : str
+                        base name of the set of directories to be fixed
+                """
+                #import pdb; pdb.set_trace()
+                components_path = "../biophys_components/"
+                biophys_subdirs = [ f.name for f in os.scandir(components_path) if f.is_dir() ]
+                
+                for dir_name in biophys_subdirs:
+                        if base_dir_name == dir_name:
+                                prefix = SimulationBuilder._get_directory_prefix(components_path + dir_name)
+                                if prefix == self.params["cell"]["prefix"]:
+                                        return
+                                else:
+                                        os.rename(components_path + base_dir_name, components_path + prefix + base_dir_name)
+                                        
+
+
+                for dir_name in biophys_subdirs:
+                        if base_dir_name in dir_name and self.params["cell"]["prefix"] in dir_name:
+                                os.rename(components_path + dir_name, components_path + base_dir_name)
+
+        def _get_directory_prefix(directory):
+                """Returns the contents of the prefix.txt file in the given directory.
+
+                Parameters
+                ----------
+                directory : str
+                        directory to look in
+
+                Returns
+                -------
+                str
+                        contents of prefix.txt
+                """  
+                with open(directory + "/prefix.txt", 'r') as f:
+                        return f.read()
 
         def _build_exc(self):
                 """Builds the excitatory input cells and their synapses.
