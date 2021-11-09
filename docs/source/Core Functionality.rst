@@ -14,7 +14,8 @@ biophys_components
 ------------------
 
 Notice that there are two different folders of both mechanisms and templates.
-When running a simulation, you will need to remove the prefix (either L2-3 or L5)
+When running a simulation, you (or build_network.py if you're in FullSimulation) 
+will need to remove the prefix (either L2-3 or L5)
 from the two folders you want to be active, depending on which cell you want.
 Remove the prefix of the cell you want to be using.
 
