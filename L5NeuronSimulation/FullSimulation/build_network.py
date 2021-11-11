@@ -447,16 +447,21 @@ class SimulationBuilder:
                 """builds and saves the BMTK NetworkBuilders
                 """                
                 # Build and save our networks
+                np.random.seed(self.seed + 12)
                 self.net.build()
                 self.net.save_nodes(output_dir='network')
+                np.random.seed(self.seed + 16)
                 self.net.save_edges(output_dir='network')
 
+                np.random.seed(self.seed + 13)
                 self.exc_stim.build()
                 self.exc_stim.save_nodes(output_dir='network')
 
+                np.random.seed(self.seed + 14)
                 self.prox_inh_stim.build()
                 self.prox_inh_stim.save_nodes(output_dir='network')
 
+                np.random.seed(self.seed + 15)
                 self.dist_inh_stim.build()
                 self.dist_inh_stim.save_nodes(output_dir='network')
 
