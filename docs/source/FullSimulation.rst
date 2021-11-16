@@ -82,6 +82,10 @@ Structure:
 * "dt": time (ms) between each simulation step,
 * "inh_shift": how many ms the average excitation trace is shifted to make the inhibition noise trace
 
+L2-3NetParams.csv
+^^^^^^^^^^^^^^^^^
+Same structure as NetParams.csv above. This is the parameters file for an L2-3 cell used.
+The cell is from the Allen Cell Database: https://celltypes.brain-map.org/experiment/electrophysiology/477127614.
 
 Segments.csv
 ^^^^^^^^^^^^
