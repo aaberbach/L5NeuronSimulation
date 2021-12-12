@@ -2,6 +2,23 @@ import pandas as pd
 import numpy as np
 from neuron import h
 
+def save_degrees(cell):
+    degrees = {}
+    calculate_degree(h.SectionRef(sec=cell.hobj.soma[0]), degrees, 0)
+
+    df_dict = {}
+    df_dict["SectionName"] = list(degrees.keys())
+    df_dict["Degrees"] = list(degrees.values())
+    
+    df = pd.DataFrame(df_dict)
+    df.to_csv("SectionDegrees.csv", index=False)
+
+def calculate_degree(sref, degrees, deg):
+    degrees[sref.sec.name()] = deg
+
+    for c in sref.child:
+        calculate_degree(h.SectionRef(sec=c), degrees, deg+1)
+
 def make_seg_df(cell):
     #import pdb; pdb.set_trace()
     seg_locs = cell.morphology.seg_coords['p05']
