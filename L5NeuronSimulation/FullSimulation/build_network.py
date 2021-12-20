@@ -745,10 +745,10 @@ if __name__ == "__main__":
         try:
                 net_params = sys.argv[1]
         except:
-                net_params = "NetParams.json"
+                net_params = "L5NetParams.json"
 
         if ".json" not in net_params:
-                net_params = "NetParams.json"
+                net_params = "L5NetParams.json"
 
         clean_folder()
 
