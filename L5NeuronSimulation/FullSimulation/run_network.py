@@ -5,6 +5,7 @@ each synapse in the simulation.
 """
 
 import os,sys,inspect
+from bmtk_modifications import modify_bmtk
 currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 parentdir = os.path.dirname(currentdir)
 sys.path.insert(0, parentdir) 
@@ -164,6 +165,8 @@ def save_connections(graph, sim):
 
 
 if __name__ == "__main__":
+    modify_bmtk()
+
     synapses.load()
     syn = synapses.syn_params_dicts()
 
