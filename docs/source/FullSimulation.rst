@@ -13,6 +13,11 @@ This is the folder where the core simulation is built and run.
 Files
 -----
 
+bmtk_modifications.py
+^^^^^^^^^^^^^^^^^^^^^
+Contains run time modications to BMTK. 
+Just import and run modify_bmtk().
+
 Connections.csv
 ^^^^^^^^^^^^^^^
 Contains information for each synapse in the simulation. Created during the run step. 
@@ -71,7 +76,13 @@ Structure:
   * "cells_per_group": number of cells per functional group,
   * "cluster_radius": radius of the sphere that clusters are constrained to,
   * "group_radius": radius of the sphere that groups are constrained to
-  
+* "file_current_clamp": name of file to use as current clamp
+
+* "record_cellvars": cellvars to record and on what part of the cell
+
+  * "vars": variable name
+  * "locs": location on cell ("all", "soma", "axon", "apic", "dend")
+
 * "inh_frs": inhibitory firing rates
   
   * "proximal": PV+, normal with \{"m":mean, "s":standard deviation\},
