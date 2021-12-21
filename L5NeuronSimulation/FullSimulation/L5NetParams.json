@@ -41,6 +41,12 @@
 
     "file_current_clamp": {"input_file":"None"},
 
+    "record_cellvars":
+    {
+        "vars": ["v"],
+        "locs": ["soma"]
+    },
+
     "inh_frs":
     {
         "proximal": {"m":16.9, "s":14.3, "rhythmicity":{"f":64, "mod":0.5}},

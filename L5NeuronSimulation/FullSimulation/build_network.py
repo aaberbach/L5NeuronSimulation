@@ -128,6 +128,12 @@ class SimulationBuilder:
                 generates and saves the excitatory spike rasters
         _gen_inh_spikes(n_cells : int, mean_fr : float, std_fr : float, key : str, fname : str)
                 creates inhibitory spike rasters, using a noise trace based on averaging excitation and shifting it
+        _modify_jsons()
+                modifies the various json files however is needed after they are built
+        _modify_sim_config()
+                modifies the simulation_config.json however is needed
+        _update_cellvar_record_locs(sim_config : dict)
+                modifies the location of cellvar recordings in the given JSON simulation_config
 
         Static Methods
         --------------
@@ -214,13 +220,15 @@ class SimulationBuilder:
                         network_dir='./network',
                         dt = self.params["dt"], 
                         tstop=self.params["time"]["stop"] * 1000.0,
-                        report_vars=['v'],
+                        report_vars=self.params["record_cellvars"]["vars"],
                         dL = self.params["dL"],#target length (um) of segments
                         spikes_threshold=-10,
                         file_current_clamp=self.file_current_clamp,
                         spikes_inputs=[('exc_stim', 'exc_stim_spikes.h5'), ('prox_inh_stim', 'prox_inh_stim_spikes.h5'), ('dist_inh_stim', 'dist_inh_stim_spikes.h5')],
                         components_dir='../biophys_components',
                         compile_mechanisms=True)
+
+                self._modify_jsons()
 
         def save_groups(self):
                 """saves the apic and dend groups into a csv.
@@ -740,6 +748,34 @@ class SimulationBuilder:
 
                     writer = SonataWriter(fname, ["spikes", key], ["timestamps", "node_ids"], [np.float, np.int])
                     make_save_spikes(writer, False, np.ones((n_cells,1)), numUnits=n_cells,rateProf=z)
+
+        def _modify_jsons(self):
+                """modifies the various json files however is needed after they are built"""
+                self._modify_sim_config()
+
+        def _modify_sim_config(self):
+                """modifies the simulation_config.json however is needed"""
+                with open("simulation_config.json", "r") as jsonFile:
+                        sim_config = json.load(jsonFile)
+
+                self._update_cellvar_record_locs(sim_config)
+
+                with open("simulation_config.json", "w") as jsonFile:
+                        json.dump(sim_config, jsonFile, indent=2)
+
+        def _update_cellvar_record_locs(self, sim_config):
+                """modifies the location of cellvar recordings in the given JSON simulation_config
+                
+                Parameters
+                ----------
+                sim_config : dict
+                    simulation_config to modify
+                """
+                reports = sim_config["reports"]
+                cellvar_reports = [report for report in reports.values() if report["module"] == "membrane_report"]
+
+                for loc, report in zip(self.params["record_cellvars"]["locs"], cellvar_reports):
+                        report["sections"] = loc
 
 if __name__ == "__main__":
         try:
