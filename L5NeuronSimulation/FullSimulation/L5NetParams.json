@@ -49,7 +49,7 @@
 
     "inh_frs":
     {
-        "proximal": {"m":16.9, "s":14.3, "rhythmicity":{"f":64, "mod":0.5}},
+        "proximal": {"m":16.9, "s":14.3, "rhythmicity":{"f":"None", "mod":"None"}},
         "distal": {"m":3.9, "s":4.9, "rhythmicity":{"f":"None", "mod":"None"}}
     },
 
