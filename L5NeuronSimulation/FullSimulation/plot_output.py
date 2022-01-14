@@ -3,9 +3,9 @@ import h5py
 import numpy as np
 import matplotlib.pyplot as plt
 
-f = h5py.File('./output/v_report.h5')
+f = h5py.File('./output/v_report.h5','r')
 
-plt.plot(f['report']['biophysical']['data'][:])
+plt.plot(f['report']['biophysical']['data'][:,0])
 plt.show()
 
 
