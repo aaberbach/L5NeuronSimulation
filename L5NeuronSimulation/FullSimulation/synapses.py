@@ -11,7 +11,7 @@ import numpy as np
 np.random.seed(42)
 generators = []
 
-pyrWeight_m = 0.3#0.229#0.24575#0.95
+pyrWeight_m = 0.03#0.229#0.24575#0.95
 pyrWeight_s = 0.345#1.3
 
 def lognormal(m, s):
@@ -25,6 +25,90 @@ def set_pyr_w(m, s):
     global pyrWeight_s
     pyrWeight_m = m
     pyrWeight_s = s
+
+def AMPANMDA(syn_params, sec_x, sec_id):
+    """Create a bg2pyr synapse
+    :param syn_params: parameters of a synapse
+    :param sec_x: normalized distance along the section
+    :param sec_id: target section
+    :return: NEURON synapse object
+    """
+
+    lsyn = h.ProbAMPANMDA2(sec_x, sec=sec_id)
+
+    if syn_params.get('tau_r_AMPA'):
+        lsyn.tau_r_AMPA = float(syn_params['tau_r_AMPA'])
+    if syn_params.get('tau_d_AMPA'):
+        lsyn.tau_d_AMPA = float(syn_params['tau_d_AMPA'])
+    if syn_params.get('tau_r_NMDA'):
+        lsyn.tau_r_NMDA = float(syn_params['tau_r_NMDA'])
+    if syn_params.get('tau_d_NMDA'):
+        lsyn.tau_d_NMDA = float(syn_params['tau_d_NMDA'])
+    if syn_params.get('Use'):
+        lsyn.Use = float(syn_params['Use'])
+    if syn_params.get('Dep'):
+        lsyn.Dep = float(syn_params['Dep'])
+    if syn_params.get('Fac'):
+        lsyn.Fac = float(syn_params['Fac'])
+    if syn_params.get('e'):
+        lsyn.e = float(syn_params['e'])
+    if syn_params.get('initW'):
+        h.distance(sec=sec_id.cell().soma[0])
+        dist = h.distance(sec_id(sec_x))
+        fullsecname = sec_id.name()
+        sec_type = fullsecname.split(".")[1][:4]
+        sec_id = int(fullsecname.split("[")[-1].split("]")[0])
+
+        # if pyrWeight_s == 0:
+        #     base = float(pyrWeight_m)
+        # else:
+        #     base = float(np.clip(lognormal(pyrWeight_m, pyrWeight_s), 0, 5))
+
+        ####OLD
+        # dend = lambda x: 0.9278403931213186 * ( 1.0022024845737223 ** x )
+        # close_apic = lambda x: 0.9131511669645764 * ( 1.0019436631560847 ** x )
+        # far_apic = lambda x: 0.16857988107990907 * ( 1.0039628707324273 ** x )
+        #############
+
+        #distance based conductance scaling functions.
+        #dend = lambda x: 0.9475625702815389 * ( 1.001318965242205 ** x )
+        #close_apic = lambda x: 0.8522367331040966 * ( 1.0020433032052223 ** x )
+        #far_apic = lambda x: 0.09043087364217033 * ( 1.004632615014859 ** x )
+        
+        dend = lambda x: ( 1.001 ** x )
+        close_apic = lambda x: ( 1.002 ** x )
+        #far_apic = lambda x: ( 1.002 ** x )
+        far_apic = lambda x: 1
+
+        if sec_type == "dend":
+            base = float(np.clip(lognormal(pyrWeight_m, pyrWeight_s), 0, 5))
+            lsyn.initW = base * dend(dist)
+        elif sec_type == "apic":
+            if dist < 750:
+                base = float(np.clip(lognormal(pyrWeight_m, pyrWeight_s), 0, 5))
+                lsyn.initW = base * close_apic(dist)
+            else:
+                base = float(np.clip(lognormal(0.17, 0.2), 0, 5))
+                lsyn.initW = base * far_apic(dist)
+
+        lsyn.initW = np.clip(float(lsyn.initW), 0, 5)
+    if syn_params.get('u0'):
+        lsyn.u0 = float(syn_params['u0'])
+    return lsyn
+
+
+def ampanmda(syn_params, xs, secs):
+    """Create a list of bg2pyr synapses
+    :param syn_params: parameters of a synapse
+    :param xs: list of normalized distances along the section
+    :param secs: target sections
+    :return: list of NEURON synpase objects
+    """
+    syns = []
+    for x, sec in zip(xs, secs):
+        syn = AMPANMDA(syn_params, x, sec)
+        syns.append(syn)
+    return syns
 
 def Bg2Pyr(syn_params, sec_x, sec_id):
     """Create a bg2pyr synapse
@@ -192,10 +276,10 @@ def Int2Pyr(syn_params, sec_x, sec_id):
             lsyn.initW = 54.75#62.31
         else:
             lsyn.P_0 = np.clip(np.random.normal(0.72, 0.1), 0, 1)
-            lsyn.initW = 42.6#66.6
+            lsyn.initW = 0#42.6#66.6
     if sec_type == "apic":
         lsyn.P_0 = np.clip(np.random.normal(0.3, 0.08), 0, 1)
-        lsyn.initW = 118.7#168.7
+        lsyn.initW = 0#118.7#168.7
 
     #Short Term Plasticity
     #######################
@@ -436,6 +520,8 @@ def pyr2pyr(syn_params, xs, secs):
 
 
 def load():
+    add_synapse_model(AMPANMDA, 'ampanmda', overwrite=False)
+    add_synapse_model(AMPANMDA, overwrite=False)
     add_synapse_model(Bg2Pyr, 'bg2pyr', overwrite=False)
     add_synapse_model(Bg2Pyr, overwrite=False)
     add_synapse_model(Pyr2Pyr, 'pyr2pyr', overwrite=False)
