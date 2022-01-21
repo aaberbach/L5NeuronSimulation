@@ -43,8 +43,8 @@
 
     "record_cellvars":
     {
-        "vars": ["Ca_LVAst.ica", "Ca_HVA.ica",  "pas.i", "v"],
-        "locs": ["all", "all", "all", "all"]
+        "vars": ["v"],
+        "locs": ["all"]
     },
 
     "inh_frs":
