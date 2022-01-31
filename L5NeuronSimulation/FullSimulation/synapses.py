@@ -11,7 +11,7 @@ import numpy as np
 np.random.seed(42)
 generators = []
 
-pyrWeight_m = 0.03#0.229#0.24575#0.95
+pyrWeight_m = 0.06#0.229#0.24575#0.95
 pyrWeight_s = 0.345#1.3
 
 def lognormal(m, s):

@@ -3,20 +3,20 @@ from bmtk.builder.networks import NetworkBuilder
 net = NetworkBuilder("biophysical")
 
 #L5 Cell
-# net.add_nodes(N=1, pop_name='Pyrc',
-#     potental='exc',
-#     model_type='biophysical',
-#     model_template='hoc:L5PCtemplate',
-#     morphology = None)
+net.add_nodes(N=1, pop_name='Pyrc',
+     potental='exc',
+     model_type='biophysical',
+     model_template='hoc:L5PCtemplate',
+     morphology = None)
 
 #L2/3 Cell
-net.add_nodes(N=1, pop_name='Pyrc',
-    potental='exc',
-    model_type='biophysical',
-    dynamics_params= "L2-3_fit.json",
-    model_template= "ctdb:Biophys1.hoc",
-    model_processing="aibs_allactive",
-    morphology = "L2-3.swc")
+#net.add_nodes(N=1, pop_name='Pyrc',
+#    potental='exc',
+#    model_type='biophysical',
+#    dynamics_params= "L2-3_fit.json",
+#    model_template= "ctdb:Biophys1.hoc",
+#    model_processing="aibs_allactive",
+#    morphology = "L2-3.swc")
 
 net.build()
 net.save_nodes(output_dir='network')

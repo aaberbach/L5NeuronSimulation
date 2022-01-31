@@ -60,7 +60,7 @@ proc biophys() {
     gamma_CaDynamics_E2 = 0.000509 
     gSK_E2bar_SK_E2 = 0.0012 
   	gSKv3_1bar_SKv3_1 = 0.000261 
-  	gNaTa_tbar_NaTa_t = 0.0213 
+  	gNaTa_tbar_NaTa_t = 2*0.0213 
   	gImbar_Im = 0.0000675 
   	g_pas = 0.0000589 
 	}
@@ -70,6 +70,21 @@ proc biophys() {
 	
   forsec $o1.basal {
 		cm = 2
+  	insert SK_E2 
+  	insert Ca_LVAst 
+  	insert Ca_HVA 
+  	insert SKv3_1 
+  	insert NaTa_t 
+  	insert Im 
+  	insert CaDynamics_E2
+		ek = -85
+		ena = 50
+    decay_CaDynamics_E2 = 122 
+    gamma_CaDynamics_E2 = 0.000509 
+    gSK_E2bar_SK_E2 = 0.0012 
+  	gSKv3_1bar_SKv3_1 = 0.000261 
+  	gNaTa_tbar_NaTa_t = 2*0.0213 
+  	gImbar_Im = 0.0000675 
 		insert Ih
 		gIhbar_Ih = 0.0002
   	g_pas = 0.0000467 

@@ -20,7 +20,6 @@ def calculate_degree(sref, degrees, deg):
         calculate_degree(h.SectionRef(sec=c), degrees, deg+1)
 
 def make_seg_df(cell):
-    #import pdb; pdb.set_trace()
     seg_locs = cell.morphology.seg_coords['p05']
     px = seg_locs[0]
     py = seg_locs[1]
@@ -34,7 +33,12 @@ def make_seg_df(cell):
     xs = []
     parts = []
     distances = []
+    elec_distances = []
     h.distance(sec=cell.hobj.soma[0])
+    zz = h.Impedance()
+    zz.loc(cell.hobj.soma[0](0.5))
+    zz.compute(25,1)
+    
     for sec in cell.hobj.all:
         for seg in sec:
             distances.append(h.distance(seg))
@@ -45,6 +49,7 @@ def make_seg_df(cell):
             sec_type = fullsecname.split(".")[1][:4]
             parts.append(sec_type)
             full_names.append(str(seg))
+            elec_distances.append(zz.ratio(seg))
             j += 1
         i += 1
 
@@ -56,6 +61,7 @@ def make_seg_df(cell):
     df["Coord X"] = px
     df["Coord Y"] = py
     df["Coord Z"] = pz
+    df["Elec_distance"] = elec_distances
 
     df.to_csv("Segments.csv", index=False)
     #import pdb; pdb.set_trace()
