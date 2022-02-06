@@ -446,7 +446,7 @@ def Pyr2Pyr(syn_params, sec_x, sec_id):
         #far_apic = lambda x: 0.09043087364217033 * ( 1.004632615014859 ** x )
         
         dend = lambda x: ( 1.001 ** x )
-        close_apic = lambda x: ( 1.002 ** x )
+        close_apic = lambda x: ( 1.001 ** x )
         #far_apic = lambda x: ( 1.002 ** x )
         far_apic = lambda x: 1
 
