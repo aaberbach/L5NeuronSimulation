@@ -458,7 +458,7 @@ def Pyr2Pyr(syn_params, sec_x, sec_id):
                 base = float(np.clip(lognormal(pyrWeight_m, pyrWeight_s), 0, 5))
                 lsyn.initW = base * close_apic(dist)
             else:
-                base = float(np.clip(lognormal(0.17, 0.2), 0, 5))
+                base = float(np.clip(lognormal(pyrWeight_m, pyrWeight_s), 0, 5))
                 lsyn.initW = base * far_apic(dist)
 
         lsyn.initW = np.clip(float(lsyn.initW), 0, 5)
