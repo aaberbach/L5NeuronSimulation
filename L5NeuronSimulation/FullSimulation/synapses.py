@@ -11,7 +11,7 @@ import numpy as np
 np.random.seed(42)
 generators = []
 
-pyrWeight_m = 0.06#0.229#0.24575#0.95
+pyrWeight_m = 0.2#0.229#0.24575#0.95
 pyrWeight_s = 0.345#1.3
 
 def lognormal(m, s):
@@ -269,17 +269,17 @@ def Int2Pyr(syn_params, sec_x, sec_id):
     #Assigns release probabilty and conductance based on location of the synapse.
     if sec_type == "soma":
         lsyn.P_0 = np.clip(np.random.normal(0.877, 0.052), 0, 1)
-        lsyn.initW = 44.75#62.31
+        lsyn.initW = .01#62.31
     if sec_type == "dend":
         if dist <= 50:
             lsyn.P_0 = np.clip(np.random.normal(0.877, 0.052), 0, 1)
-            lsyn.initW = 54.75#62.31
+            lsyn.initW = .01#62.31
         else:
             lsyn.P_0 = np.clip(np.random.normal(0.72, 0.1), 0, 1)
-            lsyn.initW = 0#42.6#66.6
+            lsyn.initW = .01#42.6#66.6
     if sec_type == "apic":
         lsyn.P_0 = np.clip(np.random.normal(0.3, 0.08), 0, 1)
-        lsyn.initW = 0#118.7#168.7
+        lsyn.initW = .01#118.7#168.7
 
     #Short Term Plasticity
     #######################
@@ -445,8 +445,8 @@ def Pyr2Pyr(syn_params, sec_x, sec_id):
         #close_apic = lambda x: 0.8522367331040966 * ( 1.0020433032052223 ** x )
         #far_apic = lambda x: 0.09043087364217033 * ( 1.004632615014859 ** x )
         
-        dend = lambda x: ( 1.001 ** x )
-        close_apic = lambda x: ( 1.001 ** x )
+        dend = lambda x: ( 1.00 ** x )
+        close_apic = lambda x: ( 1.00 ** x )
         #far_apic = lambda x: ( 1.002 ** x )
         far_apic = lambda x: 1
 

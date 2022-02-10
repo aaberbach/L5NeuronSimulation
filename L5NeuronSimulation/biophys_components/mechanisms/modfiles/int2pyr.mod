@@ -41,7 +41,7 @@ PARAMETER {
 	AlphaTmax_gaba = 1.52 (/ms):7.2609 (/ms): 2.2609 (/ms): 3.2609 (/ms)   : 7.2609 as original
 	Beta_gaba = 0.14(/ms) : 0.147 (/ms) : 0.2667 (/ms):         : 0.2667 as original
 	Erev_gaba = -75 (mV) : -75 as original
-	gbar_gaba = 0.6e-3 (uS)
+	gbar_gaba = 1 (nS)
 
 	Cainf = 50e-6 (mM)
 	pooldiam =  1.8172 (micrometer)
@@ -112,7 +112,7 @@ ASSIGNED {
 	ica (nA)
 	
 	igaba (nA)
-	g_gaba (uS)
+	g_gaba (nS)
 	on_gaba
 
 	limitW

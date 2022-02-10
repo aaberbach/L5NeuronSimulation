@@ -43,8 +43,8 @@
 
     "record_cellvars":
     {
-        "vars": ["Ca_HVA.ica","Ca_LVAst.ica","Ih.ihcn","NaTa_t.gNaTa_t","inmda","v"],
-        "locs": ["all","all","all","all","all","all"]
+        "vars": ["v"],
+        "locs": ["all"]
     },
 
     "inh_frs":
@@ -53,7 +53,7 @@
         "distal": {"m":3.9, "s":4.9, "rhythmicity":{"f":"None", "mod":"None"}}
     },
 
-    "time": {"start":0,"stop":120},
+    "time": {"start":0,"stop":5},
     "dL": 5,
     "dt": 0.1,
 

@@ -3,7 +3,7 @@
     "AlphaTmax_gaba": "1.52",
     "Beta_gaba": "0.14",
     "Cdur_gaba": "0.7254",
-    "gbar_gaba": "0.006",
+    "gbar_gaba": "1",
     "Erev_gaba": "-75",
     "initW": "1",
     "Wmax": "3",
