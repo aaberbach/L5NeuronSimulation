@@ -9,7 +9,6 @@ Etay: changed weight to be equal for NMDA and AMPA, gmax accessible in Neuron
 
 ENDCOMMENT
 
-
 NEURON {
 
         POINT_PROCESS ProbAMPANMDA2  
@@ -17,7 +16,6 @@ NEURON {
         RANGE Use, u, Dep, Fac, u0, weight_NMDA
         RANGE i, iampa, inmda, g_AMPA, g_NMDA, e, initW
         NONSPECIFIC_CURRENT iampa,inmda
-	POINTER rng
 }
 
 PARAMETER {
@@ -41,16 +39,6 @@ The Verbatim block is needed to generate random nos. from a uniform distribution
 for comparison with Pr to decide whether to activate the synapse or not
 ENDCOMMENT
    
-VERBATIM
-
-#include<stdlib.h>
-#include<stdio.h>
-#include<math.h>
-
-double nrn_random_pick(void* r);
-void* nrn_random_arg(int argpos);
-
-ENDVERBATIM
   
 
 ASSIGNED {
@@ -63,7 +51,6 @@ ASSIGNED {
 	g_NMDA (uS)
         factor_AMPA
 	factor_NMDA
-	rng
 	weight_NMDA
 }
 
@@ -152,58 +139,13 @@ NET_RECEIVE (weight,weight_AMPA, weight_NMDA, Pv, Pr, u, tsyn (ms)){
             :printf("Pr = %g\n", Pr)
             tsyn = t
                 
-		   if (erand() < Pr){
+		   
 	
                     A_AMPA = A_AMPA + weight_AMPA*factor_AMPA
                     B_AMPA = B_AMPA + weight_AMPA*factor_AMPA
 		    A_NMDA = A_NMDA + weight_NMDA*factor_NMDA
                     B_NMDA = B_NMDA + weight_NMDA*factor_NMDA
 
-                }
+                
 }
 
-PROCEDURE setRNG() {
-VERBATIM
-    {
-        /**
-         * This function takes a NEURON Random object declared in hoc and makes it usable by this mod file.
-         * Note that this method is taken from Brett paper as used by netstim.hoc and netstim.mod
-         * which points out that the Random must be in negexp(1) mode
-         */
-        void** pv = (void**)(&_p_rng);
-        if( ifarg(1)) {
-            *pv = nrn_random_arg(1);
-        } else {
-            *pv = (void*)0;
-        }
-    }
-ENDVERBATIM
-}
-
-FUNCTION erand() {
-VERBATIM
-	    //FILE *fi;
-        double value;
-        if (_p_rng) {
-                /*
-                :Supports separate independent but reproducible streams for
-                : each instance. However, the corresponding hoc Random
-                : distribution MUST be set to Random.negexp(1)
-                */
-                value = nrn_random_pick(_p_rng);
-		        //fi = fopen("RandomStreamMCellRan4.txt", "w");
-                //fprintf(fi,"random stream for this simulation = %lf\n",value);
-                //printf("random stream for this simulation = %lf\n",value);
-                return value;
-        }else{
-ENDVERBATIM
-                : the old standby. Cannot use if reproducible parallel sim
-                : independent of nhost or which host this instance is on
-                : is desired, since each instance on this cpu draws from
-                : the same stream
-                erand = exprand(1)
-VERBATIM
-        }
-ENDVERBATIM
-        erand = value
-}

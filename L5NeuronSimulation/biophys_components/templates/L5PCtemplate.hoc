@@ -16,14 +16,16 @@ begintemplate L5PCtemplate
   strdef tstr
 
 //$s1 - morphology file name
-proc init() {localobj nl,import
+proc init() {localobj nl,import,p
 	all = new SectionList()
 	somatic = new SectionList()
 	basal = new SectionList()
 	apical = new SectionList()
 	axonal = new SectionList()
 	forall delete_section()
-    
+
+
+
   nl = new Import3d_Neurolucida3()
   nl.quiet = 1
   nl.input("../biophys_components/morphologies/cell1.asc")
