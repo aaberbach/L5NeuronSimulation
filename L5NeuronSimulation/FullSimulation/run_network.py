@@ -20,6 +20,7 @@ import synapses
 import pandas as pd
 import run
 from functools import partial
+import multiprocessing
 
 try:
     np.random.seed(int(sys.argv[1]))
@@ -165,8 +166,22 @@ def save_connections(graph, sim):
 
 
 if __name__ == "__main__":
-    modify_bmtk()
 
+    Fixed_step = h.CVode()
+    Fixed_step.active(0) 
+    
+    #cpu = multiprocessing.cpu_count()
+    #h.load_file("parallelcomputetool.hoc")
+    #h.load_file("parcom.hoc")
+
+    #p = h.ParallelComputeTool()
+    #p.change_nthread(cpu,1)
+    #p.multisplit(1)
+
+
+    #modify_bmtk()
+
+    
     synapses.load()
     syn = synapses.syn_params_dicts()
 

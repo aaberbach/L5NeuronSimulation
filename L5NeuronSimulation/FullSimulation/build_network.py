@@ -654,7 +654,7 @@ class SimulationBuilder:
                     name of the file to save the rasters in (.h5)
                 """    
                 #distribution used for generating excitatory firing rates.    
-                levy_dist = partial(st.levy_stable.rvs, alpha=1.37, beta=-1.00, loc=0.92, scale=0.44, size=1)
+                levy_dist = partial(st.levy_stable.rvs, alpha=1.37, beta=-1.00, loc=0.92*2, scale=0.44, size=1)
 
                 length = self.params["time"]["stop"] - self.params["time"]["start"]
                 buffer = self.params["time"]["start"]

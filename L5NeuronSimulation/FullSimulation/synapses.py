@@ -11,7 +11,7 @@ import numpy as np
 np.random.seed(42)
 generators = []
 
-pyrWeight_m = 0.2#0.229#0.24575#0.95
+pyrWeight_m = 0.45#0.229#0.24575#0.95
 pyrWeight_s = 0.345#1.3
 
 def lognormal(m, s):
@@ -268,18 +268,18 @@ def Int2Pyr(syn_params, sec_x, sec_id):
 
     #Assigns release probabilty and conductance based on location of the synapse.
     if sec_type == "soma":
-        lsyn.P_0 = np.clip(np.random.normal(0.877, 0.052), 0, 1)
-        lsyn.initW = .012#62.31
+        lsyn.P_0 = 0.25#np.clip(np.random.normal(0.877, 0.052), 0, 1)
+        lsyn.initW = 0.06#62.31
     if sec_type == "dend":
         if dist <= 50:
-            lsyn.P_0 = np.clip(np.random.normal(0.877, 0.052), 0, 1)
-            lsyn.initW = .012#62.31
+            lsyn.P_0 = 0.25#np.clip(np.random.normal(0.877, 0.052), 0, 1)
+            lsyn.initW = 0.1#62.31
         else:
-            lsyn.P_0 = np.clip(np.random.normal(0.72, 0.1), 0, 1)
-            lsyn.initW = .012#42.6#66.6
+            lsyn.P_0 = 0.25#np.clip(np.random.normal(0.72, 0.1), 0, 1)
+            lsyn.initW = 0.1#42.6#66.6
     if sec_type == "apic":
-        lsyn.P_0 = np.clip(np.random.normal(0.72, 0.1), 0, 1)
-        lsyn.initW = .012#118.7#168.7
+        lsyn.P_0 = 0.25#np.clip(np.random.normal(0.72, 0.1), 0, 1)
+        lsyn.initW = 0.1#118.7#168.7
 
     #Short Term Plasticity
     #######################
@@ -398,7 +398,7 @@ def Pyr2Pyr(syn_params, sec_x, sec_id):
     #A list of random generators is kept so that they are not automatically garbaged.
     generators.append(r)
 
-    lsyn.P_0 = np.clip(np.random.normal(0.53, 0.22), 0, 1)#Release probability
+    lsyn.P_0 = 0.6#np.clip(np.random.normal(0.53, 0.22), 0, 1)#Release probability
 
     if syn_params.get('AlphaTmax_ampa'):
         lsyn.AlphaTmax_ampa = float(syn_params['AlphaTmax_ampa']) # par.x(21)
