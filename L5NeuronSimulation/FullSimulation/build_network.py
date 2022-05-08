@@ -177,6 +177,7 @@ class SimulationBuilder:
                 avg_exc_div = np.mean(list(self.params["divergence"]["exc"].values()))
 
                 self.n_dend_exc = int((self.params["lengths"]["basal_dist"] * self.params["syn_density"]["exc"]) / avg_exc_div)
+                
                 self.n_apic_exc = int((self.params["lengths"]["apic"] * self.params["syn_density"]["exc"]) / avg_exc_div)
 
                 self.n_dend_inh = int((self.params["lengths"]["basal_dist"] * self.params["syn_density"]["inh"]) / self.params["divergence"]["basal_inh"]["m"])
@@ -392,7 +393,7 @@ class SimulationBuilder:
                     what the start parameter should be for the next call to _build_exc_nodes
                 list
                     list of functional groups that were created
-                """                
+                """ 
                 start_id = start
 
                 n_groups = n_cells // self.params["groups"]["cells_per_group"]
@@ -653,7 +654,7 @@ class SimulationBuilder:
                     name of the file to save the rasters in (.h5)
                 """    
                 #distribution used for generating excitatory firing rates.    
-                levy_dist = partial(st.levy_stable.rvs, alpha=1.37, beta=-1.00, loc=0.92, scale=0.44, size=1)
+                levy_dist = partial(st.levy_stable.rvs, alpha=1.37, beta=-1.00, loc=0.92*2, scale=0.44, size=1)
 
                 length = self.params["time"]["stop"] - self.params["time"]["start"]
                 buffer = self.params["time"]["start"]

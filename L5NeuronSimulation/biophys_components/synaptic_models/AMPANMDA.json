@@ -1,0 +1,13 @@
+{
+    "level_of_detail": "ampanmda",
+    "tau_r_AMPA": "0.2",
+    "tau_d_AMPA": "1.7",
+    "tau_r_NMDA": "0.29",
+    "tau_d_NMDA": "43",
+    "Use": "1",
+    "Dep": "0",
+    "Fac": "0",
+    "e": "0",
+    "initW": "1",
+    "u0": "0"
+}

@@ -13,7 +13,7 @@ proc biophys() {
 	forsec $o1.all {
 	  insert pas
 		cm = 1
-		Ra = 100
+		Ra = 150
 		e_pas = -90
 	}
 

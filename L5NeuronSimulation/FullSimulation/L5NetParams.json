@@ -35,7 +35,7 @@
     "groups":
     {
         "cells_per_group": 100,
-        "cluster_radius": 5,
+        "cluster_radius": 10,
         "group_radius": 100
     },
 
@@ -43,8 +43,8 @@
 
     "record_cellvars":
     {
-        "vars": ["Ca_LVAst.ica", "Ca_HVA.ica",  "pas.i", "v"],
-        "locs": ["all", "all", "all", "all"]
+        "vars": ["v"],
+        "locs": ["soma"]
     },
 
     "inh_frs":
@@ -53,7 +53,7 @@
         "distal": {"m":3.9, "s":4.9, "rhythmicity":{"f":"None", "mod":"None"}}
     },
 
-    "time": {"start":0,"stop":1},
+    "time": {"start":0,"stop":30},
     "dL": 5,
     "dt": 0.1,
 
