@@ -27,6 +27,8 @@ def make_seg_df(cell):
     df = pd.DataFrame()
     i = 0
     j = 0
+    lens = []
+    diams = []
     bmtk_ids = []
     sec_ids = []
     full_names = []
@@ -41,6 +43,8 @@ def make_seg_df(cell):
     
     for sec in cell.hobj.all:
         for seg in sec:
+            lens.append(seg.sec.L)
+            diams.append(seg.sec.diam)
             distances.append(h.distance(seg))
             bmtk_ids.append(i)
             xs.append(seg.x)
@@ -58,10 +62,13 @@ def make_seg_df(cell):
     df["Type"] = parts
     df["Sec ID"] = sec_ids
     df["Distance"] = distances
+    df["Section_L"] = lens
+    df["Section_diam"] = diams
     df["Coord X"] = px
     df["Coord Y"] = py
     df["Coord Z"] = pz
     df["Elec_distance"] = elec_distances
+
 
     df.to_csv("Segments.csv", index=False)
     #import pdb; pdb.set_trace()
